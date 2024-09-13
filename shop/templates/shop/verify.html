@@ -1,0 +1,25 @@
+<!-- auth_two_factor/templates/auth_two_factor/verify.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Two-Factor Authentication</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}"> <!-- Include your CSS if needed -->
+</head>
+<body>
+    <h1>Verify Two-Factor Authentication</h1>
+
+    <form method="post" action="{% url 'auth_two_factor:verify' %}">
+        {% csrf_token %}
+        <!-- Include any necessary form fields here -->
+        <label for="verification_code">Enter Verification Code:</label>
+        <input type="text" id="verification_code" name="verification_code" required>
+
+        <!-- Example for submit button; modify as needed -->
+        <button type="submit">Verify</button>
+    </form>
+
+    <p><a href="{% url 'auth_two_factor:setup' %}">Setup Two-Factor Authentication</a></p>
+</body>
+</html>

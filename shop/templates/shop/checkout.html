@@ -1,0 +1,34 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<div class="container">
+    <h1>Checkout</h1>
+    <form method="post" class="checkout-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" required>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required>
+        </div>
+
+        <div class="form-group">
+            <label for="payment_method">Payment Method:</label>
+            <select id="payment_method" name="payment_method" required>
+                <option value="mpesa">M-Pesa</option>
+                <option value="mtn">MTN Mobile Money</option>
+                <option value="airtel">Airtel Money</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Pay Now</button>
+    </form>
+</div>
+{% endblock %}

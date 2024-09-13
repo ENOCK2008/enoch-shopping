@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Enoch Shopping Center</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+</head>
+<body>
+    <div class="form-container">
+        <h2>Login</h2>
+        <form method="post" action="{% url 'shop:login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+        </form>
+        
+        <hr>
+        
+        <h2>Register</h2>
+        <P>If do not not have the account you can register here!!</P>
+        <form method="post" action="{% url 'shop:register' %}">
+            {% csrf_token %}
+            {{ registration_form.as_p }}
+            <button type="submit">Register</button>
+        </form>
+        
+        <hr>
+        
+        <h2>Password Reset</h2>
+        If you have forgot you password reset it here!!
+        <form method="post" action="{% url 'shop:password_reset' %}">
+            {% csrf_token %}
+            {{ password_reset_form.as_p }}
+            <button type="submit">Reset Password</button>
+        </form>
+        
+        <hr>
+    
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <h2>Contact Us</h2>
+            <section class="contact-info">
+                <address>
+                    <p>Email: <a href="mailto:info@enochshopping.com">info@enochshopping.com</a></p>
+                    <p>Phone: (256) 756679314</p>
+                    <p>Address: Kampala, Uganda, Shopping City.</p>
+                </address>
+            </section>
+            <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
+            <p>
+                <a href="{% url 'shop:contact' %}">Contact Us</a> | 
+                <a href="{% url 'shop:about' %}">About Us</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,221 @@
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\enoch_shopping\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\urls.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Watching for file changes with StatReloader
+Method Not Allowed (GET): /logout/
+Method Not Allowed: /logout/
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+Starting server at tcp:port=8000:interface=127.0.0.1
+HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+Configuring endpoint tcp:port=8000:interface=127.0.0.1
+Listening on TCP address 127.0.0.1:8000
+Killed 0 pending application instances
+Starting server at tcp:port=8000:interface=127.0.0.1
+HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+Configuring endpoint tcp:port=8000:interface=127.0.0.1
+Listening on TCP address 127.0.0.1:8000
+Killed 0 pending application instances
+Starting server at tcp:port=8000:interface=127.0.0.1
+HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+Configuring endpoint tcp:port=8000:interface=127.0.0.1
+HTTPFactory starting on 8000
+Starting factory <daphne.http_protocol.HTTPFactory object at 0x00000210E9CF0F20>
+Listening on TCP address 127.0.0.1:8000
+Received SIGINT, shutting down.
+Killed 0 pending application instances
+(TCP Port 8000 Closed)
+Stopping factory <daphne.http_protocol.HTTPFactory object at 0x00000210E9CF0F20>
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\consumers.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /ws/chat/general/
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /chat/general/
+Traceback (most recent call last):
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\views.py", line 257, in chat_room
+    return render(request, 'chat_room.html', {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: chat_room.html
+Internal Server Error: /chat/general/
+Traceback (most recent call last):
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\views.py", line 257, in chat_room
+    return render(request, 'chat_room.html', {
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\AppData\Roaming\Python\Python312\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: chat_room.html
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\HP\Desktop\New folder (3)\enoch_shopping\shop\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /ws/chat/general/

@@ -1,0 +1,7 @@
+{
+  "name": "enoch-shopping",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

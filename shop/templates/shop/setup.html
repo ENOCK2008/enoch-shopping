@@ -1,0 +1,29 @@
+<!-- auth_two_factor/templates/auth_two_factor/setup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Two-Factor Authentication</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}"> <!-- Include your CSS if needed -->
+</head>
+<body>
+    <h1>Setup Two-Factor Authentication</h1>
+
+    <form method="post" action="{% url 'auth_two_factor:setup' %}">
+        {% csrf_token %}
+        <!-- Include any necessary form fields here -->
+        <label for="two_factor_method">Choose Your Two-Factor Method:</label>
+        <select id="two_factor_method" name="two_factor_method">
+            <option value="sms">SMS</option>
+            <option value="email">Email</option>
+            <option value="authenticator">Authenticator App</option>
+        </select>
+
+        <!-- Example for input fields; modify as needed -->
+        <button type="submit">Setup 2FA</button>
+    </form>
+
+    <p><a href="{% url 'auth_two_factor:verify' %}">Verify Two-Factor Authentication</a></p>
+</body>
+</html>

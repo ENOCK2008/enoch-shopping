@@ -1,0 +1,10 @@
+<h2>Your Orders</h2>
+<ul class="orders-list">
+    {% for order in orders %}
+        <li class="order-item">
+            <span class="order-id">Order #{{ order.id }}</span>
+            <span class="order-total">{{ order.total_price }}</span>
+            <span class="order-status">{{ order.status }}</span>
+        </li>
+    {% endfor %}
+</ul>

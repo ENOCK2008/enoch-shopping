@@ -1,0 +1,7 @@
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<h2>Upload Music</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+</form>

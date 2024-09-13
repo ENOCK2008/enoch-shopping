@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room: {{ room_name }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        #chat-log {
+            border: 1px solid #ccc;
+            height: 400px;
+            overflow-y: scroll;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .message.user {
+            background-color: #e1f5fe;
+            text-align: right;
+        }
+        .message.bot {
+            background-color: #f1f1f1;
+            text-align: left;
+        }
+        #chat-message-input {
+            width: 80%;
+            padding: 10px;
+        }
+        #chat-message-submit {
+            width: 18%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #chat-message-submit:hover {
+            background-color: #0056b3;
+        }
+        #room-selector-form {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
+                <li><a href="{% url 'shop:shop' %}" class="nav-button">Shop</a></li>
+                <li><a href="{% url 'shop:about' %}" class="nav-button">About</a></li>
+                <li><a href="{% url 'shop:contact' %}" class="nav-button">Contact</a></li>
+                <li><a href="{% url 'shop:login' %}" class="nav-button">Login</a></li>
+                <li><a href="{% url 'shop:chat_room' room_name='general' %}" class="nav-button">Chat Room</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <form id="room-selector-form">
+            <input type="text" id="room-name-input" placeholder="Enter chat room name" value="{{ room_name }}" required>
+            <button type="submit">Join Room</button>
+        </form>
+
+        <h2>Chat Room: {{ room_name }}</h2>
+        <div id="chat-log"></div>
+        <input id="chat-message-input" type="text" size="100" placeholder="Type your message...">
+        <button id="chat-message-submit">Send</button>
+    </main>
+    
+    <script>
+        let chatSocket;
+
+        function connectToRoom(roomName) {
+            if (chatSocket) {
+                chatSocket.close();
+            }
+
+            chatSocket = new WebSocket(
+                'ws://' + window.location.host + '/ws/chat/' + encodeURIComponent(roomName) + '/'
+            );
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const messageElement = document.createElement('div');
+
+                // Determine if the message is from the bot or a user
+                if (data.is_bot) {
+                    messageElement.className = 'message bot';
+                } else {
+                    messageElement.className = 'message user';
+                }
+
+                messageElement.textContent = data.message;
+                document.querySelector('#chat-log').appendChild(messageElement);
+                document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight;
+            };
+
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+        }
+
+        // Initial connection to the current room
+        connectToRoom("{{ room_name }}");
+
+        // Handle room selection form submission
+        document.querySelector('#room-selector-form').onsubmit = function(e) {
+            e.preventDefault();
+            const roomName = document.querySelector('#room-name-input').value.trim();
+            if (roomName) {
+                connectToRoom(roomName);
+                // Update the URL for navigation and state
+                history.pushState(null, '', '/chat/' + encodeURIComponent(roomName) + '/');
+            }
+        };
+
+        // Handle message sending
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInput = document.querySelector('#chat-message-input');
+            const message = messageInput.value.trim();
+            if (message) {
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                messageInput.value = '';
+            }
+        };
+
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                document.querySelector('#chat-message-submit').click();
+            }
+        });
+    </script>
+</body>
+</html>

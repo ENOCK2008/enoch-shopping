@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Enoch Shopping Center{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
+                <li><a href="{% url 'shop:shop' %}" class="nav-button">Shop</a></li>
+                <li><a href="{% url 'shop:chat_room' room_name='general' %}" class="nav-button">Chat Room</a></li> <!-- Add link to chat room -->
+                <li><a href="{% url 'shop:about' %}" class="nav-button">About</a></li>
+                <li><a href="{% url 'shop:contact' %}" class="nav-button">Contact</a></li>
+                <li><a href="{% url 'shop:login' %}" class="nav-button">Login</a></li>
+                <a href="{% url 'shop:logout' %}"class="nav-button">Logout</a>
+                <a href="{% url 'shop:order_history' %}" class="nav-button">Order History</a>
+
+                
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <h2>Contact Us</h2>
+            <section class="contact-info">
+                <address>
+                    <p>Email: <a href="mailto:info@enochshopping.com">info@enochshopping.com</a></p>
+                    <p>Phone: (256) 756679314</p>
+                    <p>Address: Kampala, Uganda, Shopping City.</p>
+                </address>
+            </section>
+            <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
+            <p>
+                <a href="{% url 'shop:contact' %}">Contact Us</a> | 
+                <a href="{% url 'shop:about' %}">About Us</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

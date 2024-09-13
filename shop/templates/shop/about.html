@@ -1,0 +1,25 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}About Us - Enoch Shopping Center{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <h1>About Us</h1>
+    <p>Welcome to Enoch Shopping Center! We are dedicated to providing the best shopping experience for our customers.</p>
+    
+    <section class="about-history">
+        <h2>Our History</h2>
+        <p>Founded in [Year], Enoch Shopping Center has grown from a small retail space into a bustling center with a wide variety of shops and services. Our mission is to create a vibrant and enjoyable shopping environment for everyone.</p>
+    </section>
+    
+    <section class="about-team">
+        <h2>Our Team</h2>
+        <p>Meet the dedicated team behind Enoch Shopping Center. Our staff is committed to delivering excellent service and ensuring a great shopping experience.</p>
+        <ul>
+            <li><strong>MAGOLOLO ENOCK</strong> - CEO</li>
+            <li><strong>KAKA SANDRA</strong> - Marketing Director</li>
+            <li><strong>JOSHUA ASOBOLA</strong> - Customer Service Manager</li>
+        </ul>
+    
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Shop - Enoch Shopping Center{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <h1>Shop</h1>
+    <p>Welcome to our shop! Browse through our collection of products below:</p>
+    
+    <div class="product-list">
+        {% for product in products %}
+            <div class="product-item">
+                <h2>{{ product.name }}</h2>
+                <img src="{% static product.image %}" alt="{{ product.name }}" class="product-image">
+                <p>Price: ${{ product.price }}</p>
+                <a href="{% url 'shop:product_detail' product.id %}" class="btn btn-primary">View Details</a>
+            </div>
+        {% empty %}
+            <p>No products available at the moment.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
