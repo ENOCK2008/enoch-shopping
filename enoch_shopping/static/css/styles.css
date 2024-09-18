@@ -1,105 +1,85 @@
-/* Basic Reset */
-body, h2, p, form, input, button, footer {
+/* Reset and Basic Styles */
+body, h1, h2, p, ul, li, a {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* General Styles */
 body {
     font-family: 'Roboto', sans-serif;
-    line-height: 1.6;
-    background-color: #f5f5f5;
-    color: #333;
-    padding: 20px;
+    background-color: #f4f4f9;
+    color: #2a2a2a;
 }
 
 /* Header Styles */
 header {
-    background: #007BFF;
-    color: white;
-    padding: 20px 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #283e4a; /* Dark LinkedIn blue */
+    padding: 10px 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-header nav {
-    text-align: center;
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo a {
+    font-size: 1.5em;
+    color: white;
+    text-decoration: none;
 }
 
 .nav-list {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    display: flex;
+    align-items: center;
 }
 
 .nav-list li {
-    display: inline;
-    margin: 0 15px;
+    margin-left: 20px;
 }
 
-.nav-button {
+.nav-list li a {
     color: white;
     text-decoration: none;
+    padding: 5px 10px;
     font-weight: bold;
-    transition: color 0.3s ease;
+    transition: background-color 0.2s ease;
 }
 
-.nav-button:hover {
-    color: #f0f0f0;
+.nav-list li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }
 
-/* Form Container Styles */
-.form-container {
-    max-width: 500px;
-    margin: auto;
-    padding: 20px;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Profile Menu Styles */
+.profile-menu {
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
-/* Form Styles */
-form {
-    margin-bottom: 20px;
+.profile-pic {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 2px solid white;
 }
 
-form input[type="text"],
-form input[type="password"],
-form input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-form button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
+.profile-name {
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-form button:hover {
-    background-color: #0056b3;
-}
-
-/* Divider Styles */
-hr {
-    margin: 20px 0;
-    border: 0;
-    border-top: 1px solid #ccc;
+    font-weight: bold;
 }
 
 /* Footer Styles */
 footer {
-    background-color: #007BFF;
+    background-color: black;
     color: white;
     padding: 20px 0;
     text-align: center;
@@ -111,6 +91,355 @@ footer {
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 20px;
+}
+
+.contact-info a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-list {
+        flex-direction: column;
+    }
+    .profile-menu {
+        flex-direction: column;
+    }
+}
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #b5b5b5;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #6a4c93; /* Deep purple border on focus */
+    outline: none;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #6a4c93; /* Deep purple for primary buttons */
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #8367c7; /* Lighter purple on hover */
+}
+
+.btn-secondary {
+    background-color: #ff6f61; /* Coral for secondary buttons */
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #d45a49; /* Darker coral on hover */
+}
+
+/* Navigation Styles */
+header {
+    background: #3b6978; /* Teal for a soothing header color */
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-list li {
+    position: relative;
+}
+
+.nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.nav-list li a:hover,
+.nav-list li a.active {
+    background-color: #d45a49; /* Darker coral on hover for buttons */
+    border-radius: 5px;
+}
+
+/* Dropdown Menu Styles */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #3b6978; /* Background color of the dropdown */
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 100%; /* Position dropdown below the parent menu item */
+    left: 0;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #2a2a2a; /* Hover color for dropdown items */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Banner Styles */
+.banner {
+    width: 100%; /* Full width of the container */
+    max-height: 300px; /* Adjust to fit your design */
+    overflow: hidden; /* Hide overflow if the image is too large */
+    position: relative; /* Relative positioning for content */
+    background-color: #333; /* Fallback color if image fails to load */
+    margin-bottom: 20px; /* Space below the banner */
+}
+
+
+/* Basic Reset */
+body, h1, h2, p, form, input, select, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f9; /* Light gray background */
+    color: #2a2a2a; /* Darker text color for readability */
+    padding: 20px;
+}
+
+/* Banner Styles */
+.banner {
+    width: 100%; /* Full width of the container */
+    max-height: 300px; /* Adjust to fit your design */
+    overflow: hidden; /* Hide overflow if the image is too large */
+    position: relative; /* Relative positioning for content */
+    background-color: #333; /* Fallback color if image fails to load */
+    margin-bottom: 20px; /* Space below the banner */
+}
+
+.banner img {
+    width: 100%; /* Full width of the banner */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Ensure image covers the banner area */
+    display: block; /* Remove extra space below the image */
+}
+
+.banner-content {
+    position: absolute; /* Absolute positioning for overlay content */
+    bottom: 20px; /* Space from the bottom of the banner */
+    left: 20px; /* Space from the left of the banner */
+    color: white; /* Text color */
+    text-align: left; /* Align text to the left */
+    padding: 10px 20px; /* Space around content */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+    border-radius: 8px; /* Rounded corners for the content box */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .banner {
+        max-height: 200px; /* Adjust height for smaller screens */
+    }
+
+    .banner-content {
+        bottom: 10px; /* Adjust bottom padding for smaller screens */
+        left: 10px; /* Adjust left padding for smaller screens */
+        padding: 5px 10px; /* Adjust padding for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .banner {
+        max-height: 150px; /* Further adjust height for very small screens */
+    }
+
+    .banner-content {
+        bottom: 5px; /* Further adjust bottom padding for very small screens */
+        left: 5px; /* Further adjust left padding for very small screens */
+        padding: 3px 5px; /* Further adjust padding for very small screens */
+    }
+}
+
+/* Profile Picture Alignment */
+.profile-pic-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Aligns the profile picture to the right */
+    margin-left: auto;
+}
+
+.profile-pic-container img {
+    border-radius: 50%;
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    object-fit: cover;
+    margin-left: 15px;
+}
+
+/* Cart Page Styles */
+.cart-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #3b6978; /* Teal color for heading */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f4f4f9;
+    color: #2a2a2a;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Quantity Form */
+.quantity-form {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-input {
+    width: 60px;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #b5b5b5;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #6a4c93; /* Deep purple for update buttons */
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #8367c7; /* Lighter purple on hover */
+}
+
+.btn-danger {
+    background-color: #d45a49; /* Dark coral for remove buttons */
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c13930; /* Darker coral on hover */
+}
+
+.btn-success {
+    background-color: #28a745; /* Green for checkout button */
+    color: white;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Cart Total */
+.cart-total {
+    font-size: 1.5em;
+    margin-top: 20px;
+    color: #3b6978; /* Teal color for total amount */
+}
+
+/* Footer Styles */
+footer {
+    background-color: black; /* Changed footer background to black */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.footer-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .footer-container h2 {
@@ -118,12 +447,781 @@ footer {
     margin-bottom: 20px;
 }
 
-.contact-info address {
+.contact-info a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+/* Header Styles */
+header {
+    background: #3b6978; /* Teal for a soothing header color */
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
 
+header nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between; /* Distributes menu items evenly */
+    align-items: center; /* Aligns items vertically center */
+}
+
+.nav-list li {
+    position: relative;
+}
+
+
+.nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.nav-list li a:hover,
+.nav-list li a.active {
+    background-color: #d45a49; /* Darker coral on hover for buttons */
+    border-radius: 5px;
+}
+
+/* Profile Picture Styles */
+.profile-picture {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Aligns the profile picture to the right */
+    margin-left: auto;
+}
+
+.profile-picture img {
+    border-radius: 50%;
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    object-fit: cover;
+}
+
+/* Form Container Styles */
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    color: #3b6978; /* Teal color for heading */
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-container form input[type="text"],
+.form-container form input[type="password"],
+.form-container form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #b5b5b5;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.form-container form input:focus,
+.form-container form button:focus {
+    border-color: #6a4c93; /* Deep purple border on focus */
+    outline: none;
+}
+
+.form-container form button {
+    background-color: #6a4c93; /* Deep purple for buttons */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-container form button:hover {
+    background-color: #8367c7; /* Lighter purple on hover */
+}
+
+.form-container p {
+    margin-top: 10px;
+}
+
+.form-container p a {
+    color: #6a4c93; /* Deep purple for links */
+    text-decoration: none;
+}
+
+.form-container p a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Styles */
+footer {
+    background-color: black; /* Footer background to black */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.footer-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-container h2 {
+    font-size: 1.75em;
+    margin-bottom: 20px;
+}
+/* Profile Picture Alignment - Align to Left */
+.profile-picture {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Aligns the profile picture to the left */
+    margin-right: auto;
+}
+
+.profile-picture img {
+    border-radius: 50%;
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    object-fit: cover;
+    margin-right: 15px; /* Add some space between the image and content */
+}
+
+/* Navigation Styles - Align Menu to Right */
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: flex-end; /* Aligns menu items to the right */
+    align-items: center; /* Aligns items vertically center */
+}
+
 .contact-info a {
-    color: #fff;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+/* Basic Reset */
+body, h1, h2, p, form, input, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f9; /* Light gray background */
+    color: #2a2a2a; /* Darker text color for readability */
+    padding: 20px;
+}
+
+/* Form Container Styles */
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    color: #3b6978; /* Teal color for heading */
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-container form input[type="text"],
+.form-container form input[type="email"],
+.form-container form input[type="password"],
+.form-contai/* General Styles */
+body, h1, h2, p, form, input, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f9; /* Light gray background */
+    color: #2a2a2a; /* Darker text color for readability */
+    padding: 20px;
+}
+
+/* Banner Styles */
+.banner img {
+    width: 100%; /* Full width of the banner */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Ensure image covers the banner area */
+    display: block; /* Remove extra space below the image */
+}
+
+.banner-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    text-align: left;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    border-radius: 8px;
+}
+
+/* Responsive Design for Banner */
+@media (max-width: 768px) {
+    .banner {
+        max-height: 200px; /* Adjust height for smaller screens */
+    }
+
+    .banner-content {
+        bottom: 10px;
+        left: 10px;
+        padding: 5px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner {
+        max-height: 150px;
+    }
+
+    .banner-content {
+        bottom: 5px;
+        left: 5px;
+        padding: 3px 5px;
+    }
+}
+
+/* Profile Picture Alignment - Repeated Styles Removed */
+.profile-picture {
+    display: flex;
+    align-items: center;
+}
+
+.profile-picture img {
+    border-radius: 50%;
+    width: 40px; /* Adjust size as needed */
+    height: 40px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+/* Cart Page Styles */
+.cart-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #3b6978;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f4f4f9;
+    color: #2a2a2a;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Form Styles */
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    color: #3b6978;
+}
+
+.form-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-container form input[type="text"],
+.form-container form input[type="email"],
+.form-container form input[type="password"],
+.form-container form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #b5b5b5;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-container form input:focus,
+.form-container form button:focus {
+    border-color: #6a4c93; /* Deep purple border on focus */
+    outline: none;
+}
+
+.form-container form button {
+    background-color: #6a4c93;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-container form button:hover {
+    background-color: #8367c7; /* Lighter purple on hover */
+}
+
+.form-container p a {
+    color: #6a4c93;
+    text-decoration: none;
+}
+
+.form-container p a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Styles */
+footer {
+    background-color: black; /* Footer background */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.footer-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.contact-info a {
+    color: white;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+/* Navigation Styles */
+header {
+    background-color: #3b6978;
+    color: white;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: flex-end; /* Aligns menu items to the right */
+    align-items: center;
+}
+
+.nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.nav-list li a:hover,
+.nav-list li a.active {
+    background-color: #d45a49; /* Darker coral on hover */
+    border-radius: 5px;
+}
+ner form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #b5b5b5;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.form-container form input:focus,
+.form-container form button:focus {
+    border-color: #6a4c93; /* Deep purple border on focus */
+    outline: none;
+}
+
+.form-container form button {
+    background-color: #6a4c93; /* Deep purple for buttons */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-container form button:hover {
+    background-color: #8367c7; /* Lighter purple on hover */
+}
+
+.form-container p {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.form-container p a {
+    color: #6a4c93; /* Deep purple for links */
+    text-decoration: none;
+}
+
+.form-container p a:hover {
+    text-decoration: underline;
+}
+/* Basic Reset */
+body, h1, p, form, input, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f9; /* Light gray background */
+    color: #2a2a2a; /* Darker text color for readability */
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    background: #3b6978; /* Teal for a soothing header color */
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between; /* Distributes menu items evenly */
+    align-items: center; /* Aligns items vertically center */
+}
+
+.nav-list li {
+    position: relative;
+}
+
+.nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.nav-list li a:hover {
+    background-color: #d45a49; /* Darker coral on hover */
+    border-radius: 5px;
+}
+
+/* Form Container Styles */
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1 {
+    margin-bottom: 20px;
+    color: #3b6978; /* Teal color for heading */
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #b5b5b5;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.form-group input:focus {
+    border-color: #6a4c93; /* Deep purple border on focus */
+    outline: none;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #6a4c93; /* Deep purple for primary buttons */
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #8367c7; /* Lighter purple on hover */
+}
+
+/* Footer Styles */
+footer {
+    background-color: black; /* Changed footer background to black */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.footer-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-container p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1em;
+}
+/* Basic Reset */
+body, h1, h2, p, form, input, textarea, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f9; /* Light gray background */
+    color: #2a2a2a; /* Darker text color for readability */
+    padding: 20px;
+}
+
+/* Container Styles */
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Contact Form Styles */
+.contact-form {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #3b6978; /* Teal color for heading */
+}
+
+.contact-form .form-group {
+    margin-bottom: 20px;
+}
+
+.contact-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #b5b5b5;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: #6a4c93; /* Deep purple border on focus */
+    outline: none;
+}
+
+.contact-form button {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #6a4c93; /* Deep purple for primary button */
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.contact-form button:hover {
+    background-color: #8367c7; /* Lighter purple on hover */
+}
+
+/* Footer Styles */
+footer {
+    background-color: black; /* Footer background color */
+    color: white; /* Text color in the footer */
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.footer-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-container h2 {
+    font-size: 1.75em;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.contact-info {
+    margin-bottom: 20px;
+}
+
+.contact-info address {
+    font-style: normal;
+}
+
+.contact-info p {
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.contact-info a {
+    color: #ffffff;
     text-decoration: none;
 }
 
@@ -133,543 +1231,274 @@ footer {
 
 .footer-container p {
     margin: 10px 0;
-    font-size: 0.9em;
+    color: #ffffff;
 }
 
-/* Profile Update Form Styles */
-.profile-update-form {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+.footer-container a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-container a:hover {
+    text-decoration: underline;
+}
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f9; /* Light gray background */
+    color: #2a2a2a; /* Darker text color for readability */
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+}
+
+/* Music List Styles */
+.music-list {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.profile-update-form h2 {
-    text-align: center;
+.music-list h2 {
+    font-size: 2em;
     margin-bottom: 20px;
+    color: #3b6978; /* Teal color for heading */
 }
 
-.profile-update-form form {
+.music-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.music-list .music-item {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
     display: flex;
     flex-direction: column;
 }
 
-.profile-update-form label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-.profile-update-form input[type="text"],
-.profile-update-form input[type="email"],
-.profile-update-form input[type="file"],
-.profile-update-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-}
-
-.profile-update-form input[type="text"]:focus,
-.profile-update-form input[type="email"]:focus,
-.profile-update-form input[type="file"]:focus,
-.profile-update-form textarea:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-.profile-update-form button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%;
-}
-
-.profile-update-form button:hover {
-    background-color: #0056b3;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .header, .footer {
-        padding: 15px;
-    }
-
-    .footer-container h2 {
-        font-size: 1.5em;
-    }
-
-    .profile-update-form {
-        padding: 20px;
-    }
-
-    .profile-update-form h2 {
-        font-size: 1.75em;
-    }
-}
-
-@media (max-width: 600px) {
-    .register-form,
-    .profile-update-form,
-    .checkout-container {
-        padding: 15px;
-        width: 100%;
-    }
-
-    .btn,
-    .register-form button,
-    .profile-update-form button {
-        font-size: 14px;
-        padding: 10px;
-    }
-
-    .cart-summary h3 {
-        font-size: 18px;
-    }
-}
-
-@media (max-width: 480px) {
-    .profile-update-form,
-    .register-form {
-        width: 100%;
-        padding: 15px;
-    }
-
-    .profile-update-form button,
-    .register-form button {
-        width: 100%;
-    }
-}
-/* Contact Us Page Styles */
-.contact-us-container {
-    width: 90%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.contact-us-container h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.contact-us-container p {
-    font-size: 1.1em;
-    margin-bottom: 20px;
-    line-height: 1.6;
-    color: #555;
-}
-
-.contact-info {
-    margin-bottom: 30px;
-}
-
-.contact-info h2 {
-    font-size: 1.5em;
+.music-list .music-info {
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
-    color: #007bff;
 }
 
-.contact-info address {
-    font-style: normal;
+.music-list .music-info h3 {
+    margin-right: 20px;
+    font-size: 1.5em;
     color: #333;
 }
 
-.contact-info address p {
-    margin: 5px 0;
-}
-
-.contact-info a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.contact-info a:hover {
-    text-decoration: underline;
-}
-
-/* Contact Form Styling */
-.contact-form {
-    background: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.contact-form h2 {
-    font-size: 1.75em;
-    margin-bottom: 20px;
-    color: #007bff;
-    text-align: center;
-}
-
-.contact-form label {
-    display: block;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-    color: #333;
-}
-
-.contact-form input,
-.contact-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
+.music-list .cover-image {
     border-radius: 5px;
-    margin-bottom: 1.5em;
-    font-size: 1em;
+    max-width: 100px; /* Adjust size as needed */
+    height: auto;
+    margin-right: 20px;
 }
 
-.contact-form textarea {
-    height: 150px;
-    resize: vertical;
+.music-list audio {
+    width: 100%; /* Full width for audio player */
+    margin-top: 10px;
 }
-
-.contact-form button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    display: block;
-    width: 100%;
-}
-
-.contact-form button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .contact-us-container {
-        padding: 15px;
-    }
-
-    .contact-form h2 {
-        font-size: 1.5em;
-    }
-}
-
-@media (max-width: 480px) {
-    .contact-us-container {
-        padding: 10px;
-    }
-
-    .contact-form button {
-        padding: 10px;
-        font-size: 14px;
-    }
-}
-/* Checkout Page Styles */
-.checkout-container {
-    width: 90%;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.checkout-container h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.checkout-container p {
-    font-size: 1.1em;
-    margin-bottom: 20px;
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
     line-height: 1.6;
-    color: #555;
+    background-color: #f4f4f9; /* Light gray background */
+    color: #2a2a2a; /* Darker text color for readability */
+    padding: 20px;
 }
 
-/* Form Group */
+/* Notifications Styles */
+.notifications {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.notifications h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #3b6978; /* Teal color for heading */
+}
+
+.notifications ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notifications li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.notifications li:last-child {
+    border-bottom: none;
+}
+
+.notifications .new-notification {
+    background-color: #e0f7fa; /* Light cyan background for new notifications */
+    font-weight: bold;
+}
+
+.notifications .notification-status {
+    color: #ff6f61; /* Coral color for 'New' status */
+    font-weight: bold;
+    margin-left: 10px;
+}
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f9; /* Light gray background */
+    color: #2a2a2a; /* Darker text color for readability */
+    padding: 0;
+    margin: 0;
+}
+
+/* Header Styles */
+header {
+    background: #3b6978; /* Teal color for the header */
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between; /* Distributes menu items evenly */
+    align-items: center; /* Aligns items vertically center */
+}
+
+.nav-list li {
+    position: relative;
+}
+
+.nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.nav-list li a:hover,
+.nav-list li a.active {
+    background-color: #d45a49; /* Darker coral on hover for buttons */
+    border-radius: 5px;
+}
+
+/* Container Styles */
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styles */
 .form-group {
     margin-bottom: 20px;
 }
 
 .form-group label {
     display: block;
-    font-weight: bold;
     margin-bottom: 5px;
+    font-weight: bold;
     color: #333;
 }
 
-.form-group input,
 .form-group select {
     width: 100%;
     padding: 10px;
+    border: 1px solid #b5b5b5;
+    border-radius: 5px;
     font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    box-sizing: border-box; /* Ensures padding is included in width */
 }
 
-.form-group input[type="radio"],
-.form-group input[type="checkbox"] {
-    width: auto;
-    margin-right: 5px;
-}
-
-.form-group .payment-method {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-}
-
-/* Cart Summary */
-.cart-summary {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.cart-summary h2 {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-    color: #007bff;
-}
-
-.cart-summary p {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.cart-summary .total {
-    font-weight: bold;
-    font-size: 18px;
-    text-align: right;
-    margin-top: 15px;
-}
-
-.cart-summary .product-name {
-    font-weight: bold;
-}
-
-.cart-summary .product-price {
-    float: right;
-}
-
-/* Checkout Form Styling */
-.checkout-form {
-    background: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.checkout-form h2 {
-    font-size: 1.75em;
-    margin-bottom: 20px;
-    color: #007bff;
-    text-align: center;
-}
-
-.checkout-form label {
-    display: block;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-    color: #333;
-}
-
-.checkout-form input,
-.checkout-form select,
-.checkout-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 1.5em;
-    font-size: 1em;
-}
-
-.checkout-form textarea {
-    height: 150px;
-    resize: vertical;
-}
-
-.checkout-form button {
+/* Button Styles */
+.btn {
+    display: inline-block;
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    display: block;
-    width: 100%;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
 }
 
-.checkout-form button:hover {
-    background-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.btn-primary {
+    background-color: #6a4c93; /* Deep purple for primary buttons */
+    color: white;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .checkout-container {
-        padding: 15px;
-    }
-
-    .checkout-form h2 {
-        font-size: 1.5em;
-    }
+.btn-primary:hover {
+    background-color: #8367c7; /* Lighter purple on hover */
 }
 
-@media (max-width: 480px) {
-    .checkout-container {
-        padding: 10px;
-    }
-
-    .checkout-form button {
-        padding: 10px;
-        font-size: 14px;
-    }
+/* Link Styles */
+.link {
+    color: #3b6978; /* Teal color for links */
+    text-decoration: none;
 }
+
+.link:hover {
+    text-decoration: underline;
+}
+
+/* Footer Styles */
+footer {
+    background-color: black; /* Footer background color */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-container h2 {
+    font-size: 1.75em;
+    margin-bottom: 20px;
+}
+
 .contact-info a {
-    color: #ffd900; /* Ensure this contrasts with the background */
-}
-/* Basic Reset */
-body, h1, h2, h3, p, ul, ol, li {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    color: #ffffff;
+    text-decoration: none;
 }
 
-/* Body Styling */
-body {
-    font-family: 'Roboto', sans-serif; /* Font family for the whole page */
-    font-size: 16px; /* Default font size */
-    color: #333; /* Default text color */
-    line-height: 1.6; /* Line height for readability */
-    background-color: #f5f5f5; /* Background color of the page */
-    padding: 20px; /* Padding around the content */
-}
-
-/* Header Styling */
-h1, h2, h3 {
-    font-family: 'Roboto', sans-serif; /* Ensure headers use the same font family */
-    font-weight: bold; /* Make headers bold */
-}
-
-h1 {
-    font-size: 2em; /* Font size for primary headers */
-    margin-bottom: 20px; /* Space below primary headers */
-}
-
-h2 {
-    font-size: 1.75em; /* Font size for secondary headers */
-    margin-bottom: 15px; /* Space below secondary headers */
-}
-
-h3 {
-    font-size: 1.5em; /* Font size for tertiary headers */
-    margin-bottom: 10px; /* Space below tertiary headers */
-}
-
-/* Paragraph Styling */
-p {
-    margin-bottom: 20px; /* Space below paragraphs */
-    font-size: 1em; /* Font size for paragraphs */
-    color: #555; /* Slightly lighter color for paragraphs */
-}
-
-/* Links Styling */
-a {
-    color: #007bff; /* Color for links */
-    text-decoration: none; /* Remove underline from links */
-}
-
-a:hover {
-    text-decoration: underline; /* Underline links on hover */
-}
-
-/* List Styling */
-ul, ol {
-    margin: 0;
-    padding: 0;
-}
-
-li {
-    margin-bottom: 10px; /* Space between list items */
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    body {
-        font-size: 14px; /* Adjust font size for smaller screens */
-    }
-
-    h1 {
-        font-size: 1.75em; /* Adjust header size for smaller screens */
-    }
-
-    h2 {
-        font-size: 1.5em; /* Adjust secondary header size for smaller screens */
-    }
-
-    h3 {
-        font-size: 1.25em; /* Adjust tertiary header size for smaller screens */
-    }
-}
-/* Orders List Styling */
-.orders-list {
-    list-style: none; /* Remove default list bullets */
-    padding: 0; /* Remove default padding */
-    margin: 0; /* Remove default margin */
-}
-
-.order-item {
-    padding: 10px; /* Add padding to each order item */
-    border-bottom: 1px solid #ddd; /* Add a bottom border to separate items */
-    margin-bottom: 5px; /* Space between order items */
-    background-color: #fff; /* Background color for each order item */
-    border-radius: 5px; /* Rounded corners for each order item */
-}
-
-.order-item:last-child {
-    border-bottom: none; /* Remove the bottom border from the last item */
-}
-
-.order-id {
-    font-weight: bold; /* Bold font for order ID */
-    color: #333; /* Color for order ID */
-}
-
-.order-total {
-    color: #007bff; /* Color for the total price */
-    font-weight: bold; /* Bold font for total price */
-}
-
-.order-status {
-    color: #555; /* Color for the order status */
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .order-item {
-        font-size: 14px; /* Adjust font size for smaller screens */
-        padding: 8px; /* Adjust padding for smaller screens */
-    }
+.contact-info a:hover {
+    text-decoration: underline;
 }

@@ -1,0 +1,46 @@
+{%load static%}
+{% extends 'shop/base.html' %}
+{% block title %}Music{% endblock %}
+
+{% block content %}
+    <h1>Music Library</h1>
+    
+    <!-- Section for uploading new music -->
+    <section class="upload-section">
+        <h2>Upload New Music</h2>
+        <form action="{% url 'shop:upload_music' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            
+            <label for="artist">Artist:</label>
+            <input type="text" id="artist" name="artist" required>
+            
+            <label for="audio_file">Audio File:</label>
+            <input type="file" id="audio_file" name="audio_file" accept="audio/*" required>
+            
+            <button type="submit">Upload</button>
+        </form>
+    </section>
+    
+    <!-- Section for displaying music items -->
+    <section class="music-list">
+        <h2>Available Music</h2>
+        {% if music_list %}
+            <ul>
+                {% for music in music_list %}
+                    <li>
+                        <strong>Title:</strong> {{ music.title }} <br>
+                        <strong>Artist:</strong> {{ music.artist }} <br>
+                        <audio controls>
+                            <source src="{{ music.audio_file.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No music available at the moment.</p>
+        {% endif %}
+    </section>
+{% endblock %}

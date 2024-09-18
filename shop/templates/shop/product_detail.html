@@ -2,50 +2,51 @@
 {% load static %}
 
 {% block content %}
-<h2>{{ product.name }}</h2>
-<p>Price: ${{ product.price }}</p>
-
-{% if product.description %}
-    <p>{{ product.description }}</p>
-{% endif %}
-
-{% if product.image %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <h3>Product Image:</h3>
-    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
-{% endif %}
+<div class="product-details-container">
+    <h2 class="product-name">{{ product.name }}</h2>
+    <p class="product-price">Price: ${{ product.price }}</p>
 
-{% if product.video_url %}
-    <h3>Product Video:</h3>
-    <video width="640" height="360" controls>
-        <source src="{{ product.video_url }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-{% endif %}
+    {% if product.description %}
+        <p class="product-description">{{ product.description }}</p>
+    {% endif %}
 
-{% if product.panoramic_image %}
-    <h3>360-Degree View:</h3>
-    <img src="{{ product.panoramic_image.url }}" alt="Panoramic View" class="panoramic-image">
-{% endif %}
+    {% if product.image %}
+        <h3>Product Image:</h3>
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+    {% endif %}
 
-<!-- Form to add product to cart -->
-<form action="{% url 'shop:add_to_cart' product.id %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Add to Cart</button>
-</form>
+    {% if product.video_url %}
+        <h3>Product Video:</h3>
+        <video width="640" height="360" controls>
+            <source src="{{ product.video_url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    {% endif %}
 
-<!-- Display product reviews -->
-{% if product.reviews.all %}
-    <h3>Reviews:</h3>
-    <ul>
-        {% for review in product.reviews.all %}
-            <li>
-                <strong>{{ review.user.username }}</strong>: {{ review.comment }} (Rating: {{ review.rating }})
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No reviews yet.</p>
-{% endif %}
+    {% if product.panoramic_image %}
+        <h3>360-Degree View:</h3>
+        <img src="{{ product.panoramic_image.url }}" alt="Panoramic View" class="panoramic-image">
+    {% endif %}
 
+    <!-- Form to add product to cart -->
+    <form action="{% url 'shop:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Add to Cart</button>
+    </form>
+
+    <!-- Display product reviews -->
+    {% if product.reviews.all %}
+        <h3>Reviews:</h3>
+        <ul class="review-list">
+            {% for review in product.reviews.all %}
+                <li class="review-item">
+                    <strong>{{ review.user.username }}</strong>: {{ review.comment }} (Rating: {{ review.rating }})
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No reviews yet.</p>
+    {% endif %}
+</div>
 {% endblock %}

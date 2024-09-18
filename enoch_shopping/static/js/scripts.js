@@ -1,12 +1,26 @@
-const roomName = "{{ room_name }}"; // Ensure room_name is being passed correctly
-const chatSocket = new WebSocket(
-    'ws://' + window.location.host + '/ws/chat/' + encodeURIComponent(roomName) + '/'
-);
+// Register the service worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/static/js/serviceworker.js')
+    .then(function(registration) {
+        console.log('Service Worker registered with scope:', registration.scope);
+    })
+    .catch(function(error) {
+        console.error('Service Worker registration failed:', error);
+    });
+}
+
+// Ensure room_name is being passed correctly
+const roomName = "{{ room_name }}"; 
+const socket = new WebSocket('ws://' + window.location.host + '/ws/chat/general/');
 let reconnectAttempts = 0;
 
 function updateStatus(message) {
     const statusElement = document.querySelector('#status');
-    statusElement.textContent = message;
+    if (statusElement) {
+        statusElement.textContent = message;
+    } else {
+        console.warn('Status element not found');
+    }
 }
 
 function connectWebSocket() {
@@ -18,6 +32,8 @@ function connectWebSocket() {
 
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
+        console.log('Message received:', data); // Log received messages
+
         const messageElement = document.createElement('div');
         const messageTime = new Date().toLocaleTimeString();
 
@@ -25,8 +41,13 @@ function connectWebSocket() {
         messageElement.className = data.is_bot ? 'message bot' : 'message user';
         messageElement.innerHTML = `<strong>[${messageTime}]</strong> ${data.message}`;
         
-        document.querySelector('#chat-log').appendChild(messageElement);
-        document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight;
+        const chatLog = document.querySelector('#chat-log');
+        if (chatLog) {
+            chatLog.appendChild(messageElement);
+            chatLog.scrollTop = chatLog.scrollHeight; // Scroll to bottom
+        } else {
+            console.warn('#chat-log element not found');
+        }
     };
 
     chatSocket.onerror = function(e) {
@@ -55,6 +76,7 @@ document.querySelector('#chat-message-submit').onclick = function(e) {
 
     if (message && message.length <= MAX_MESSAGE_LENGTH) {
         if (chatSocket.readyState === WebSocket.OPEN) {
+            console.log('Sending message:', message); // Log the message being sent
             chatSocket.send(JSON.stringify({ 'message': message }));
             messageInput.value = ''; // Clear input after sending
         } else {

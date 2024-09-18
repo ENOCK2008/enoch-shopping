@@ -1,0 +1,16 @@
+<!-- shop/templates/shop/discount_code_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Discount Codes</title>
+</head>
+<body>
+    <h1>Discount Codes</h1>
+    <a href="{% url 'shop:create_discount_code' %}">Create Discount Code</a>
+    <ul>
+        {% for code in codes %}
+            <li>{{ code.code }} - {{ code.discount_amount }} - {{ code.start_date }} to {{ code.end_date }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

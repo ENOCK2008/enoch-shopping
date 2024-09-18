@@ -4,7 +4,28 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 <div class="home-container">
-    <h1>Welcome to Enoch Shopping Center</h1>
+    <h1 class="welcome-heading">Welcome to Enock Shopping Center</h1>
     <img src="{% static 'images/banner.jpg' %}" alt="Banner" class="banner-image">
+
+    <div class="hero-section">
+        <h2>Shop the Latest Products</h2>
+        <p>Discover our featured products and enjoy great discounts!</p>
+        <a href="{% url 'shop:categories' %}" class="cta-button">Explore Categories</a>
+    </div>
+
+    <div class="featured-products">
+        <h2>Featured Products</h2>
+        <div class="product-list">
+            <!-- Placeholder for dynamically generated products -->
+            {% for product in featured_products %}
+                <div class="product-item">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-price">${{ product.price }}</p>
+                    <a href="{% url 'shop:product_detail' product.id %}" class="product-link">View Details</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}

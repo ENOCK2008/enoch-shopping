@@ -1,16 +1,28 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Music List - Enoch Shopping Center{% endblock %}
+
+{% block content %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-<h2>Music List</h2>
-<ul>
-    {% for music in musics %}
-        <li>
-            <h3>{{ music.title }}</h3>
-            <audio controls>
-                <source src="{{ music.audio_file.url }}" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-            {% if music.cover_image %}
-                <img src="{{ music.cover_image.url }}" alt="{{ music.title }} Cover" width="100">
-            {% endif %}
-        </li>
-    {% endfor %}
-</ul>
+
+<section class="music-list">
+    <h2>Music List</h2>
+    <ul>
+        {% for music in musics %}
+            <li class="music-item">
+                <div class="music-info">
+                    <h3>{{ music.title }}</h3>
+                    {% if music.cover_image %}
+                        <img src="{{ music.cover_image.url }}" alt="{{ music.title }} Cover" class="cover-image">
+                    {% endif %}
+                </div>
+                <audio controls>
+                    <source src="{{ music.audio_file.url }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

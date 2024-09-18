@@ -4,7 +4,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-<div class="container">
+<div class="cart-container">
     <h1>Your Cart</h1>
 
     {% if cart_items %}
@@ -23,9 +23,9 @@
             <tr>
                 <td>{{ item.product.name }}</td>
                 <td>
-                    <form action="{% url 'shop:update_cart_item' item.id %}" method="post">
+                    <form action="{% url 'shop:update_cart_item' item.id %}" method="post" class="quantity-form">
                         {% csrf_token %}
-                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="quantity-input">
                         <button type="submit" class="btn btn-primary">Update</button>
                     </form>
                 </td>
@@ -42,7 +42,7 @@
         </tbody>
     </table>
 
-    <h3>Total: ${{ cart_total|floatformat:2 }}</h3>
+    <h3 class="cart-total">Total: ${{ cart_total|floatformat:2 }}</h3>
 
     <a href="{% url 'shop:checkout' %}" class="btn btn-success">Proceed to Checkout</a>
     {% else %}

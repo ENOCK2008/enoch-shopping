@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Enoch Shopping Center</title>
+    <title>Login | Enock Shopping Center</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    
 </head>
 <body>
+    <header>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
+                
+        {% if user.is_authenticated %}
+            <div class="profile-picture">
+                <img src="{% static 'images/profile_picture.jpg' %}" alt="Profile Picture">
+            </div>
+        {% endif %}
+    </header>
+
     <div class="form-container">
         <h2>Login</h2>
         <form method="post" action="{% url 'shop:login' %}">
@@ -16,31 +27,9 @@
             {{ form.as_p }}
             <button type="submit">Login</button>
         </form>
-        
-        <hr>
-        
-        <h2>Register</h2>
-        <P>If do not not have the account you can register here!!</P>
-        <form method="post" action="{% url 'shop:register' %}">
-            {% csrf_token %}
-            {{ registration_form.as_p }}
-            <button type="submit">Register</button>
-        </form>
-        
-        <hr>
-        
-        <h2>Password Reset</h2>
-        If you have forgot you password reset it here!!
-        <form method="post" action="{% url 'shop:password_reset' %}">
-            {% csrf_token %}
-            {{ password_reset_form.as_p }}
-            <button type="submit">Reset Password</button>
-        </form>
-        
-        <hr>
-    
+        <p>Don't have an account? <a href="{% url 'shop:register' %}">Register here</a>.</p>
     </div>
-
+    
     <footer>
         <div class="footer-container">
             <h2>Contact Us</h2>
@@ -51,7 +40,7 @@
                     <p>Address: Kampala, Uganda, Shopping City.</p>
                 </address>
             </section>
-            <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
+            <p>&copy; 2024 Enock Shopping Center. All rights reserved.</p>
             <p>
                 <a href="{% url 'shop:contact' %}">Contact Us</a> | 
                 <a href="{% url 'shop:about' %}">About Us</a>

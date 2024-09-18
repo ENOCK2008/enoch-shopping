@@ -1,0 +1,15 @@
+<!-- shop/templates/shop/create_discount_code.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Discount Code</title>
+</head>
+<body>
+    <h1>Create Discount Code</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>

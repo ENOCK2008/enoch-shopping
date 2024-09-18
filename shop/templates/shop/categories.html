@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Categories</title>
+    {% load static %}  <!-- Load the static template tag library -->
+    <link rel="stylesheet" href="{% static 'shop/styles.css' %}"> <!-- Adjust the path as necessary -->
+</head>
+<body>
+    <header>
+        <h1>Product Categories</h1>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
+                <li><a href="{% url 'shop:shop' %}" class="nav-button">Shop</a></li>
+                <li><a href="{% url 'shop:about' %}" class="nav-button">About Us</a></li>
+                <li><a href="{% url 'shop:contact' %}" class="nav-button">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Available Categories</h2>
+        <ul class="category-list">
+            {% for category in categories %}
+                <li>
+                    <a href="{% url 'shop:product_detail' category.id %}" class="category-item">
+                        {{ category.name }}
+                    </a>
+                </li>
+            {% empty %}
+                <li>No categories available.</li>
+            {% endfor %}
+        </ul>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <h2>Contact Us</h2>
+            <section class="contact-info">
+                <address>
+                    <p>Email: <a href="mailto:info@enochshopping.com">info@enochshopping.com</a></p>
+                    <p>Phone: (256) 756679314</p>
+                    <p>Address: Kampala, Uganda, Shopping City.</p>
+                </address>
+            </section>
+            <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
+            <p>
+                <a href="{% url 'shop:contact' %}">Contact Us</a> | 
+                <a href="{% url 'shop:about' %}">About Us</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="{% static 'shop/scripts.js' %}"></script> <!-- Adjust the path as necessary -->
+    
+    <style>
+       body {
+        font-family: 'Roboto', sans-serif; /* Modern font for better readability */
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9; /* Light background for better contrast */
+        color: #333; /* Darker text color for readability */
+        line-height: 1.6; /* Increased line height for better text spacing */
+    }
+    header {
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        text-align: center;
+    }
+    nav {
+        margin-top: 10px;
+    }
+    .nav-list {
+        list-style-type: none;
+        padding: 0;
+        display: flex; /* Use flexbox for horizontal layout */
+        justify-content: center; /* Center align the items */
+    }
+    .nav-button {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        padding: 10px 15px; /* Add some padding for better click area */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+    }
+    .nav-button:hover {
+        background-color: rgba(255, 255, 255, 0.2); /* Add a background on hover */
+        text-decoration: underline;
+    }
+    main {
+        padding: 20px;
+    }
+    h2 {
+        font-size: 1.8em; /* Slightly larger font size for headings */
+        color: #007bff; /* Heading color for consistency */
+        margin-bottom: 15px; /* Space below the heading */
+    }
+    .category-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .category-item {
+        text-decoration: none;
+        color: #007bff;
+        padding: 10px 0; /* Add vertical padding */
+        display: block; /* Make the link a block for better click area */
+        transition: color 0.3s; /* Smooth transition for hover effect */
+    }
+    .category-item:hover {
+        color: #0056b3; /* Darker color on hover */
+        text-decoration: underline;
+    }
+    footer {
+        text-align: center;
+        padding: 15px;
+        background-color: #f1f1f1;
+        margin-top: 20px; /* Space above the footer */
+    }
+    .footer-container {
+        max-width: 800px; /* Limit footer width for better layout */
+        margin: auto; /* Center footer */
+    }
+    </style>
+</body>
+</html>

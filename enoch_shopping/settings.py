@@ -1,4 +1,6 @@
 from pathlib import Path
+import os
+from django.utils.translation import gettext_lazy as _
 
 # Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -6,11 +8,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security settings
 SECRET_KEY = 'your_secret_key'  # Ensure this is kept secret in production
 DEBUG = True  # Set to False in production
-ALLOWED_HOSTS = []  # Update this with the allowed hostnames in production
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Allow localhost and 127.0.0.1 for local development
 
 # Login and redirect URLs
-LOGIN_URL = 'shop:login'
 LOGIN_REDIRECT_URL = 'shop:home'
+LOGOUT_REDIRECT_URL = 'shop:home'
+LOGIN_URL = '/shop/login/'  # Ensure this matches your login path
 
 # Installed apps
 INSTALLED_APPS = [
@@ -26,6 +29,7 @@ INSTALLED_APPS = [
     'django_otp',  # Django OTP for two-factor authentication
     'django_otp.plugins.otp_totp',  # Time-based One-Time Passwords (TOTP)
     'two_factor',  # Two-factor authentication
+    'django_extensions',  # Extensions for Django
 ]
 
 # Middleware settings
@@ -46,7 +50,8 @@ ROOT_URLCONF = 'enoch_shopping.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'shop/templates'],  # Points to your templates directory
+        'DIRS': [BASE_DIR / 'shop/templates'],
+         'DIRS': [BASE_DIR / ' two_factor/templates/auth_two_factor'],# Points to your templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,10 +90,28 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static and media files
+LANGUAGES = [
+    ('en', _('English')),
+    ('es', _('Spanish')),
+    # Add other languages here
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
+import os
+
+# The URL prefix for serving static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'enoch_shopping/static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# The directory where static files are collected
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# The directory where static files for the project are stored
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'enoch_shopping\static'),
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -100,24 +123,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 APPEND_SLASH = True  # Ensures URLs are correctly routed with a trailing slash
 
 # Stripe configuration (if you're using Stripe for payments)
-STRIPE_SECRET_KEY = 'your_stripe_secret_key'
-STRIPE_PUBLISHABLE_KEY = 'your_stripe_publishable_key'
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', 'your_stripe_secret_key')
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY', 'your_stripe_publishable_key')
 
 # Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.your-email-provider.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your-email@example.com'
-EMAIL_HOST_PASSWORD = 'your-email-password'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Use console backend for development
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.your-email-provider.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'your-email@example.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your-email-password')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Mobile money configuration
 MOBILE_MONEY_CONFIG = {
-    'API_BASE_URL': 'https://api.example.com/',  # Base URL for the payment API
-    'MPESA_API_KEY': 'your_mpesa_api_key',
-    'MTN_API_KEY': 'your_mtn_api_key',
-    'AIRTEL_API_KEY': 'your_airtel_api_key',
+    'API_BASE_URL': os.getenv('MOBILE_MONEY_API_BASE_URL', 'https://api.example.com/'),
+    'MPESA_API_KEY': os.getenv('MPESA_API_KEY', 'your_mpesa_api_key'),
+    'MTN_API_KEY': os.getenv('MTN_API_KEY', 'your_mtn_api_key'),
+    'AIRTEL_API_KEY': os.getenv('AIRTEL_API_KEY', 'your_airtel_api_key'),
 }
 
 # Django Channels settings
@@ -125,10 +148,11 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],  # Ensure Redis is running on this host and port
+            'hosts': [('127.0.0.1', 6379)],  # Ensure Redis is running here
         },
     },
 }
+
 
 # Logging configuration
 LOGGING = {
@@ -146,3 +170,13 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
+
+# Secure settings for local development
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+X_FRAME_OPTIONS = 'SAMEORIGIN'  # Allows framing from the same origin only
+
+# PayPal configuration
+PAYPAL_CLIENT_ID = os.getenv('PAYPAL_CLIENT_ID')
+PAYPAL_CLIENT_SECRET = os.getenv('PAYPAL_CLIENT_SECRET')

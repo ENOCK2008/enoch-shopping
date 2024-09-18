@@ -1,18 +1,21 @@
-{% extends 'shop/base.html' %}
-{% load static %}
-
-{% block title %}Register - Enoch Shopping Center{% endblock %}
-
-{% block content %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
-<section class="register-form">
-    <h2>Create Your Account</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Register</button>
-    </form>
-</section>
-
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Enoch Shopping Center</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Register</h2>
+        <form method="post" action="{% url 'shop:register' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="{% url 'shop:login' %}">Login here</a>.</p>
+    </div>
+</body>
+</html>

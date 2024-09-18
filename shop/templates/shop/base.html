@@ -5,23 +5,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Enoch Shopping Center{% endblock %}</title>
+    <title>{% block title %}Enock Shopping Center{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        function logout() {
+            document.getElementById('logout-form').submit();
+        }
+    </script>
 </head>
 <body>
     <header>
         <nav>
             <ul class="nav-list">
-                <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
-                <li><a href="{% url 'shop:shop' %}" class="nav-button">Shop</a></li>
-                <li><a href="{% url 'shop:chat_room' room_name='general' %}" class="nav-button">Chat Room</a></li> <!-- Add link to chat room -->
-                <li><a href="{% url 'shop:about' %}" class="nav-button">About</a></li>
-                <li><a href="{% url 'shop:contact' %}" class="nav-button">Contact</a></li>
-                <li><a href="{% url 'shop:login' %}" class="nav-button">Login</a></li>
-                <a href="{% url 'shop:logout' %}"class="nav-button">Logout</a>
-                <a href="{% url 'shop:order_history' %}" class="nav-button">Order History</a>
-
                 
+                <!-- Static Dropdown Menu -->
+                <li class="dropdown">
+                    <a href="#" class="nav-button dropbtn">Menu</a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'shop:home' %}" class="nav-button">Home</a>
+                        <a href="{% url 'shop:shop' %}" class="nav-button">Shop</a>
+                        <a href="{% url 'shop:about' %}" class="nav-button">About</a>
+                        <a href="{% url 'shop:contact' %}" class="nav-button">Contact</a>
+                        <a href="{% url 'shop:feedback' %}" class="nav-button">Feedback</a>
+                        <a href="{% url 'shop:music_list' %}" class="nav-button">Music</a>
+                        <a href="{% url 'shop:profile' %}">Profile</a>
+                        <a href="{% url 'shop:loyalty_points_list' %}">Loyalty Points</a>
+                        <a href="{% url 'shop:notification_view' %}">Notifications</a>
+
+                        {% if user.is_staff %}
+                            <a href="{% url 'shop:setup' %}">Setup</a>
+                            <a href="{% url 'shop:discount_code_list' %}">Discount Codes</a>
+                        {% endif %}
+                        <a href="{% url 'shop:order_history' %}">Order History</a>
+                        <a href="javascript:void(0);" onclick="logout()">Logout</a>
+                        <form id="logout-form" action="{% url 'shop:logout' %}" method="post" style="display:none;">
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </li>
+
+                {% if not user.is_authenticated %}
+                    <li><a href="{% url 'shop:login' %}" class="nav-button">Login</a></li>
+                    <li><a href="{% url 'shop:register' %}" class="nav-button">Register</a></li>
+                    <li><a href="{% url 'shop:password_reset' %}" class="nav-button">Forgot Password</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
@@ -41,7 +70,7 @@
                     <p>Address: Kampala, Uganda, Shopping City.</p>
                 </address>
             </section>
-            <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
+            <p>&copy; 2024 Enock Shopping Center. All rights reserved.</p>
             <p>
                 <a href="{% url 'shop:contact' %}">Contact Us</a> | 
                 <a href="{% url 'shop:about' %}">About Us</a>

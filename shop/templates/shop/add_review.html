@@ -1,6 +1,14 @@
-<h2>Leave a Review for {{ product.name }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit Review</button>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Review</title>
+</head>
+<body>
+    <h1>Add Review for {{ product.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit Review</button>
+    </form>
+</body>
+</html>

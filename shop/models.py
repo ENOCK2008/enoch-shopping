@@ -1,6 +1,43 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.utils import timezone
+import paypalrestsdk
+
+# Configure PayPal
+paypalrestsdk.configure({
+    "mode": "sandbox",  # Change to "live" in production
+    "client_id": settings.PAYPAL_CLIENT_ID,
+    "client_secret": settings.PAYPAL_CLIENT_SECRET
+})
+
+# Feedback Model
+class Feedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Feedback from {self.user.username} on {self.created_at}'
+
+# LoyaltyPoints Model
+class LoyaltyPoints(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    points = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.points} points'
+
+# DiscountCode Model
+class DiscountCode(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    start_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField()
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.code
 
 # Category Model
 class Category(models.Model):
@@ -128,3 +165,21 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
+# shop/models.py
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Notification for {self.user.username} on {self.created_at}'
+#shop/models.py
+
+from django.db import models
+
+class MenuItem(models.Model):
+    name = models.CharField(max_length=100)
+    url_name = models.CharField(max_length=100)  # Name of the URL pattern
+
+    def __str__(self):
+        return self.name

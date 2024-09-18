@@ -6,6 +6,115 @@
     <title>Chat Room: {{ room_name }}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="manifest" href="{% static 'manifest.json' %}">  <!-- Adjust as necessary -->
+
+    <script>
+        let chatSocket;
+        let roomName = "{{ room_name }}"; // Initialize with the room name passed from the server
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('{% static "js/serviceworker.js" %}').then(function(registration) {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    }).catch(function(error) {
+                        console.log('Service Worker registration failed:', error);
+                    });
+                });
+            }
+        }
+
+        function updateStatus(message) {
+            const statusElement = document.querySelector('#status');
+            if (statusElement) {
+                statusElement.textContent = message;
+            }
+        }
+
+        function connectWebSocket() {
+            chatSocket = new WebSocket(
+                'ws://127.0.0.1:8080/ws/chat/' + encodeURIComponent(roomName) + '/'
+            );
+
+            chatSocket.onopen = function(e) {
+                console.log('WebSocket connection established');
+                updateStatus('Connected to room: ' + roomName);
+            };
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const messageElement = document.createElement('div');
+                const messageTime = new Date().toLocaleTimeString();
+
+                // Assign class based on whether the message is from a bot or user
+                messageElement.className = data.is_bot ? 'message bot' : 'message user';
+                messageElement.innerHTML = `<strong>[${messageTime}]</strong> ${data.message}`;
+                
+                const chatLog = document.querySelector('#chat-log');
+                if (chatLog) {
+                    chatLog.appendChild(messageElement);
+                    chatLog.scrollTop = chatLog.scrollHeight; // Scroll to bottom
+                }
+            };
+
+            chatSocket.onerror = function(e) {
+                console.error('WebSocket error:', e);
+                updateStatus('Connection error. Attempting to reconnect...');
+            };
+
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly', e);
+                updateStatus('Disconnected. Attempting to reconnect...');
+                setTimeout(connectWebSocket, 2000); // Reconnect after 2 seconds
+            };
+        }
+
+        // Handle room joining
+        document.addEventListener('DOMContentLoaded', function() {
+            registerServiceWorker();
+            connectWebSocket();
+
+            const roomSelectorForm = document.getElementById('room-selector-form');
+            roomSelectorForm.onsubmit = function(e) {
+                e.preventDefault(); // Prevent form submission
+
+                const newRoomName = document.getElementById('room-name-input').value.trim();
+                if (newRoomName && newRoomName !== roomName) {
+                    roomName = newRoomName; // Update the room name
+                    chatSocket.close(); // Close the current WebSocket connection
+                    connectWebSocket(); // Connect to the new room
+                }
+            };
+
+            // Send message when the button is clicked
+            document.querySelector('#chat-message-submit').onclick = function(e) {
+                const messageInput = document.querySelector('#chat-message-input');
+                const message = messageInput.value.trim();
+
+                const MAX_MESSAGE_LENGTH = 200; // Set your desired max message length
+
+                if (message && message.length <= MAX_MESSAGE_LENGTH) {
+                    if (chatSocket.readyState === WebSocket.OPEN) {
+                        chatSocket.send(JSON.stringify({ 'message': message }));
+                        messageInput.value = ''; // Clear input after sending
+                    } else {
+                        console.error('WebSocket is not open. Current state:', chatSocket.readyState);
+                    }
+                } else {
+                    alert(`Message must be under ${MAX_MESSAGE_LENGTH} characters.`);
+                }
+            };
+
+            // Send message on 'Enter' key press
+            document.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent form submission
+                    document.querySelector('#chat-message-submit').click();
+                }
+            });
+        });
+    </script>
+
     <style>
         #chat-log {
             border: 1px solid #ccc;
@@ -68,76 +177,10 @@
             <button type="submit">Join Room</button>
         </form>
 
-        <h2>Chat Room: {{ room_name }}</h2>
+        <h2>Chat Room: <span id="current-room-name">{{ room_name }}</span></h2>
         <div id="chat-log"></div>
         <input id="chat-message-input" type="text" size="100" placeholder="Type your message...">
         <button id="chat-message-submit">Send</button>
     </main>
-    
-    <script>
-        let chatSocket;
-
-        function connectToRoom(roomName) {
-            if (chatSocket) {
-                chatSocket.close();
-            }
-
-            chatSocket = new WebSocket(
-                'ws://' + window.location.host + '/ws/chat/' + encodeURIComponent(roomName) + '/'
-            );
-
-            chatSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                const messageElement = document.createElement('div');
-
-                // Determine if the message is from the bot or a user
-                if (data.is_bot) {
-                    messageElement.className = 'message bot';
-                } else {
-                    messageElement.className = 'message user';
-                }
-
-                messageElement.textContent = data.message;
-                document.querySelector('#chat-log').appendChild(messageElement);
-                document.querySelector('#chat-log').scrollTop = document.querySelector('#chat-log').scrollHeight;
-            };
-
-            chatSocket.onclose = function(e) {
-                console.error('Chat socket closed unexpectedly');
-            };
-        }
-
-        // Initial connection to the current room
-        connectToRoom("{{ room_name }}");
-
-        // Handle room selection form submission
-        document.querySelector('#room-selector-form').onsubmit = function(e) {
-            e.preventDefault();
-            const roomName = document.querySelector('#room-name-input').value.trim();
-            if (roomName) {
-                connectToRoom(roomName);
-                // Update the URL for navigation and state
-                history.pushState(null, '', '/chat/' + encodeURIComponent(roomName) + '/');
-            }
-        };
-
-        // Handle message sending
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInput = document.querySelector('#chat-message-input');
-            const message = messageInput.value.trim();
-            if (message) {
-                chatSocket.send(JSON.stringify({
-                    'message': message
-                }));
-                messageInput.value = '';
-            }
-        };
-
-        document.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                document.querySelector('#chat-message-submit').click();
-            }
-        });
-    </script>
 </body>
 </html>
