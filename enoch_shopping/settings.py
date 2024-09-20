@@ -1,23 +1,18 @@
 from pathlib import Path
 import os
 from django.utils.translation import gettext_lazy as _
-import os
-from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Media files settings
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# Base directory of the project (using Path for consistency)
+# Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = 'your_secret_key'  # Ensure this is kept secret in production
-DEBUG = False
-  # Set to False in production
-ALLOWED_HOSTS = [ 'enoch_shopping.onrender.com','localhost', '127.0.0.1' ]  # Allow localhost and 127.0.0.1 for local development
+DEBUG = False  # Set to False in production
+ALLOWED_HOSTS = ['enoch_shopping.onrender.com', 'localhost', '127.0.0.1']
+
+# Media files settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Login and redirect URLs
 LOGIN_REDIRECT_URL = 'shop:home'
@@ -59,7 +54,7 @@ ROOT_URLCONF = 'enoch_shopping.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'shop/templates', BASE_DIR / 'two_factor/templates/auth_two_factor'],  # Fixed templates path
+        'DIRS': [BASE_DIR / 'shop/templates', BASE_DIR / 'two_factor/templates/auth_two_factor'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -110,14 +105,10 @@ LOCALE_PATHS = [
 
 # Static and media files configuration
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Changed to use Path
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
-    BASE_DIR / 'enoch_shopping/static',  # Changed to use Path
+    BASE_DIR / 'enoch_shopping/static',
 ]
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'  # Changed to use Path
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -164,7 +155,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'chat_consumer.log',  # Changed to use Path
+            'filename': BASE_DIR / 'chat_consumer.log',
         },
     },
     'root': {
