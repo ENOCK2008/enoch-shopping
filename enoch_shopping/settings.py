@@ -8,7 +8,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security settings
 SECRET_KEY = 'your_secret_key'  # Ensure this is kept secret in production
 DEBUG = False  # Set to False in production
-ALLOWED_HOSTS = ['enoch_shopping.onrender.com', 'localhost', '127.0.0.1']
+import os
+
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '0.0.0.0',
+    '[::1]', 
+    'enoch_shopping.onrender.com',  # Replace with your actual Render domain
+]
 
 # Media files settings
 MEDIA_URL = '/media/'
