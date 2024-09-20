@@ -60,6 +60,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/', null=True, blank=True, verbose_name="Product Image")
     video_url = models.URLField(null=True, blank=True, verbose_name="Product Video URL")
     panoramic_image = models.ImageField(upload_to='products/panoramic/', null=True, blank=True, verbose_name="Panoramic Image")
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name="Product Rating")  # Rating field added
 
     def __str__(self):
         return self.name
@@ -68,10 +69,10 @@ class Product(models.Model):
         verbose_name = "Product"
         verbose_name_plural = "Products"
 
-# OrderItem Model (Through Model for Order and Product)
+# OrderItem Model
 class OrderItem(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Price at Purchase")
 
@@ -120,15 +121,15 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15, blank=True)
     address = models.TextField(blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, default='profile_pictures/default.jpg')
 
     def __str__(self):
         return f'{self.user.username} Profile'
 
-# CartItem Model (Through Model for Cart and Product)
+# CartItem Model
 class CartItem(models.Model):
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
@@ -165,7 +166,8 @@ class Review(models.Model):
     class Meta:
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
-# shop/models.py
+
+# Notification Model
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
@@ -173,13 +175,21 @@ class Notification(models.Model):
 
     def __str__(self):
         return f'Notification for {self.user.username} on {self.created_at}'
-#shop/models.py
 
-from django.db import models
-
+# MenuItem Model
 class MenuItem(models.Model):
     name = models.CharField(max_length=100)
     url_name = models.CharField(max_length=100)  # Name of the URL pattern
 
     def __str__(self):
         return self.name
+
+# ProductRating Model
+class ProductRating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    rating = models.IntegerField(default=0)  # Simple rating scale 1-5
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} rated {self.product.name} - {self.rating}'

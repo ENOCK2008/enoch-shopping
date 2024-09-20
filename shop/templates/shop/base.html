@@ -33,7 +33,7 @@
                         <a href="{% url 'shop:profile' %}">Profile</a>
                         <a href="{% url 'shop:loyalty_points_list' %}">Loyalty Points</a>
                         <a href="{% url 'shop:notification_view' %}">Notifications</a>
-
+                        <a href="{% url 'shop:recommended_products' %}">Recommended Products</a>
                         {% if user.is_staff %}
                             <a href="{% url 'shop:setup' %}">Setup</a>
                             <a href="{% url 'shop:discount_code_list' %}">Discount Codes</a>

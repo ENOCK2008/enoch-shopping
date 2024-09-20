@@ -23,6 +23,15 @@ from .payment_integration import (
 
 import paypalrestsdk
 import stripe
+from django.shortcuts import render
+from .models import Profile
+
+def profile_view(request):
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user=request.user)
+    else:
+        profile = None
+    return render(request, 'profile.html', {'profile': profile})
 
 # PayPal setup
 paypalrestsdk.configure({
@@ -192,7 +201,6 @@ def profile(request):
         'reviews': reviews,
         'orders': orders
     })
-
 # Add Review
 def add_review(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -437,6 +445,24 @@ from django.shortcuts import render
 def account_home(request):
     # Your view logic here
     return render(request, 'shop/account_home.html')
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .forms import ProfileImageForm
+
+@login_required
+def update_profile_picture(request):
+    if request.method == 'POST':
+        form = ProfileImageForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile picture was successfully updated!')
+            return redirect('shop:profile')
+    else:
+        form = ProfileImageForm(instance=request.user.profile)
+
+    return render(request, 'shop/profile.html', {'form': form})
+
 # shop/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import DiscountCode
@@ -487,3 +513,54 @@ def initiate_paypal_payment(amount, return_url, cancel_url):
         return payment
     else:
         return None
+from django.shortcuts import render
+from .models import Product  # Assuming you have a Product model
+
+def recommended_products_view(request):
+    # Logic to get recommended products (you can customize this)
+    recommended_products = Product.objects.filter(is_recommended=True)  # Example filter
+
+    # Render the recommended products in a template
+    return render(request, 'shop/recommended_products.html', {'recommended_products': recommended_products})
+
+import yaml
+from django.conf import settings  # Import the settings where you defined the YAML path
+
+def load_yaml_data():
+    yaml_file_path = settings.YAML_FILE_PATH
+
+    # Open and load the YAML file
+    try:
+        with open(yaml_file_path, 'r') as file:
+            data = yaml.safe_load(file)
+            return data  # Now you can use the loaded YAML data
+    except FileNotFoundError:
+        print(f"YAML file not found at: {yaml_file_path}")
+        return None
+    except yaml.YAMLError as exc:
+        print(f"Error while parsing YAML: {exc}")
+        return None
+from django.shortcuts import render, get_object_or_404
+from .models import Profile  # or wherever your Profile model is located
+
+def profile_view(request):
+    user_profile = get_object_or_404(Profile, user=request.user)
+    return render(request, 'shop/profile.html', {'profile': user_profile})
+from django.shortcuts import render, redirect
+from django.views import View
+from .models import Profile
+from .forms import ProfileForm  # Make sure to create a ProfileForm
+
+class EditProfileView(View):
+    def get(self, request):
+        profile = Profile.objects.get(user=request.user)
+        form = ProfileForm(instance=profile)
+        return render(request, 'shop/edit_profile.html', {'form': form})
+
+    def post(self, request):
+        profile = Profile.objects.get(user=request.user)
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('shop:profile')  # Redirect to profile page after saving
+        return render(request, 'shop/edit_profile.html', {'form': form})

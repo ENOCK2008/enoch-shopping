@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Enock Shopping Center</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
+                <li><a href="{% url 'shop:profile' %}" class="nav-button">Profile</a></li>
+                <li><a href="javascript:void(0);" onclick="logout()">Logout</a></li>
+                <form id="logout-form" action="{% url 'shop:logout' %}" method="post" style="display:none;">
+                    {% csrf_token %}
+                </form>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Edit Profile</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="nav-button">Save Changes</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Enock Shopping Center. All rights reserved.</p>
+    </footer>
+</body>
+</html>

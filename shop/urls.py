@@ -6,6 +6,7 @@ from . import views
 from . import consumers
 from django.views.static import serve
 from django.conf import settings
+# from .views import RecommendedProductsView  # Remove this line
 
 app_name = 'shop'
 
@@ -60,17 +61,13 @@ urlpatterns = [
 
     # New views (feedback, notification, loyalty points)
     path('feedback/', views.feedback_view, name='feedback'),
-    path('music/', views.music_view, name='music'),
     path('loyalty_points/', views.loyalty_points_list, name='loyalty_points_list'),
     path('notification/', views.notification_view, name='notification'),
-     path('notifications/', views.notification_view, name='notification_view'),
-     path('order_history/', views.order_history, name='order_history'),
-     path('discount_codes/create/', views.create_discount_code, name='create_discount_code'),
+    path('order_history/', views.order_history, name='order_history'),
+    path('discount_codes/create/', views.create_discount_code, name='create_discount_code'),
      
-
     # Discount management views
     path('discount_codes/', views.discount_code_list, name='discount_code_list'),
-    path('discount_codes/create/', views.create_discount_code, name='create_discount_code'),
     path('discount_codes/delete/<int:code_id>/', views.delete_discount_code, name='delete_discount_code'),
     path('discount_codes/update/<int:code_id>/', views.update_discount_code, name='update_discount_code'),
     path('update_loyalty_points/', views.update_loyalty_points, name='update_loyalty_points'),
@@ -88,18 +85,17 @@ urlpatterns = [
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='shop/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='shop/password_reset_confirm.html'), name='password_reset_confirm'),
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='shop/password_reset_complete.html'), name='password_reset_complete'),
-    path('password_reset/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'), name='password_reset'),
-    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), name='password_reset_confirm'),
-    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
 
     # Two-factor authentication
     path('two_factor/', include('two_factor.urls', namespace='two_factor')),
     path('create_discount_code/', views.create_discount_code, name='create_discount_code'),
     path('music_view/', views.music_view, name='music_view'),
     path('account_home/', views.account_home, name='account_home'),
-    path('discount_codes/update/<int:code_id>/', views.update_discount_code, name='update_discount_code'),
-    
+    path('notification/', views.notification_view, name='notification_view'),
+    path('recommended/', views.recommended_products_view, name='recommended_products'),
+    path('update_profile_picture/', views.update_profile_picture, name='update_profile_picture'),
+    path('edit_profile/', views.EditProfileView.as_view(), name='edit_profile'),
+  # Ensure this is correctly set
 ]
 
 # Adding two-factor authentication views if they are function-based views (setup and verify)

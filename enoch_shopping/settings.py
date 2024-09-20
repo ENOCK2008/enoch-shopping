@@ -1,14 +1,23 @@
 from pathlib import Path
 import os
 from django.utils.translation import gettext_lazy as _
+import os
+from pathlib import Path
 
-# Base directory of the project
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Media files settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Base directory of the project (using Path for consistency)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = 'your_secret_key'  # Ensure this is kept secret in production
-DEBUG = True  # Set to False in production
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Allow localhost and 127.0.0.1 for local development
+DEBUG = False
+  # Set to False in production
+ALLOWED_HOSTS = ['localhost', 'enoch_shopping.onrender.com', ]  # Allow localhost and 127.0.0.1 for local development
 
 # Login and redirect URLs
 LOGIN_REDIRECT_URL = 'shop:home'
@@ -50,8 +59,7 @@ ROOT_URLCONF = 'enoch_shopping.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'shop/templates'],
-         'DIRS': [BASE_DIR / ' two_factor/templates/auth_two_factor'],# Points to your templates directory
+        'DIRS': [BASE_DIR / 'shop/templates', BASE_DIR / 'two_factor/templates/auth_two_factor'],  # Fixed templates path
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,21 +108,16 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-import os
-
-# The URL prefix for serving static files
+# Static and media files configuration
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Changed to use Path
 
-# The directory where static files are collected
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# The directory where static files for the project are stored
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'enoch_shopping\static'),
+    BASE_DIR / 'enoch_shopping/static',  # Changed to use Path
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'media'  # Changed to use Path
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -153,7 +156,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-
 # Logging configuration
 LOGGING = {
     'version': 1,
@@ -162,7 +164,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'chat_consumer.log',
+            'filename': BASE_DIR / 'chat_consumer.log',  # Changed to use Path
         },
     },
     'root': {

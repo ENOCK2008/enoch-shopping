@@ -13,10 +13,25 @@
         <a href="{% url 'shop:categories' %}" class="cta-button">Explore Categories</a>
     </div>
 
+    <!-- Display Profile Picture -->
+    <div class="profile-section">
+        {% if user.is_authenticated %}
+            <h2>Your Profile</h2>
+            {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile-image">
+            {% else %}
+                <img src="{% static 'images/default_profile_picture.jpg' %}" alt="Default Profile Picture" class="profile-image">
+            {% endif %}
+            <p>Hello, {{ user.username }}!</p>
+        {% else %}
+            <p>Please <a href="{% url 'shop:login' %}">log in</a> to see your profile.</p>
+        {% endif %}
+    </div>
+    
+
     <div class="featured-products">
         <h2>Featured Products</h2>
         <div class="product-list">
-            <!-- Placeholder for dynamically generated products -->
             {% for product in featured_products %}
                 <div class="product-item">
                     <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">

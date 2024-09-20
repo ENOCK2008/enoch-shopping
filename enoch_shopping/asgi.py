@@ -4,13 +4,18 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 import shop.routing  # Ensure this import is correct
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'enoch_shopping.settings')
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+from django.urls import path
+from shop.consumers import ChatConsumer
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            shop.routing.websocket_urlpatterns  # Reference routing here
+            [
+                path('ws/chat/<str:room_name>/', ChatConsumer.as_asgi()),
+            ]
         )
     ),
 })

@@ -1,12 +1,19 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Product, Review, Profile, Music, UserPreference
-# shop/forms.py
-# shop/forms.py
+from django.contrib.auth.forms import UserCreationForm
+from .models import Product, Review, Profile, Music, UserPreference, DiscountCode, Feedback, LoyaltyPoints
 from django import forms
-from .models import DiscountCode
-from django import forms
-from .models import Feedback
+from .models import Profile
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['phone_number', 'address', 'profile_picture']  # Add any fields you want to be editable
+
+class ProfileImageForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['profile_picture']
 
 class FeedbackForm(forms.ModelForm):
     class Meta:
@@ -18,12 +25,10 @@ class DiscountCodeForm(forms.ModelForm):
         model = DiscountCode
         fields = ['code', 'discount_amount', 'start_date', 'end_date', 'active']
 
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-class CustomUserCreationForm(UserCreationForm):
+class CustomUserCreationForm(UserCreationForm):  # Changed to inherit from UserCreationForm
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2']  # These fields are valid
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -48,16 +53,19 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['phone_number', 'address', 'profile_picture']
+        fields = ['phone_number', 'address', 'profile_picture']  # Adjusted to include fields
 
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['rating', 'comment']
-from django import forms
-from .models import LoyaltyPoints
 
 class LoyaltyPointsForm(forms.ModelForm):
     class Meta:
         model = LoyaltyPoints
-        fields = ['points', 'user']  # Adjust fields based on your model
+        fields = ['points', 'user']
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'description', 'price', 'image', 'stock', 'category']

@@ -1,5 +1,5 @@
 /* Reset and Basic Styles */
-body, h1, h2, p, ul, li, a {
+body, h1, h2, p, form, input, select, button, ul, li, a {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -13,18 +13,19 @@ body {
 
 /* Header Styles */
 header {
-    background-color: #283e4a; /* Dark LinkedIn blue */
+    background-color: #3b6978; /* Teal for a soothing header color */
     padding: 10px 0;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: white;
 }
 
-.navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.navbar-container, header nav {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .logo a {
@@ -33,14 +34,17 @@ header {
     text-decoration: none;
 }
 
+/* Navigation Styles */
 .nav-list {
     list-style: none;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .nav-list li {
     margin-left: 20px;
+    position: relative;
 }
 
 .nav-list li a {
@@ -48,12 +52,40 @@ header {
     text-decoration: none;
     padding: 5px 10px;
     font-weight: bold;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.3s ease;
 }
 
-.nav-list li a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+.nav-list li a:hover,
+.nav-list li a.active {
+    background-color: #d45a49; /* Darker coral on hover */
+    border-radius: 5px;
+}
+
+/* Dropdown Menu Styles */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #3b6978;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 100%;
+    left: 0;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #2a2a2a;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 /* Profile Menu Styles */
@@ -103,15 +135,52 @@ footer {
     text-decoration: underline;
 }
 
+/* Banner Styles */
+.banner {
+    width: 100%;
+    max-height: 300px;
+    overflow: hidden;
+    position: relative;
+    background-color: #333;
+    margin-bottom: 20px;
+}
+
+.banner img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+.banner-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    text-align: left;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-    .nav-list {
+    .nav-list, .profile-menu {
         flex-direction: column;
     }
-    .profile-menu {
-        flex-direction: column;
+
+    .banner {
+        max-height: 200px;
+    }
+
+    .banner-content {
+        bottom: 10px;
+        left: 10px;
+        padding: 5px 10px;
     }
 }
+
+/* Form Styles */
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group select {
@@ -124,7 +193,7 @@ footer {
 
 .form-group input:focus,
 .form-group select:focus {
-    border-color: #6a4c93; /* Deep purple border on focus */
+    border-color: #6a4c93;
     outline: none;
 }
 
@@ -142,157 +211,24 @@ footer {
 }
 
 .btn-primary {
-    background-color: #6a4c93; /* Deep purple for primary buttons */
+    background-color: #6a4c93;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #8367c7; /* Lighter purple on hover */
+    background-color: #8367c7;
 }
 
 .btn-secondary {
-    background-color: #ff6f61; /* Coral for secondary buttons */
+    background-color: #ff6f61;
     color: white;
 }
 
 .btn-secondary:hover {
-    background-color: #d45a49; /* Darker coral on hover */
-}
-
-/* Navigation Styles */
-header {
-    background: #3b6978; /* Teal for a soothing header color */
-    color: white;
-    padding: 20px 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-header nav {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.nav-list {
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.nav-list li {
-    position: relative;
-}
-
-.nav-list li a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 10px 20px;
-    display: block;
-    transition: background-color 0.3s ease;
-}
-
-.nav-list li a:hover,
-.nav-list li a.active {
-    background-color: #d45a49; /* Darker coral on hover for buttons */
-    border-radius: 5px;
-}
-
-/* Dropdown Menu Styles */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #3b6978; /* Background color of the dropdown */
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    top: 100%; /* Position dropdown below the parent menu item */
-    left: 0;
-}
-
-.dropdown-content a {
-    color: white;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #2a2a2a; /* Hover color for dropdown items */
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* Banner Styles */
-.banner {
-    width: 100%; /* Full width of the container */
-    max-height: 300px; /* Adjust to fit your design */
-    overflow: hidden; /* Hide overflow if the image is too large */
-    position: relative; /* Relative positioning for content */
-    background-color: #333; /* Fallback color if image fails to load */
-    margin-bottom: 20px; /* Space below the banner */
+    background-color: #d45a49;
 }
 
 
-/* Basic Reset */
-body, h1, h2, p, form, input, select, button {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* General Styles */
-body {
-    font-family: 'Roboto', sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f9; /* Light gray background */
-    color: #2a2a2a; /* Darker text color for readability */
-    padding: 20px;
-}
-
-/* Banner Styles */
-.banner {
-    width: 100%; /* Full width of the container */
-    max-height: 300px; /* Adjust to fit your design */
-    overflow: hidden; /* Hide overflow if the image is too large */
-    position: relative; /* Relative positioning for content */
-    background-color: #333; /* Fallback color if image fails to load */
-    margin-bottom: 20px; /* Space below the banner */
-}
-
-.banner img {
-    width: 100%; /* Full width of the banner */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: cover; /* Ensure image covers the banner area */
-    display: block; /* Remove extra space below the image */
-}
-
-.banner-content {
-    position: absolute; /* Absolute positioning for overlay content */
-    bottom: 20px; /* Space from the bottom of the banner */
-    left: 20px; /* Space from the left of the banner */
-    color: white; /* Text color */
-    text-align: left; /* Align text to the left */
-    padding: 10px 20px; /* Space around content */
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
-    border-radius: 8px; /* Rounded corners for the content box */
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .banner {
-        max-height: 200px; /* Adjust height for smaller screens */
-    }
-
-    .banner-content {
-        bottom: 10px; /* Adjust bottom padding for smaller screens */
-        left: 10px; /* Adjust left padding for smaller screens */
-        padding: 5px 10px; /* Adjust padding for smaller screens */
-    }
-}
 
 @media (max-width: 480px) {
     .banner {
@@ -306,21 +242,6 @@ body {
     }
 }
 
-/* Profile Picture Alignment */
-.profile-pic-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* Aligns the profile picture to the right */
-    margin-left: auto;
-}
-
-.profile-pic-container img {
-    border-radius: 50%;
-    width: 40px; /* Adjust size as needed */
-    height: 40px; /* Adjust size as needed */
-    object-fit: cover;
-    margin-left: 15px;
-}
 
 /* Cart Page Styles */
 .cart-container {
@@ -500,20 +421,6 @@ header nav {
     border-radius: 5px;
 }
 
-/* Profile Picture Styles */
-.profile-picture {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* Aligns the profile picture to the right */
-    margin-left: auto;
-}
-
-.profile-picture img {
-    border-radius: 50%;
-    width: 40px; /* Adjust size as needed */
-    height: 40px; /* Adjust size as needed */
-    object-fit: cover;
-}
 
 /* Form Container Styles */
 .form-container {
@@ -600,21 +507,6 @@ footer {
     font-size: 1.75em;
     margin-bottom: 20px;
 }
-/* Profile Picture Alignment - Align to Left */
-.profile-picture {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Aligns the profile picture to the left */
-    margin-right: auto;
-}
-
-.profile-picture img {
-    border-radius: 50%;
-    width: 40px; /* Adjust size as needed */
-    height: 40px; /* Adjust size as needed */
-    object-fit: cover;
-    margin-right: 15px; /* Add some space between the image and content */
-}
 
 /* Navigation Styles - Align Menu to Right */
 .nav-list {
@@ -641,14 +533,6 @@ body, h1, h2, p, form, input, button {
     box-sizing: border-box;
 }
 
-/* General Styles */
-body {
-    font-family: 'Roboto', sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f9; /* Light gray background */
-    color: #2a2a2a; /* Darker text color for readability */
-    padding: 20px;
-}
 
 /* Form Container Styles */
 .form-container {
@@ -736,7 +620,7 @@ body {
 /* Profile Picture Alignment - Repeated Styles Removed */
 .profile-picture {
     display: flex;
-    align-items: center;
+    align-items: right;
 }
 
 .profile-picture img {
@@ -1243,14 +1127,6 @@ footer {
 .footer-container a:hover {
     text-decoration: underline;
 }
-/* General Styles */
-body {
-    font-family: 'Roboto', sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f9; /* Light gray background */
-    color: #2a2a2a; /* Darker text color for readability */
-    padding: 20px;
-}
 
 /* Music List Styles */
 .music-list {
@@ -1306,14 +1182,6 @@ body {
     width: 100%; /* Full width for audio player */
     margin-top: 10px;
 }
-/* General Styles */
-body {
-    font-family: 'Roboto', sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f9; /* Light gray background */
-    color: #2a2a2a; /* Darker text color for readability */
-    padding: 20px;
-}
 
 /* Notifications Styles */
 .notifications {
@@ -1357,15 +1225,7 @@ body {
     font-weight: bold;
     margin-left: 10px;
 }
-/* General Styles */
-body {
-    font-family: 'Roboto', sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f9; /* Light gray background */
-    color: #2a2a2a; /* Darker text color for readability */
-    padding: 0;
-    margin: 0;
-}
+
 
 /* Header Styles */
 header {
@@ -1501,4 +1361,85 @@ footer {
 
 .contact-info a:hover {
     text-decoration: underline;
+}
+.recommended-products-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+}
+
+.product-item {
+    width: 200px;
+    margin: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    background-color: #f9f9f9;
+    transition: transform 0.3s ease-in-out;
+}
+
+.product-item:hover {
+    transform: scale(1.05);
+}
+
+.product-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.product-item h3 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.product-item p {
+    color: #333;
+}
+.profile-picture {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+
+
+form {
+    display: flex;
+    flex-direction: column; /* Stack form elements vertically */
+    align-items: flex-start; /* Align items to the start */
+}
+
+label {
+    font-weight: bold; /* Make label text bold */
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+input[type="file"] {
+    margin-bottom: 10px; /* Space between input and button */
+}
+
+button {
+    background-color: #007BFF; /* Bootstrap primary color */
+    color: white; /* Text color */
+    border: none; /* Remove default border */
+    padding: 8px 12px; /* Padding for button */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+.profile-section {
+    text-align: center; /* Center align text and images */
+    margin-top: 20px; /* Space above the profile section */
+}
+
+.profile-image {
+    width: 100px; /* Adjust size as needed */
+    height: 100px; /* Maintain aspect ratio */
+    border-radius: 50%; /* Make it a circle */
 }

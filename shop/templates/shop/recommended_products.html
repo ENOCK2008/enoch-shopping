@@ -1,0 +1,16 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+    <h2>Recommended Products for You</h2>
+    <ul class="recommended-products-list">
+        {% for product in recommended_products %}
+            <li class="product-item">
+                <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.price }}</p>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

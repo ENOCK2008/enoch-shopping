@@ -32,11 +32,10 @@
         }
 
         function connectWebSocket() {
-            chatSocket = new WebSocket(
-                'ws://127.0.0.1:8080/ws/chat/' + encodeURIComponent(roomName) + '/'
-            );
-
-            chatSocket.onopen = function(e) {
+            const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+            chatSocket = new WebSocket(protocol + window.location.host + '/ws/chat/' + encodeURIComponent(roomName) + '/');
+            console.log('Connecting to:', protocol + window.location.host + '/ws/chat/' + encodeURIComponent(roomName) + '/');
+            chatSocket.onopen = function() {
                 console.log('WebSocket connection established');
                 updateStatus('Connected to room: ' + roomName);
             };
@@ -49,7 +48,7 @@
                 // Assign class based on whether the message is from a bot or user
                 messageElement.className = data.is_bot ? 'message bot' : 'message user';
                 messageElement.innerHTML = `<strong>[${messageTime}]</strong> ${data.message}`;
-                
+
                 const chatLog = document.querySelector('#chat-log');
                 if (chatLog) {
                     chatLog.appendChild(messageElement);
@@ -87,7 +86,7 @@
             };
 
             // Send message when the button is clicked
-            document.querySelector('#chat-message-submit').onclick = function(e) {
+            document.querySelector('#chat-message-submit').onclick = function() {
                 const messageInput = document.querySelector('#chat-message-input');
                 const message = messageInput.value.trim();
 
@@ -181,6 +180,7 @@
         <div id="chat-log"></div>
         <input id="chat-message-input" type="text" size="100" placeholder="Type your message...">
         <button id="chat-message-submit">Send</button>
+        <p id="status"></p>
     </main>
 </body>
 </html>

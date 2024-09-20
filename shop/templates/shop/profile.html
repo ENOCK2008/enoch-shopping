@@ -5,15 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Enock Shopping Center{% endblock %}</title>
+    <title>User Profile - Enock Shopping Center</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
-    <script>
-        function logout() {
-            document.getElementById('logout-form').submit();
-        }
-    </script>
 </head>
 <body>
     <header>
@@ -25,43 +19,34 @@
                 <li><a href="{% url 'shop:contact' %}" class="nav-button">Contact</a></li>
                 <li><a href="{% url 'shop:feedback' %}" class="nav-button">Feedback</a></li>
                 <li><a href="{% url 'shop:music_list' %}" class="nav-button">Music</a></li>
-
-                <!-- Static Dropdown Menu -->
-                <li class="dropdown">
-                    <a href="#" class="nav-button dropbtn">Menu</a>
-                    <div class="dropdown-content">
-                        <a href="{% url 'shop:profile' %}">Profile</a>
-                        <a href="{% url 'shop:loyalty_points_list' %}">Loyalty Points</a>
-                        <a href="{% url 'shop:notification_view' %}">Notifications</a>
-                        {% if user.is_staff %}
-                            <a href="{% url 'shop:setup' %}">Setup</a>
-                            <a href="{% url 'shop:discount_code_list' %}">Discount Codes</a>
-                        {% endif %}
-                        <a href="{% url 'shop:order_history' %}">Order History</a>
-                        <a href="javascript:void(0);" onclick="logout()">Logout</a>
-                        <form id="logout-form" action="{% url 'shop:logout' %}" method="post" style="display:none;">
-                            {% csrf_token %}
-                        </form>
-                    </div>
-                </li>
-
-                {% if not user.is_authenticated %}
-                    <li><a href="{% url 'shop:login' %}" class="nav-button">Login</a></li>
-                    <li><a href="{% url 'shop:register' %}" class="nav-button">Register</a></li>
-                    <li><a href="{% url 'shop:password_reset' %}" class="nav-button">Forgot Password</a></li>
-                {% endif %}
+                <li><a href="{% url 'shop:order_history' %}" class="nav-button">Order History</a></li>
+                <li><a href="javascript:void(0);" onclick="logout()">Logout</a></li>
+                <form id="logout-form" action="{% url 'shop:logout' %}" method="post" style="display:none;">
+                    {% csrf_token %}
+                </form>
             </ul>
         </nav>
-        {% if user.is_authenticated %}
-            <div class="profile-picture">
-                <img src="{% static 'images/profile_picture.jpg' %}" alt="Profile Picture">
-            </div>
-        {% endif %}
     </header>
 
     <div class="container">
-        {% block content %}
-        {% endblock %}
+        <h1>Your Profile</h1>
+
+        <div class="profile-info">
+            <h2>{{ profile.user.username }}</h2>
+            <p><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
+            <p><strong>Address:</strong> {{ profile.address }}</p>
+            <p><strong>Profile Picture:</strong></p>
+            {% if profile.image %}
+                <img src="{{ profile.image.url }}" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'images/default_profile_picture.jpg' %}" alt="Default Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
+            {% endif %}
+        </div>
+
+        <div class="profile-actions">
+            <a href="{% url 'shop:update_profile_picture' %}" class="nav-button">Change Profile Picture</a>
+            <a href="{% url 'shop:edit_profile' %}" class="nav-button">Edit Profile</a>
+        </div>
     </div>
 
     <footer>
