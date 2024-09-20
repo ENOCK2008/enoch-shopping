@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'your_secret_key'  # Ensure this is kept secret in production
 DEBUG = False
   # Set to False in production
-ALLOWED_HOSTS = [ 'enoch_shopping.onrender.com', ]  # Allow localhost and 127.0.0.1 for local development
+ALLOWED_HOSTS = [ 'enoch_shopping.onrender.com','localhost', '127.0.0.1' ]  # Allow localhost and 127.0.0.1 for local development
 
 # Login and redirect URLs
 LOGIN_REDIRECT_URL = 'shop:home'
