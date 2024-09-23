@@ -105,22 +105,15 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-#Static files (CSS, JavaScript, Images)
-# settings.py
-
+# Static files (CSS, JavaScript, Images)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'  # Make sure this path exists
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory where static files will be collected
 STATICFILES_DIRS = [
-<<<<<<< HEAD
     BASE_DIR / 'shop/static',  # Adjust this path if your static files are located elsewhere
-=======
-    BASE_DIR / 'shop/static',
->>>>>>> 743346b36e90e2d1c1d7950ecbeafe403b02ae06
 ]
-
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
