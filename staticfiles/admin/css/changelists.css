@@ -15,7 +15,7 @@
     width: 100%;
 }
 
-.change-list .hiddenfields { display:none; }
+.change-list .hiddenfields { display: none; }
 
 .change-list .filtered table {
     border-right: none;
@@ -25,8 +25,10 @@
     min-height: 400px;
 }
 
-.change-list .filtered .results, .change-list .filtered .paginator,
-.filtered #toolbar, .filtered div.xfull {
+.change-list .filtered .results,
+.change-list .filtered .paginator,
+.filtered #toolbar,
+.filtered div.xfull {
     width: auto;
 }
 
@@ -107,8 +109,6 @@
     border: 1px solid var(--border-color);
     font-size: 0.8125rem;
     padding: 4px 8px;
-    margin: 0;
-    vertical-align: middle;
     background: var(--body-bg);
     box-shadow: 0 -15px 20px -10px rgba(0, 0, 0, 0.15) inset;
     cursor: pointer;
@@ -140,9 +140,9 @@
 }
 
 @media (forced-colors: active) {
-  #changelist-filter {
-      border: 1px solid;
-  }
+    #changelist-filter {
+        border: 1px solid;
+    }
 }
 
 #changelist-filter h2 {
@@ -151,7 +151,6 @@
     letter-spacing: 0.5px;
     padding: 5px 15px;
     margin-bottom: 12px;
-    border-bottom: none;
 }
 
 #changelist-filter h3,
@@ -215,7 +214,8 @@
     color: var(--link-selected-fg);
 }
 
-#changelist-filter a:focus, #changelist-filter a:hover,
+#changelist-filter a:focus,
+#changelist-filter a:hover,
 #changelist-filter li.selected a:focus,
 #changelist-filter li.selected a:hover {
     color: var(--link-hover-color);
@@ -261,8 +261,6 @@
     vertical-align: baseline;
 }
 
-/* Once the :has() pseudo-class is supported by all browsers, the tr.selected
-   selector and the JS adding the class can be removed. */
 #changelist tbody tr.selected {
     background-color: var(--selected-row);
 }
@@ -338,6 +336,7 @@
     color: var(--body-fg);
 }
 
-#changelist .actions .button:focus, #changelist .actions .button:hover {
+#changelist .actions .button:focus,
+#changelist .actions .button:hover {
     border-color: var(--body-quiet-color);
 }

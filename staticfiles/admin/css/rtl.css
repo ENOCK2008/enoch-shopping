@@ -1,5 +1,4 @@
 /* GLOBAL */
-
 th {
     text-align: right;
 }
@@ -13,15 +12,8 @@ th {
     margin-right: 1.5em;
 }
 
-.viewlink, .addlink, .changelink, .hidelink {
-    padding-left: 0;
-    padding-right: 16px;
-    background-position: 100% 1px;
-}
-
-.deletelink {
-    padding-left: 0;
-    padding-right: 16px;
+.viewlink, .addlink, .changelink, .hidelink, .deletelink {
+    padding: 0 16px 0 0;
     background-position: 100% 1px;
 }
 
@@ -35,7 +27,6 @@ tfoot td:first-child {
 }
 
 /* LAYOUT */
-
 #user-tools {
     right: auto;
     left: 0;
@@ -52,17 +43,14 @@ div.breadcrumbs {
 
 #content-related {
     float: left;
-    margin-left: -300px;
-    margin-right: auto;
+    margin: 0 -300px auto 0;
 }
 
 .colMS {
     margin-left: 300px;
-    margin-right: 0;
 }
 
 /* SORTABLE TABLES */
-
 table thead th.sorted .sortoptions {
    float: left;
 }
@@ -72,44 +60,36 @@ thead th.sorted .text {
     padding-left: 42px;
 }
 
-/* dashboard styles */
-
+/* DASHBOARD STYLES */
 .dashboard .module table td a {
-    padding-left: .6em;
-    padding-right: 16px;
+    padding: 0.6em 16px;
 }
 
-/* changelists styles */
-
+/* CHANGELISTS STYLES */
 .change-list .filtered table {
     border-left: none;
-    border-right: 0px none;
+    border-right: none;
 }
 
 #changelist-filter {
     border-left: none;
     border-right: none;
-    margin-left: 0;
-    margin-right: 30px;
+    margin: 0 30px 0 0;
 }
 
 #changelist-filter li.selected {
     border-left: none;
-    padding-left: 10px;
-    margin-left: 0;
+    padding: 0 10px;
     border-right: 5px solid var(--hairline-color);
-    padding-right: 10px;
-    margin-right: -15px;
 }
 
-#changelist table tbody td:first-child, #changelist table tbody th:first-child {
-    border-right: none;
-    border-left: none;
+#changelist table tbody td:first-child,
+#changelist table tbody th:first-child {
+    border: none;
 }
 
 .paginator .end {
     margin-left: 6px;
-    margin-right: 0;
 }
 
 .paginator input {
@@ -118,7 +98,6 @@ thead th.sorted .text {
 }
 
 /* FORMS */
-
 .aligned label {
     padding: 0 0 3px 1em;
 }
@@ -137,22 +116,18 @@ thead th.sorted .text {
 }
 
 form .aligned ul {
-    margin-right: 163px;
-    padding-right: 10px;
-    margin-left: 0;
-    padding-left: 0;
+    margin: 0 0 0 0;
+    padding: 0 10px 0 0;
 }
 
 form ul.inline li {
     float: right;
-    padding-right: 0;
     padding-left: 7px;
 }
 
 form .aligned p.help,
 form .aligned div.help {
-    margin-left: 0;
-    margin-right: 160px;
+    margin: 0 160px 0 0;
     padding-right: 10px;
 }
 
@@ -168,8 +143,7 @@ form .aligned p.time div.help.timezonewarning {
 form .wide p.help,
 form .wide ul.errorlist,
 form .wide div.help {
-    padding-left: 0;
-    padding-right: 50px;
+    padding: 0 50px 0 0;
 }
 
 .submit-row {
@@ -177,32 +151,31 @@ form .wide div.help {
 }
 
 fieldset .fieldBox {
-    margin-left: 20px;
-    margin-right: 0;
+    margin: 0 0 0 20px;
+}
+
+.errorlist li,
+.errornote {
+    padding: 10px 12px;
 }
 
 .errorlist li {
     background-position: 100% 12px;
-    padding: 0;
 }
 
 .errornote {
     background-position: 100% 12px;
-    padding: 10px 12px;
 }
 
 /* WIDGETS */
-
 .calendarnav-previous {
     top: 0;
-    left: auto;
     right: 10px;
     background: url(../img/calendar-icons.svg) 0 -15px no-repeat;
 }
 
 .calendarnav-next {
     top: 0;
-    right: auto;
     left: 10px;
     background: url(../img/calendar-icons.svg) 0 0 no-repeat;
 }
@@ -220,19 +193,19 @@ fieldset .fieldBox {
 }
 
 .selector-add {
-  background: url(../img/selector-icons.svg) 0 -64px no-repeat;
+    background: url(../img/selector-icons.svg) 0 -64px no-repeat;
 }
 
 .active.selector-add:focus, .active.selector-add:hover {
-  background-position: 0 -80px;
+    background-position: 0 -80px;
 }
 
 .selector-remove {
-  background: url(../img/selector-icons.svg) 0 -96px no-repeat;
+    background: url(../img/selector-icons.svg) 0 -96px no-repeat;
 }
 
 .active.selector-remove:focus, .active.selector-remove:hover {
-  background-position: 0 -112px;
+    background-position: 0 -112px;
 }
 
 a.selector-chooseall {
@@ -264,21 +237,16 @@ form .form-row p.datetime {
 }
 
 /* MISC */
-
 .inline-related h2, .inline-group h2 {
-    text-align: right
+    text-align: right;
 }
 
 .inline-related h3 span.delete {
     padding-right: 20px;
-    padding-left: inherit;
-    left: 10px;
-    right: inherit;
-    float:left;
+    float: left;
 }
 
 .inline-related h3 span.delete label {
-    margin-left: inherit;
     margin-right: 2px;
 }
 

@@ -1,13 +1,11 @@
 /* LOGIN FORM */
-
 .login {
     background: var(--darkened-bg);
-    height: auto;
 }
 
 .login #header {
-    height: auto;
     padding: 15px 16px;
+    display: flex;
     justify-content: center;
 }
 
@@ -32,7 +30,6 @@
     width: 28em;
     min-width: 300px;
     margin: 100px auto;
-    height: auto;
 }
 
 .login .form-row {
@@ -44,15 +41,15 @@
     line-height: 2em;
 }
 
-.login .form-row #id_username, .login .form-row #id_password {
+.login .form-row input[type="text"],
+.login .form-row input[type="password"] {
     padding: 8px;
     width: 100%;
     box-sizing: border-box;
 }
 
 .login .submit-row {
-    padding: 1em 0 0 0;
-    margin: 0;
+    padding: 1em 0 0;
     text-align: center;
 }
 
