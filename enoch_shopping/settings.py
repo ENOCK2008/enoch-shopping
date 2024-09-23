@@ -114,7 +114,11 @@ MEDIA_ROOT = BASE_DIR / 'media'  # Make sure this path exists
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory where static files will be collected
 STATICFILES_DIRS = [
+<<<<<<< HEAD
     BASE_DIR / 'shop/static',  # Adjust this path if your static files are located elsewhere
+=======
+    BASE_DIR / 'shop/static',
+>>>>>>> 743346b36e90e2d1c1d7950ecbeafe403b02ae06
 ]
 
 
