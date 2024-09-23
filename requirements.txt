@@ -81,6 +81,6 @@ virtualenv==20.26.5
 Werkzeug==3.0.4
 zope.interface==7.0.3
 gunicorn==20.1.0
-setuptools==65.5.0
+
 
 
