@@ -112,7 +112,7 @@ MEDIA_ROOT = BASE_DIR / 'media'  # Make sure this path exists
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory where static files will be collected
 STATICFILES_DIRS = [
-    BASE_DIR / 'shop/static',  # Adjust this path if your static files are located elsewhere
+    BASE_DIR / 'enoch_shopping/static',  # Adjust this path if your static files are located elsewhere
 ]
 
 # Default primary key field type
