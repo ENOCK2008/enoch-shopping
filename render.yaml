@@ -6,4 +6,3 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn enoch_shopping.wsgi:application
     plan: free
-clear

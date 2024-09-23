@@ -1,1 +1,1 @@
-web: gunicorn enoch_shopping.wsgi:application
+web: gunicorn enoch_shopping.wsgi:applicationgit add .
