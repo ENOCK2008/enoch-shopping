@@ -16,10 +16,6 @@ ALLOWED_HOSTS = [
     'enoch-shopping-3.onrender.com'  # Replace with your actual Render domain
 ]
 
-# Media files settings
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
 # Login and redirect URLs
 LOGIN_REDIRECT_URL = 'shop:home'
 LOGOUT_REDIRECT_URL = 'shop:home'
@@ -109,12 +105,18 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-# Static and media files configuration
+#Static files (CSS, JavaScript, Images)
+# settings.py
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'  # Make sure this path exists
+
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory where static files will be collected
 STATICFILES_DIRS = [
-    BASE_DIR / 'enoch_shopping/static',
+    BASE_DIR / 'shop/static',  # Adjust this path if your static files are located elsewhere
 ]
+
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
