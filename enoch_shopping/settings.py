@@ -6,9 +6,8 @@ from django.utils.translation import gettext_lazy as _
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
-SECRET_KEY = 'your_secret_key'  # Ensure this is kept secret in production
+SECRET_KEY = os.getenv('SECRET_KEY', 'your_secret_key')  # Ensure this is kept secret in production
 DEBUG = False  # Set to False in production
-import os
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -181,3 +180,6 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'  # Allows framing from the same origin only
 # PayPal configuration
 PAYPAL_CLIENT_ID = os.getenv('PAYPAL_CLIENT_ID')
 PAYPAL_CLIENT_SECRET = os.getenv('PAYPAL_CLIENT_SECRET')
+
+# Use the PORT environment variable for deployment
+PORT = os.environ.get('PORT', '8000')
