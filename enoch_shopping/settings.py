@@ -169,6 +169,11 @@ LOGGING = {
     },
 }
 
+# Ensure the log directory exists
+log_file_path = BASE_DIR / 'chat_consumer.log'
+if not log_file_path.parent.exists():
+    os.makedirs(log_file_path.parent)
+
 # Secure settings for local development
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = False
