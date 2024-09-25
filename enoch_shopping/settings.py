@@ -7,12 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = os.getenv('SECRET_KEY', 'your_secret_key')  # Ensure this is kept secret in production
-DEBUG = False # Set to False in production
+DEBUG = False  # Set to False in production
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '0.0.0.0',
-    '[::1]', 
+    '[::1]',
     'enoch-shopping-2.onrender.com'  # Replace with your actual Render domain
 ]
 
@@ -113,8 +113,7 @@ STATIC_URL = '/static/'
 
 # Fix for missing directory
 STATICFILES_DIRS = [
-
-    os.path.join(BASE_DIR, 'enoch_shopping', 'static'),
+    BASE_DIR / 'enoch_shopping/static',  # Adjust this path if your static files are located elsewhere
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
