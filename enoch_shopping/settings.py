@@ -12,13 +12,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '0.0.0.0',
-<<<<<<< HEAD
-    '[::1]',
-    'enoch-shopping-4.onrender.com'  # Replace with your actual Render domain
-=======
     '[::1]', 
     'enoch-shopping-2.onrender.com'  # Replace with your actual Render domain
->>>>>>> c85ce45b5b939cf8d0e0dad9e14101743a625e15
 ]
 
 # Login and redirect URLs
