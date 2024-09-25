@@ -11,6 +11,37 @@ paypalrestsdk.configure({
     "client_secret": settings.PAYPAL_CLIENT_SECRET
 })
 
+# Category Model
+class Category(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Category Name")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+
+# Product Model
+class Product(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Product Name")
+    description = models.TextField(verbose_name="Product Description")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Product Price")
+    stock = models.IntegerField(verbose_name="Stock Quantity")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Product Category")
+    image = models.ImageField(upload_to='products/', null=True, blank=True, verbose_name="Product Image")
+    video_url = models.URLField(null=True, blank=True, verbose_name="Product Video URL")
+    panoramic_image = models.ImageField(upload_to='products/panoramic/', null=True, blank=True, verbose_name="Panoramic Image")
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name="Product Rating")  # Rating field added
+    is_recommended = models.BooleanField(default=False)  # Ensure this line exists
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
+
 # Feedback Model
 class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -38,36 +69,6 @@ class DiscountCode(models.Model):
 
     def __str__(self):
         return self.code
-
-# Category Model
-class Category(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Category Name")
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Category"
-        verbose_name_plural = "Categories"
-
-# Product Model
-class Product(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Product Name")
-    description = models.TextField(verbose_name="Product Description")
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Product Price")
-    stock = models.IntegerField(verbose_name="Stock Quantity")
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Product Category")
-    image = models.ImageField(upload_to='products/', null=True, blank=True, verbose_name="Product Image")
-    video_url = models.URLField(null=True, blank=True, verbose_name="Product Video URL")
-    panoramic_image = models.ImageField(upload_to='products/panoramic/', null=True, blank=True, verbose_name="Panoramic Image")
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0, verbose_name="Product Rating")  # Rating field added
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Product"
-        verbose_name_plural = "Products"
 
 # OrderItem Model
 class OrderItem(models.Model):

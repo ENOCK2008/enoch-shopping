@@ -1,16 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Enoch Shopping Center</title>
-    {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     <div class="form-container">
         <h2>Register</h2>
-        <form method="post" action="{% url 'shop:register' %}">
+        <form method="post" action="{% url 'shop:register_view' %}">  <!-- Updated this line -->
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Register</button>

@@ -7,13 +7,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = os.getenv('SECRET_KEY', 'your_secret_key')  # Ensure this is kept secret in production
-DEBUG = False  # Set to False in production
+DEBUG = False # Set to False in production
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '0.0.0.0',
-    '[::1]', 
-    'enoch-shopping-3.onrender.com'  # Replace with your actual Render domain
+    '[::1]',
+    'enoch-shopping-4.onrender.com'  # Replace with your actual Render domain
 ]
 
 # Login and redirect URLs
@@ -110,10 +110,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'  # Make sure this path exists
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory where static files will be collected
+
+# Fix for missing directory
 STATICFILES_DIRS = [
-    BASE_DIR / 'shop/static',  # Adjust this path if your static files are located elsewhere
+    os.path.join(BASE_DIR, 'enoch_shopping', 'static'),
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -168,6 +171,11 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
+
+# Ensure the log directory exists
+log_file_path = BASE_DIR / 'chat_consumer.log'
+if not log_file_path.parent.exists():
+    os.makedirs(log_file_path.parent)
 
 # Secure settings for local development
 SECURE_SSL_REDIRECT = False

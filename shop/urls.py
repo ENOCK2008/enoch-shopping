@@ -6,6 +6,7 @@ from . import views
 from . import consumers
 from django.views.static import serve
 from django.conf import settings
+from django.contrib.auth.views import LogoutView
 # from .views import RecommendedProductsView  # Remove this line
 
 app_name = 'shop'
@@ -18,7 +19,7 @@ websocket_urlpatterns = [
 # Main URL patterns
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+    path('signup/', views.register_view, name='signup'),  # Assuming register_view exists in views.py
     # User authentication using class-based views
     path('shop/login/', auth_views.LoginView.as_view(template_name='shop/login.html'), name='login'),
     path('shop/logout/', auth_views.LogoutView.as_view(), name='logout'),
@@ -78,14 +79,16 @@ urlpatterns = [
     # Built-in auth views (login, logout, register)
     path('login/', auth_views.LoginView.as_view(template_name='shop/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     path('register/', views.register, name='register'),  # Assuming register exists in views.py
 
     # Password reset views
+    path('password-change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='shop/password_change_done.html'), name='password_change_done'),
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='shop/password_reset.html'), name='password_reset'),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='shop/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='shop/password_reset_confirm.html'), name='password_reset_confirm'),
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='shop/password_reset_complete.html'), name='password_reset_complete'),
-
+    path('password-change/', auth_views.PasswordChangeView.as_view(template_name='shop/password_change.html'), name='password_change'),
     # Two-factor authentication
     path('two_factor/', include('two_factor.urls', namespace='two_factor')),
     path('create_discount_code/', views.create_discount_code, name='create_discount_code'),

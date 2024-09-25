@@ -20,6 +20,12 @@ from .models import (
 from .payment_integration import (
     initiate_mpesa_payment, initiate_mtn_payment, initiate_airtel_payment
 )
+from django.shortcuts import render
+from .models import Product  # Import the Product model from models.py
+
+def recommended_products_view(request):
+    recommended_products = Product.objects.filter(is_recommended=True)
+    return render(request, 'shop/recommended.html', {'products': recommended_products})
 
 import paypalrestsdk
 import stripe
@@ -564,3 +570,6 @@ class EditProfileView(View):
             form.save()
             return redirect('shop:profile')  # Redirect to profile page after saving
         return render(request, 'shop/edit_profile.html', {'form': form})
+
+def home(request):
+    return render(request, 'shop/home.html')  # Adjust the template name as needed
