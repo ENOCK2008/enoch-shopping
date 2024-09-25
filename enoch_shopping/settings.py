@@ -113,11 +113,8 @@ STATIC_URL = '/static/'
 
 # Fix for missing directory
 STATICFILES_DIRS = [
-<<<<<<< HEAD
+
     os.path.join(BASE_DIR, 'enoch_shopping', 'static'),
-=======
-    BASE_DIR / 'enoch_shopping/static',  # Adjust this path if your static files are located elsewhere
->>>>>>> c85ce45b5b939cf8d0e0dad9e14101743a625e15
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
