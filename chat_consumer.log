@@ -1224,3 +1224,34 @@ Traceback (most recent call last):
   File "C:\Users\HP\Desktop\New folder (3)\enoch-shopping\venv\Lib\site-packages\django\template\base.py", line 536, in extend_nodelist
     raise self.error(
 django.template.exceptions.TemplateSyntaxError: <ExtendsNode: extends "shop/base.html"> must be the first tag in the template.
+Watching for file changes with StatReloader
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /static/images/banner.jpg
+Not Found: /static/css/styles.css
+Not Found: /static/css/styles.css
+Not Found: /favicon.ico
+C:\Users\HP\Desktop\New folder (3)\enoch-shopping\enoch_shopping\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /static/css/styles.css
+Not Found: /static/images/banner.jpg
+Not Found: /static/css/styles.css
+Watching for file changes with StatReloader
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /media/profile_pictures/default.jpg
+C:\Users\HP\Desktop\New folder (3)\enoch-shopping\enoch_shopping\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /media/music_covers/Screenshot_2024-09-02_154833.png
+Not Found: /media/music/Talk__Talk_-_Radio__Weasel_erycom_1468614421.mp3
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /static/shop/styles.css
+Not Found: /static/shop/scripts.js
+Not Found: /static/enoch_shopping/static/css/styles.css
+Not Found: /media/products/panoramic/Screenshot_2024-08-20_113954.png
+Not Found: /media/products/Screenshot_2024-08-20_114051.png
