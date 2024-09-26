@@ -36,17 +36,19 @@
     </form>
 
     <!-- Display product reviews -->
-    {% if product.reviews.all %}
-        <h3>Reviews:</h3>
-        <ul class="review-list">
-            {% for review in product.reviews.all %}
-                <li class="review-item">
-                    <strong>{{ review.user.username }}</strong>: {{ review.comment }} (Rating: {{ review.rating }})
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No reviews yet.</p>
-    {% endif %}
+    <div class="product-reviews">
+        {% if product.reviews.all %}
+            <h3>Reviews:</h3>
+            <ul class="review-list">
+                {% for review in product.reviews.all %}
+                    <li class="review-item">
+                        <strong>{{ review.user.username }}</strong>: {{ review.comment }} (Rating: {{ review.rating }})
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No reviews yet.</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

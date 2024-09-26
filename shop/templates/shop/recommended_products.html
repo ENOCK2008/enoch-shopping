@@ -1,16 +1,77 @@
 {% extends 'shop/base.html' %}
+{% load static %}  <!-- Load static files here -->
 
 {% block content %}
-    <h2>Recommended Products for You</h2>
-    <ul class="recommended-products-list">
-        {% for product in recommended_products %}
-            <li class="product-item">
-                <a href="{% url 'product_detail' product.id %}">
+<style>
+    .recommended-products-list {
+        display: flex;
+        flex-wrap: wrap;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .product-item {
+        margin: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+        width: calc(25% - 30px);  /* Adjust width based on number of items per row */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .product-item:hover {
+        transform: scale(1.05);
+    }
+
+    .product-image {
+        width: 100%;
+        height: auto;
+    }
+
+    h3 {
+        font-size: 1.2em;
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+        color: #555;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    a:hover {
+        color: #007bff;  /* Change color on hover */
+    }
+
+    footer {
+        background-color: black;
+        color: white;
+        padding: 20px;
+        text-align: center; /* Center align text */
+    }
+</style>
+
+<h2>Recommended Products for You</h2>
+<ul class="recommended-products-list">
+    {% for product in recommended_products %}
+        <li class="product-item">
+            <a href="{% url 'shop:product_detail' product.id %}">
+                {% if product.image %}
                     <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
-                    <h3>{{ product.name }}</h3>
-                    <p>{{ product.price }}</p>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+                {% else %}
+                    <img src="{% static 'images/default_product.png' %}" alt="Default Image" class="product-image">
+                {% endif %}
+                <h3>{{ product.name }}</h3>
+                <p>Price: ${{ product.price }}</p>
+            </a>
+        </li>
+    {% endfor %}
+
 {% endblock %}

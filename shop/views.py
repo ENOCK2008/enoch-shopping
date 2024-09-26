@@ -226,6 +226,18 @@ def checkout(request):
 
     return render(request, 'shop/checkout.html')  # Render your checkout template
 
+from django.shortcuts import render, get_object_or_404
+from .models import Product
+from django.views.generic.detail import DetailView  # Add this line
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'shop/product_detail.html'  # Create this template
+    context_object_name = 'product'
+
+    def get_object(self, queryset=None):
+        id = self.kwargs.get('id')  # Get the ID from the URL
+        return get_object_or_404(Product, id=id)
 
 # Payment Success View
 def payment_success(request):

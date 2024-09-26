@@ -8,6 +8,7 @@ from django.views.static import serve
 from django.conf import settings
 from django.contrib.auth.views import LogoutView
 from .views import mtn_view
+from .views import ProductDetailView 
 # from .views import RecommendedProductsView  # Remove this line
 
 app_name = 'shop'
@@ -31,7 +32,7 @@ urlpatterns = [
     path('bot/', views.chat_bot_view, name='chat_bot'),
     path('', views.home, name='home'),
     path('account/', views.account_home, name='account_home'),
-
+    # Add this line
     # Profile and cart management
     path('profile/', views.profile, name='profile'),
     path('update_cart_item/<int:item_id>/', views.update_cart_item, name='update_cart_item'),
@@ -40,7 +41,7 @@ urlpatterns = [
     path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
 
     # Product and category views
-    path('product/<int:pk>/', views.product_detail, name='product_detail'),
+    path('product/<int:id>/', ProductDetailView.as_view(), name='product_detail'),
     path('categories/', views.categories, name='categories'),
     path('shop/', views.shop, name='shop'),
 
@@ -89,7 +90,7 @@ urlpatterns = [
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='shop/password_reset.html'), name='password_reset'),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='shop/password_reset_done.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='shop/password_reset_confirm.html'), name='password_reset_confirm'),
-    path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='shop/password_reset_complete.html'), name='password_reset_complete'),
+    
     path('password-change/', auth_views.PasswordChangeView.as_view(template_name='shop/password_change.html'), name='password_change'),
     # Two-factor authentication
     path('two_factor/', include('two_factor.urls', namespace='two_factor')),
