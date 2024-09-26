@@ -45,6 +45,49 @@ paypalrestsdk.configure({
     "client_id": settings.PAYPAL_CLIENT_ID,
     "client_secret": settings.PAYPAL_CLIENT_SECRET
 })
+# shop/views.py
+
+from django.shortcuts import render
+from .mtn_service import get_api_user_info
+
+def api_user_info_view(request):
+    api_user_id = 'c72025f5-5cd1-4630-99e4-8ba4722fad56'  # Or get from settings/environment variables
+    subscription_key = 'd484a1f0d34f4301916d0f2c9e9106a2'  # Or get from settings/environment variables
+
+    user_info = get_api_user_info(api_user_id, subscription_key)
+
+    return render(request, 'your_template.html', {'user_info': user_info})
+from django.shortcuts import render
+import requests
+
+def mtn_view(request):
+    # Define your constants
+    BASE_URL = 'https://momodeveloper.mtn.com/apiuser/'
+    API_USER_ID = 'c72025f5-5cd1-4630-99e4-8ba4722fad56'
+    SUBSCRIPTION_KEY = 'd484a1f0d34f4301916d0f2c9e9106a2'
+
+    # Construct the full URL
+    url = f"{BASE_URL}{API_USER_ID}"
+
+    # Set up the headers
+    headers = {
+        'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY,
+        'Content-Type': 'application/json',
+    }
+
+    # Make the GET request
+    response = requests.get(url, headers=headers)
+
+    # Check the response status
+    if response.status_code == 200:
+        # Successful request
+        response_data = response.json()
+    else:
+        # Handle error response
+        response_data = None
+
+    # Render the mtn.html template
+    return render(request, 'shop/mtn.html', {'response': response_data})
 
 # Stripe setup
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -147,31 +190,42 @@ def remove_from_cart(request, item_id):
     return redirect('shop:cart_view')
 
 # Checkout View
-@login_required
+import requests
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+
 def checkout(request):
     if request.method == 'POST':
-        phone_number = request.POST.get('phone_number')
-        amount = request.POST.get('amount')
-        order_id = 'order123'  # Example order ID
-        payment_method = request.POST.get('payment_method')
+        BASE_URL = settings.MOBILE_MONEY_CONFIG['API_BASE_URL']
+        API_USER_ID = 'c72025f5-5cd1-4630-99e4-8ba4722fad56'  # Your actual API User ID
+        SUBSCRIPTION_KEY = settings.MOBILE_MONEY_CONFIG['MTN_API_KEY']
 
-        payment_methods = {
-            'mpesa': initiate_mpesa_payment,
-            'mtn': initiate_mtn_payment,
-            'airtel': initiate_airtel_payment,
-            'paypal': initiate_paypal_payment
+        # Construct the full URL for initiating the payment
+        url = f"{BASE_URL}{API_USER_ID}/mtn/initiate"  # Ensure there is no leading slash
+
+        headers = {
+            'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY,
+            'Content-Type': 'application/json',
         }
 
-        if payment_method in payment_methods:
-            response = payment_methods[payment_method](phone_number, amount, order_id)
-            if response.get('status') == 'success':
-                return redirect('shop:payment_success')
-            else:
-                return redirect('shop:payment_failure')
+        # Sample payload for initiating a payment
+        payload = {
+            'amount': 100,  # Replace with the actual amount you want to send
+            'currency': 'USD',  # Replace with the actual currency
+            'description': 'Payment for order',
+            # Add any other necessary fields required by the API
+        }
 
-        return redirect('shop:payment_failure')
+        try:
+            response = requests.post(url, headers=headers, json=payload)
+            response.raise_for_status()  # Raises an error for bad HTTP responses
+            return JsonResponse({'success': True, 'data': response.json()})
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
-    return render(request, 'shop/checkout.html')
+    return render(request, 'shop/checkout.html')  # Render your checkout template
+
 
 # Payment Success View
 def payment_success(request):

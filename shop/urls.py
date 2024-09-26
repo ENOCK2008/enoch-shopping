@@ -7,6 +7,7 @@ from . import consumers
 from django.views.static import serve
 from django.conf import settings
 from django.contrib.auth.views import LogoutView
+from .views import mtn_view
 # from .views import RecommendedProductsView  # Remove this line
 
 app_name = 'shop'
@@ -18,6 +19,7 @@ websocket_urlpatterns = [
 
 # Main URL patterns
 urlpatterns = [
+    path('mtn/', mtn_view, name='mtn_view'),  # Add this line
     path('admin/', admin.site.urls),
     path('signup/', views.register_view, name='signup'),  # Assuming register_view exists in views.py
     # User authentication using class-based views

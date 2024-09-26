@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = os.getenv('SECRET_KEY', 'your_secret_key')  # Ensure this is kept secret in production
-DEBUG = False  # Set to False in production
+DEBUG = True  # Set to False in production
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
@@ -105,17 +105,16 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-# Static files (CSS, JavaScript, Images)
+import os
+
+# Media files (uploads)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'  # Make sure this path exists
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Adjust the path as necessary
 
 STATIC_URL = '/static/'
-
-# Fix for missing directory
 STATICFILES_DIRS = [
     BASE_DIR / 'enoch_shopping/static',  # Adjust this path if your static files are located elsewhere
 ]
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
@@ -123,6 +122,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application settings
 APPEND_SLASH = True  # Ensures URLs are correctly routed with a trailing slash
+
+# Mobile money configuration
+MOBILE_MONEY_CONFIG = {
+    'API_BASE_URL': os.getenv('MOBILE_MONEY_API_BASE_URL', 'https://momodeveloper.mtn.com/apiuser/'),
+    'MPESA_API_KEY': os.getenv('MPESA_API_KEY', 'your_mpesa_api_key'),
+    'MTN_API_KEY': os.getenv('MTN_API_KEY', 'd484a1f0d34f4301916d0f2c9e9106a2'),  # Your actual MTN API key
+    'AIRTEL_API_KEY': os.getenv('AIRTEL_API_KEY', 'your_airtel_api_key'),
+}
 
 # Stripe configuration (if you're using Stripe for payments)
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', 'your_stripe_secret_key')
@@ -137,23 +144,15 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'your-email@example.com')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your-email-password')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-# Mobile money configuration
-MOBILE_MONEY_CONFIG = {
-    'API_BASE_URL': os.getenv('MOBILE_MONEY_API_BASE_URL', 'https://api.example.com/'),
-    'MPESA_API_KEY': os.getenv('MPESA_API_KEY', 'your_mpesa_api_key'),
-    'MTN_API_KEY': os.getenv('MTN_API_KEY', 'your_mtn_api_key'),
-    'AIRTEL_API_KEY': os.getenv('AIRTEL_API_KEY', 'your_airtel_api_key'),
-}
-
-# Django Channels settings
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],  # Ensure Redis is running here
+            "hosts": [('127.0.0.1', 6379)],
         },
     },
 }
+
 
 # Logging configuration
 LOGGING = {

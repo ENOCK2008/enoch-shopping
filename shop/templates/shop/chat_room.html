@@ -1,3 +1,4 @@
+{%load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,8 @@
     <title>Chat Room: {{ room_name }}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="manifest" href="{% static 'manifest.json' %}">  <!-- Adjust as necessary -->
+    <link rel="manifest" href="{% static 'js/manifest.json' %}">
+ <!-- Adjust as necessary -->
 
     <script>
         let chatSocket;
@@ -18,7 +20,7 @@
                     navigator.serviceWorker.register('{% static "js/serviceworker.js" %}').then(function(registration) {
                         console.log('Service Worker registered with scope:', registration.scope);
                     }).catch(function(error) {
-                        console.log('Service Worker registration failed:', error);
+                        console.error('Service Worker registration failed:', error);
                     });
                 });
             }
@@ -34,7 +36,7 @@
         function connectWebSocket() {
             const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
             chatSocket = new WebSocket(protocol + window.location.host + '/ws/chat/' + encodeURIComponent(roomName) + '/');
-            console.log('Connecting to:', protocol + window.location.host + '/ws/chat/' + encodeURIComponent(roomName) + '/');
+
             chatSocket.onopen = function() {
                 console.log('WebSocket connection established');
                 updateStatus('Connected to room: ' + roomName);
@@ -89,7 +91,6 @@
             document.querySelector('#chat-message-submit').onclick = function() {
                 const messageInput = document.querySelector('#chat-message-input');
                 const message = messageInput.value.trim();
-
                 const MAX_MESSAGE_LENGTH = 200; // Set your desired max message length
 
                 if (message && message.length <= MAX_MESSAGE_LENGTH) {
