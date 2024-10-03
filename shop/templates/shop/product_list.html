@@ -1,26 +1,45 @@
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
 <h2>Products</h2>
-<form method="get">
-    <input type="text" name="q" placeholder="Search products...">
+
+<!-- Filter Form for Products -->
+<form method="get" class="product-filter-form">
+    <!-- Search by Name -->
+    <input type="text" name="q" placeholder="Search products..." value="{{ request.GET.q }}">
+    
+    <!-- Filter by Category -->
     <select name="category">
         <option value="">All Categories</option>
         {% for category in categories %}
-            <option value="{{ category.name }}">{{ category.name }}</option>
+            <option value="{{ category.name }}" {% if request.GET.category == category.name %}selected{% endif %}>{{ category.name }}</option>
         {% endfor %}
     </select>
-    <input type="number" name="min_price" placeholder="Min Price">
-    <input type="number" name="max_price" placeholder="Max Price">
+    
+    <!-- Filter by Price Range -->
+    <input type="number" name="min_price" placeholder="Min Price" value="{{ request.GET.min_price }}">
+    <input type="number" name="max_price" placeholder="Max Price" value="{{ request.GET.max_price }}">
+    
+    <!-- Sort Products -->
     <select name="sort_by">
-        <option value="name_asc">Name (A-Z)</option>
-        <option value="name_desc">Name (Z-A)</option>
-        <option value="price_asc">Price (Low to High)</option>
-        <option value="price_desc">Price (High to Low)</option>
+        <option value="name_asc" {% if request.GET.sort_by == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
+        <option value="name_desc" {% if request.GET.sort_by == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
+        <option value="price_asc" {% if request.GET.sort_by == 'price_asc' %}selected{% endif %}>Price (Low to High)</option>
+        <option value="price_desc" {% if request.GET.sort_by == 'price_desc' %}selected{% endif %}>Price (High to Low)</option>
     </select>
-    <button type="submit">Filter</button>
+    
+    <!-- Filter Button -->
+    <button type="submit" class="btn btn-primary">Filter</button>
 </form>
 
-<ul>
+<!-- Product Listing -->
+<ul class="product-list">
     {% for product in products %}
-        <li>{{ product.name }} - {{ product.price }}</li>
+        <li class="product-item">
+            <a href="{% url 'product_detail' product.id %}">
+                <strong>{{ product.name }}</strong> - ${{ product.price }}
+            </a>
+        </li>
+    {% empty %}
+        <li>No products found matching your criteria.</li>
     {% endfor %}
 </ul>

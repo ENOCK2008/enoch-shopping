@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Most Viewed Products</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+</head>
+<body>
+    <header class="header">
+        <h1>Most Viewed Products</h1>
+        <p>Discover the products that everyone is talking about!</p>
+    </header>
+    
+    <main class="container">
+        {% if most_viewed_products %}
+            <div class="product-grid">
+                {% for product in most_viewed_products %}
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        </div>
+                        <div class="product-info">
+                            <h2>{{ product.name }}</h2>
+                            <p class="product-description">{{ product.description|truncatewords:20 }}</p>
+                            <div class="product-price">
+                                <span>${{ product.price }}</span>
+                            </div>
+                            <a href="{% url 'shop:product_detail' product.id %}" class="view-button">View Product</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No products have been viewed yet.</p>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; {{ current_year }} Enoch Shopping Center. All rights reserved.</p>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script> <!-- Link to your JavaScript file -->
+</body>
+</html>

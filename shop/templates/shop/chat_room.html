@@ -1,145 +1,97 @@
-{%load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Room: {{ room_name }}</title>
-    {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="manifest" href="{% static 'js/manifest.json' %}">
- <!-- Adjust as necessary -->
-
-    <script>
-        let chatSocket;
-        let roomName = "{{ room_name }}"; // Initialize with the room name passed from the server
-
-        function registerServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('{% static "js/serviceworker.js" %}').then(function(registration) {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    }).catch(function(error) {
-                        console.error('Service Worker registration failed:', error);
-                    });
-                });
-            }
-        }
-
-        function updateStatus(message) {
-            const statusElement = document.querySelector('#status');
-            if (statusElement) {
-                statusElement.textContent = message;
-            }
-        }
-
-        function connectWebSocket() {
-            const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-            chatSocket = new WebSocket(protocol + window.location.host + '/ws/chat/' + encodeURIComponent(roomName) + '/');
-
-            chatSocket.onopen = function() {
-                console.log('WebSocket connection established');
-                updateStatus('Connected to room: ' + roomName);
-            };
-
-            chatSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                const messageElement = document.createElement('div');
-                const messageTime = new Date().toLocaleTimeString();
-
-                // Assign class based on whether the message is from a bot or user
-                messageElement.className = data.is_bot ? 'message bot' : 'message user';
-                messageElement.innerHTML = `<strong>[${messageTime}]</strong> ${data.message}`;
-
-                const chatLog = document.querySelector('#chat-log');
-                if (chatLog) {
-                    chatLog.appendChild(messageElement);
-                    chatLog.scrollTop = chatLog.scrollHeight; // Scroll to bottom
-                }
-            };
-
-            chatSocket.onerror = function(e) {
-                console.error('WebSocket error:', e);
-                updateStatus('Connection error. Attempting to reconnect...');
-            };
-
-            chatSocket.onclose = function(e) {
-                console.error('Chat socket closed unexpectedly', e);
-                updateStatus('Disconnected. Attempting to reconnect...');
-                setTimeout(connectWebSocket, 2000); // Reconnect after 2 seconds
-            };
-        }
-
-        // Handle room joining
-        document.addEventListener('DOMContentLoaded', function() {
-            registerServiceWorker();
-            connectWebSocket();
-
-            const roomSelectorForm = document.getElementById('room-selector-form');
-            roomSelectorForm.onsubmit = function(e) {
-                e.preventDefault(); // Prevent form submission
-
-                const newRoomName = document.getElementById('room-name-input').value.trim();
-                if (newRoomName && newRoomName !== roomName) {
-                    roomName = newRoomName; // Update the room name
-                    chatSocket.close(); // Close the current WebSocket connection
-                    connectWebSocket(); // Connect to the new room
-                }
-            };
-
-            // Send message when the button is clicked
-            document.querySelector('#chat-message-submit').onclick = function() {
-                const messageInput = document.querySelector('#chat-message-input');
-                const message = messageInput.value.trim();
-                const MAX_MESSAGE_LENGTH = 200; // Set your desired max message length
-
-                if (message && message.length <= MAX_MESSAGE_LENGTH) {
-                    if (chatSocket.readyState === WebSocket.OPEN) {
-                        chatSocket.send(JSON.stringify({ 'message': message }));
-                        messageInput.value = ''; // Clear input after sending
-                    } else {
-                        console.error('WebSocket is not open. Current state:', chatSocket.readyState);
-                    }
-                } else {
-                    alert(`Message must be under ${MAX_MESSAGE_LENGTH} characters.`);
-                }
-            };
-
-            // Send message on 'Enter' key press
-            document.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Prevent form submission
-                    document.querySelector('#chat-message-submit').click();
-                }
-            });
-        });
-    </script>
+    <script src="{% static 'js/script.js' %}"></script>
 
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0; 
+        }
+
+        header {
+            background-color: #007bff; 
+            padding: 15px; 
+            text-align: center; 
+        }
+
+        h1 {
+            color: white; 
+            margin: 0; 
+        }
+
+        nav {
+            display: flex;
+            justify-content: center; 
+            margin-top: 10px; 
+        }
+
+        .nav-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex; 
+        }
+
+        .nav-button {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 0 5px;
+            transition: background-color 0.3s; 
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3; 
+        }
+
+        main {
+            padding: 20px; 
+        }
+
         #chat-log {
             border: 1px solid #ccc;
             height: 400px;
             overflow-y: scroll;
             padding: 10px;
             margin-bottom: 10px;
+            background-color: #f9f9f9; 
+            border-radius: 5px; 
         }
+
         .message {
             margin-bottom: 10px;
-            padding: 5px;
+            padding: 10px;
             border-radius: 5px;
+            font-size: 14px; 
         }
+
         .message.user {
-            background-color: #e1f5fe;
+            background-color: #b2ebf2; 
             text-align: right;
         }
+
         .message.bot {
-            background-color: #f1f1f1;
+            background-color: #ffccbc; 
             text-align: left;
         }
+
         #chat-message-input {
             width: 80%;
             padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px; 
         }
+
         #chat-message-submit {
             width: 18%;
             padding: 10px;
@@ -148,40 +100,61 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s; 
         }
+
         #chat-message-submit:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; 
         }
+
         #room-selector-form {
             margin-bottom: 10px;
+        }
+
+        #typing-status {
+            font-style: italic;
+            color: #999;
+        }
+
+        #status {
+            font-weight: bold; 
+            color: white; 
+        }
+
+        @media (max-width: 600px) {
+            #chat-message-input {
+                width: 70%; 
+            }
+            #chat-message-submit {
+                width: 28%; 
+            }
         }
     </style>
 </head>
 <body>
     <header>
+        <h1>Welcome to the Chat Room</h1>
         <nav>
             <ul class="nav-list">
                 <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
-                <li><a href="{% url 'shop:shop' %}" class="nav-button">Shop</a></li>
-                <li><a href="{% url 'shop:about' %}" class="nav-button">About</a></li>
-                <li><a href="{% url 'shop:contact' %}" class="nav-button">Contact</a></li>
-                <li><a href="{% url 'shop:login' %}" class="nav-button">Login</a></li>
-                <li><a href="{% url 'shop:chat_room' room_name='general' %}" class="nav-button">Chat Room</a></li>
+                <li><a href="{% url 'shop:logout' %}" class="nav-button">Logout</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
+        <h1>Chat Room: {{ room_name }}</h1>
+        <div id="status"></div>
+        <div id="typing-status"></div>
+        <div id="chat-log"></div>
+
         <form id="room-selector-form">
-            <input type="text" id="room-name-input" placeholder="Enter chat room name" value="{{ room_name }}" required>
-            <button type="submit">Join Room</button>
+            <input id="room-name-input" type="text" placeholder="Enter new room name..." />
+            <button type="submit" class="nav-button">Change Room</button>
         </form>
 
-        <h2>Chat Room: <span id="current-room-name">{{ room_name }}</span></h2>
-        <div id="chat-log"></div>
-        <input id="chat-message-input" type="text" size="100" placeholder="Type your message...">
+        <input id="chat-message-input" type="text" placeholder="Type your message..." />
         <button id="chat-message-submit">Send</button>
-        <p id="status"></p>
     </main>
 </body>
 </html>

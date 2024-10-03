@@ -11,11 +11,19 @@
     <div class="container">
         <h1>Setup Two-Factor Authentication</h1>
 
+        <p>Two-Factor Authentication (2FA) adds an extra layer of security to your account. In addition to your password, you will need a second method of verification.</p>
+        <p><strong>Benefits of 2FA:</strong></p>
+        <ul>
+            <li>Increased security for your account</li>
+            <li>Protection against unauthorized access</li>
+            <li>Safeguarding personal and sensitive information</li>
+        </ul>
+
         <form method="post" action="{% url 'auth_two_factor:setup' %}">
             {% csrf_token %}
             <div class="form-group">
                 <label for="two_factor_method">Choose Your Two-Factor Method:</label>
-                <select id="two_factor_method" name="two_factor_method">
+                <select id="two_factor_method" name="two_factor_method" required>
                     <option value="sms">SMS</option>
                     <option value="email">Email</option>
                     <option value="authenticator">Authenticator App</option>
@@ -24,7 +32,12 @@
             <button type="submit" class="btn btn-primary">Setup 2FA</button>
         </form>
 
-        <p><a href="{% url 'auth_two_factor:verify' %}" class="link">Verify Two-Factor Authentication</a></p>
+        <p class="mt-4">After setting up 2FA, please <a href="{% url 'auth_two_factor:verify' %}" class="link">verify your Two-Factor Authentication</a> to ensure it's working properly.</p>
+
+        <div class="mt-4">
+            <h3>Need Help?</h3>
+            <p>If you have any questions or need assistance, feel free to reach out to us.</p>
+        </div>
     </div>
 
     <footer>

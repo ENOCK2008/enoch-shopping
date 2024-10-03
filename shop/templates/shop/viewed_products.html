@@ -1,0 +1,28 @@
+<!-- viewed_products.html -->
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Viewed Products - Enoch Shopping Center{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<section class="viewed-products">
+    <h1>Viewed Products</h1>
+    <ul>
+        {% if viewed_products %}
+            {% for viewed_product in viewed_products %}
+                <li>
+                    <a href="{% url 'shop:product_detail' viewed_product.product.id %}">
+                        {{ viewed_product.product.name }} - {{ viewed_product.product.price }}
+                    </a>
+                    <small>Viewed at {{ viewed_product.viewed_at|date:"Y-m-d H:i" }}</small>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>No products viewed yet.</li>
+        {% endif %}
+    </ul>
+</section>
+
+{% endblock %}

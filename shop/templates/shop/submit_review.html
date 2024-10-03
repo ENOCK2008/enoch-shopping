@@ -1,0 +1,87 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Submit a Review for {{ product.name }}</title>
+    <style>
+        /* Star rating styles */
+        .star-rating {
+            direction: rtl; /* Reverse the direction */
+            display: inline-flex;
+        }
+
+        .star-rating input {
+            display: none; /* Hide the radio buttons */
+        }
+
+        .star-rating label {
+            font-size: 2rem; /* Star size */
+            color: #ccc; /* Default star color */
+            cursor: pointer; /* Pointer on hover */
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: gold; /* Color when hovering */
+        }
+
+        .star-rating input:checked ~ label {
+            color: gold; /* Color for checked stars */
+        }
+
+        .star-rating input:checked + label:hover,
+        .star-rating input:checked + label:hover ~ label {
+            color: gold; /* Maintain checked color on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Submit a Review for {{ product.name }}</h1>
+
+        {% if messages %}
+            <div class="alert alert-info">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="reviewText">Your Review</label>
+                {{ form.review_text|as_widget(attrs={'class': 'form-control', 'rows': '4', 'placeholder': 'Write your review here...'}) }}
+                {% if form.review_text.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.review_text.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="rating">Rating</label>
+                <div class="star-rating mb-3">
+                    {% for i in "12345" %}
+                        <input type="radio" name="rating" id="rating{{ i }}" value="{{ i }}">
+                        <label for="rating{{ i }}">★</label> <!-- Star character -->
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Submit Review</button>
+        </form>
+
+        <a href="{% url 'shop:product_detail' product.id %}" class="btn btn-link mt-3">Back to Product Details</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

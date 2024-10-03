@@ -1,9 +1,17 @@
 {% extends 'shop/base.html' %}
+{% load static %}
 {% block content %}
-  <h2>Feedback</h2>
-  <form method="post">
-    {% csrf_token %}
-    <textarea name="feedback" rows="4" cols="50" placeholder="Your feedback here..."></textarea><br>
-    <button type="submit">Submit Feedback</button>
-  </form>
+  <div class="container mt-5 feedback-section">
+    <h2 class="section-title mb-4">We Value Your Feedback</h2>
+    <form method="post" class="feedback-form">
+      {% csrf_token %}
+      <div class="form-group mb-3">
+        <label for="feedback" class="form-label">Your Feedback:</label>
+        <textarea name="feedback" id="feedback" rows="4" cols="50"  class="form-control feedback-input" placeholder="Share your thoughts..." required></textarea><br>
+      </div>
+      <button type="submit" class="btn btn-primary feedback-btn">Submit Feedback</button>
+    </form>
+  </div>
+
+  
 {% endblock %}

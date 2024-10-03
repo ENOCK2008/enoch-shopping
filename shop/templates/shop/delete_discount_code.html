@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Delete Discount Code</title>
-</head>
-<body>
-    <h1>Delete Discount Code</h1>
-    <form method="post">
-        {% csrf_token %}
-        <p>Are you sure you want to delete "{{ discount_code.code }}"?</p>
-        <button type="submit">Delete</button>
-        <a href="{% url 'shop:discount_code_list' %}">Cancel</a>
-    </form>
-</body>
-</html>
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}Delete Discount Code{% endblock %}
+
+{% block content %}
+<h1>Delete Discount Code</h1>
+<p>Are you sure you want to delete the discount code "{{ discount_code.code }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'some_redirect_view' %}">Cancel</a>
+</form>
+{% endblock %}

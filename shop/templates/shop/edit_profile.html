@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile - Enock Shopping Center</title>
+    <title>User Profile - Enock Shopping Center</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -14,7 +14,6 @@
             <ul class="nav-list">
                 <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
                 <li><a href="{% url 'shop:profile' %}" class="nav-button">Profile</a></li>
-                <li><a href="javascript:void(0);" onclick="logout()">Logout</a></li>
                 <form id="logout-form" action="{% url 'shop:logout' %}" method="post" style="display:none;">
                     {% csrf_token %}
                 </form>
@@ -23,7 +22,19 @@
     </header>
 
     <div class="container">
-        <h1>Edit Profile</h1>
+        <h1>User Profile</h1>
+        <div class="profile-details">
+            <h2>{{ user.username }}</h2>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Joined on:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+            {% if user.profile.profile_picture %}
+                <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile-image">
+            {% else %}
+                <img src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture" class="profile-image">
+            {% endif %}
+        </div>
+
+        <h2>Edit Profile</h2>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}

@@ -3,7 +3,9 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
 <div class="product-details-container">
+    <!-- Product Details -->
     <h2 class="product-name">{{ product.name }}</h2>
     <p class="product-price">Price: ${{ product.price }}</p>
 
@@ -11,11 +13,13 @@
         <p class="product-description">{{ product.description }}</p>
     {% endif %}
 
+    <!-- Product Image -->
     {% if product.image %}
         <h3>Product Image:</h3>
         <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
     {% endif %}
 
+    <!-- Product Video -->
     {% if product.video_url %}
         <h3>Product Video:</h3>
         <video width="640" height="360" controls>
@@ -24,31 +28,159 @@
         </video>
     {% endif %}
 
+    <!-- Panoramic Image for 360-Degree View -->
     {% if product.panoramic_image %}
         <h3>360-Degree View:</h3>
         <img src="{{ product.panoramic_image.url }}" alt="Panoramic View" class="panoramic-image">
     {% endif %}
 
-    <!-- Form to add product to cart -->
+    <!-- Add to Cart Form -->
     <form action="{% url 'shop:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">Add to Cart</button>
     </form>
 
-    <!-- Display product reviews -->
+    <!-- Reviews Section -->
     <div class="product-reviews">
-        {% if product.reviews.all %}
-            <h3>Reviews:</h3>
+        <h3>Reviews:</h3>
+        {% if product.reviews.exists %}
             <ul class="review-list">
                 {% for review in product.reviews.all %}
                     <li class="review-item">
-                        <strong>{{ review.user.username }}</strong>: {{ review.comment }} (Rating: {{ review.rating }})
+                        <strong>{{ review.user.username }}</strong>: {{ review.comment }} 
+                        <span class="star-rating">
+                            {% for i in "12345"|make_list %}
+                                {% if i <= review.rating %}
+                                    <img src="{% static 'images/star-full.png' %}" alt="Star" class="star">
+                                {% else %}
+                                    <img src="{% static 'images/star-empty.png' %}" alt="Star" class="star">
+                                {% endif %}
+                            {% endfor %}
+                        </span>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>No reviews yet.</p>
+            <p>No reviews yet. Be the first to review this product!</p>
+        {% endif %}
+
+        <!-- Review Submission Form -->
+        {% if user.is_authenticated %}
+            <div class="submit-review">
+                <h3>Submit a Review for {{ product.name }}</h3>
+                <form id="review-form" method="post" action="{% url 'shop:submit_review' product.id %}">
+                    {% csrf_token %}
+                    <textarea name="comment" rows="4" placeholder="Write your review here..." required></textarea>
+                    <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)" required>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        {% else %}
+            <p><a href="{% url 'login' %}">Log in</a> to submit a review.</p>
         {% endif %}
     </div>
+
+    <!-- Augmented Reality Features -->
+    <div class="ar-features">
+        <h3>Try this product in AR:</h3>
+        <p>Use our augmented reality feature to visualize this product in your space.</p>
+        <a href="{% url 'shop:ar_view' product.id %}" class="btn btn-secondary">View in AR</a>
+    </div>
+
+    <!-- Discount Codes -->
+    <div class="discount-codes">
+        {% if active_discount %}
+            <h3>Available Discount Code:</h3>
+            <p>Use code <strong>{{ active_discount.code }}</strong> for a {{ active_discount.discount_amount }}% discount!</p>
+        {% else %}
+            <p>No discount codes available for this product.</p>
+        {% endif %}
+    </div>
+
+    <!-- Loyalty Points Section -->
+    <div class="loyalty-points">
+        {% if user.is_authenticated %}
+            <h3>Your Loyalty Points: {{ user.loyaltypoints.points }}</h3>
+            <p>Earn more points by purchasing this product!</p>
+        {% else %}
+            <p><a href="{% url 'login' %}">Log in</a> to view and earn loyalty points.</p>
+        {% endif %}
+    </div>
+
+    <!-- Feedback Form -->
+    <div class="user-feedback">
+        <h3>We value your feedback to improve our services!</h3>
+        <form action="{% url 'shop:feedback' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Leave Feedback</button>
+        </form>
+    </div>
+
+    <!-- User Notifications Section -->
+    {% if user.is_authenticated %}
+        <div class="user-notifications">
+            <h3>Your Notifications</h3>
+            <ul class="notification-list">
+                {% for notification in user.notifications.all %}
+                    <li>{{ notification.message }} ({{ notification.created_at|date:"Y-m-d H:i" }})</li>
+                {% empty %}
+                    <li>No new notifications.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 </div>
+
+<!-- AJAX Submission for Review -->
+<script>
+    // Define star image URLs
+    const starImageUrl = "{% static 'images/star-full.png' %}";
+    const starEmptyImageUrl = "{% static 'images/star-empty.png' %}";
+
+    document.getElementById('review-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(this);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}', // Ensure CSRF token is sent
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Append the new review to the review list
+                const reviewList = document.querySelector('.review-list');
+                const newReview = document.createElement('li');
+                newReview.className = 'review-item';
+                newReview.innerHTML = `<strong>${data.username}</strong>: ${data.comment} <span class="star-rating">${generateStars(data.rating)}</span>`;
+                reviewList.appendChild(newReview);
+                // Optionally reset the form
+                document.getElementById('review-form').reset();
+            } else {
+                alert('Failed to submit review: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting your review.');
+        });
+    });
+
+    function generateStars(rating) {
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= rating) {
+                starsHtml += `<img src="${starImageUrl}" alt="Star" class="star">`;
+            } else {
+                starsHtml += `<img src="${starEmptyImageUrl}" alt="Star" class="star">`;
+            }
+        }
+        return starsHtml;
+    }
+</script>
+
 {% endblock %}

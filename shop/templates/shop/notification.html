@@ -12,8 +12,14 @@
         {% for notification in notifications %}
             <li class="{% if not notification.is_read %}new-notification{% endif %}">
                 {{ notification.message }} 
+                <small class="notification-date">{{ notification.created_at|date:"Y-m-d H:i" }}</small>
                 {% if not notification.is_read %}
                     <span class="notification-status">New</span>
+                    <form action="{% url 'shop:notifications' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="notification_id" value="{{ notification.id }}">
+                        <button type="submit" class="btn btn-link">Mark as read</button>
+                    </form>
                 {% endif %}
             </li>
         {% empty %}
@@ -21,4 +27,5 @@
         {% endfor %}
     </ul>
 </section>
+
 {% endblock %}

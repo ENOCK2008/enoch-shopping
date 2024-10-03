@@ -95,15 +95,21 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+from django.utils.translation import gettext_lazy as _
+
 LANGUAGES = [
     ('en', _('English')),
     ('es', _('Spanish')),
-    # Add other languages here
+    ('zh-hans', _('Chinese')),  # Simplified Chinese
+    ('lg', _('Luganda')),       # ISO 639-1 code for Luganda
+    ('sw', _('Kiswahili')),     # ISO 639-1 code for Kiswahili
+    ('nyn', _('Lunyole')),      # ISO 639-3 code for Lunyole
 ]
 
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
+
 
 import os
 
@@ -111,10 +117,19 @@ import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Adjust the path as necessary
 
+# Define BASE_DIR as a Path object
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Now you can use BASE_DIR with the / operator to join paths
+log_file_path = BASE_DIR / 'chat_consumer.log'
+
+
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [
-    BASE_DIR / 'enoch_shopping/static',  # Adjust this path if your static files are located elsewhere
+    os.path.join(BASE_DIR, 'enoch_shopping', 'static'),
 ]
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
@@ -148,10 +163,11 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [('127.0.0.1', 6379)],  # Ensure the Redis host and port are correct
         },
     },
 }
+
 
 
 # Logging configuration
@@ -159,18 +175,21 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'chat_consumer.log',
+        'console': {
+            'class': 'logging.StreamHandler',
         },
     },
-    'root': {
-        'handlers': ['file'],
-        'level': 'DEBUG',
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # Change to 'ERROR' to suppress more messages
+        },
+        'django_extensions': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # This will suppress info messages from django_extensions
+        },
     },
 }
-
 # Ensure the log directory exists
 log_file_path = BASE_DIR / 'chat_consumer.log'
 if not log_file_path.parent.exists():

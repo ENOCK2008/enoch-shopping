@@ -51,7 +51,7 @@
     }
 
     footer {
-        background-color: black;
+        background-color :whitesmoke ;
         color: white;
         padding: 20px;
         text-align: center; /* Center align text */
@@ -72,6 +72,9 @@
                 <p>Price: ${{ product.price }}</p>
             </a>
         </li>
+    {% empty %}
+        <li>No recommended products available.</li>
     {% endfor %}
+</ul>
 
 {% endblock %}

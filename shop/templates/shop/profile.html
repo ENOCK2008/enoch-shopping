@@ -5,21 +5,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile - Enock Shopping Center</title>
+    <title>Edit Profile - Enock Shopping Center</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* General body styling */
+        body {
+            background-color: #f4f4f4; /* Light grey background */
+            color: #333; /* Darker text for better contrast */
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header and Navigation styling */
+        header {
+            background-color: #ffffff; /* White background for header */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        .nav-list {
+            list-style-type: none;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-around; /* Space out nav items */
+        }
+
+        .nav-button {
+            text-decoration: none;
+            color: #007bff; /* Blue color for links */
+            font-weight: 700; /* Bold text */
+        }
+
+        .nav-button:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+
+        /* Container styling */
+        .container {
+            background-color: #ffffff; /* White background for content */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            margin: 20px auto; /* Center the container */
+            max-width: 600px; /* Max width for the container */
+        }
+
+        h1 {
+            color: #333; /* Darker title */
+            text-align: center; /* Center title */
+            margin-bottom: 20px; /* Space below title */
+        }
+
+        /* Form styling */
+        form {
+            display: flex;
+            flex-direction: column; /* Stack form elements */
+        }
+
+        form input[type="text"], 
+        form input[type="email"], 
+        form input[type="file"],
+        form textarea {
+            padding: 10px; /* Padding inside input fields */
+            margin-bottom: 15px; /* Space below each input */
+            border: 1px solid #ccc; /* Light grey border */
+            border-radius: 4px; /* Rounded corners */
+        }
+
+        form button {
+            padding: 10px;
+            background-color: #007bff; /* Primary button color */
+            color: #ffffff; /* White text */
+            border: none; /* No border */
+            border-radius: 4px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            font-size: 16px; /* Larger text */
+        }
+
+        form button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #f8f9fa; /* Light footer background */
+            color: #555; /* Darker text for contrast */
+            padding: 20px 0;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0; /* No margin for footer text */
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
             <ul class="nav-list">
                 <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
-                <li><a href="{% url 'shop:shop' %}" class="nav-button">Shop</a></li>
-                <li><a href="{% url 'shop:about' %}" class="nav-button">About</a></li>
-                <li><a href="{% url 'shop:contact' %}" class="nav-button">Contact</a></li>
-                <li><a href="{% url 'shop:feedback' %}" class="nav-button">Feedback</a></li>
-                <li><a href="{% url 'shop:music_list' %}" class="nav-button">Music</a></li>
-                <li><a href="{% url 'shop:order_history' %}" class="nav-button">Order History</a></li>
+                <li><a href="{% url 'shop:profile' %}" class="nav-button">Profile</a></li>
                 <li><a href="javascript:void(0);" onclick="logout()">Logout</a></li>
                 <form id="logout-form" action="{% url 'shop:logout' %}" method="post" style="display:none;">
                     {% csrf_token %}
@@ -29,42 +118,27 @@
     </header>
 
     <div class="container">
-        <h1>Your Profile</h1>
+        <h1>Edit Profile</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="{{ profile.user.username }}" required>
 
-        <div class="profile-info">
-            <h2>{{ profile.user.username }}</h2>
-            <p><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
-            <p><strong>Address:</strong> {{ profile.address }}</p>
-            <p><strong>Profile Picture:</strong></p>
-            {% if profile.image %}
-                <img src="{{ profile.image.url }}" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
-            {% else %}
-                <img src="{% static 'images/default_profile_picture.jpg' %}" alt="Default Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
-            {% endif %}
-        </div>
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" value="{{ profile.phone_number }}" required>
 
-        <div class="profile-actions">
-            <a href="{% url 'shop:update_profile_picture' %}" class="nav-button">Change Profile Picture</a>
-            <a href="{% url 'shop:edit_profile' %}" class="nav-button">Edit Profile</a>
-        </div>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" value="{{ profile.address }}" required>
+
+            <label for="profile_image">Profile Picture:</label>
+            <input type="file" id="profile_image" name="image">
+
+            <button type="submit" class="nav-button">Save Changes</button>
+        </form>
     </div>
 
     <footer>
-        <div class="footer-container">
-            <h2>Contact Us</h2>
-            <section class="contact-info">
-                <address>
-                    <p>Email: <a href="mailto:info@enochshopping.com">info@enochshopping.com</a></p>
-                    <p>Phone: (256) 756679314</p>
-                    <p>Address: Kampala, Uganda, Shopping City.</p>
-                </address>
-            </section>
-            <p>&copy; 2024 Enock Shopping Center. All rights reserved.</p>
-            <p>
-                <a href="{% url 'shop:contact' %}">Contact Us</a> | 
-                <a href="{% url 'shop:about' %}">About Us</a>
-            </p>
-        </div>
+        <p>&copy; 2024 Enock Shopping Center. All rights reserved.</p>
     </footer>
 </body>
 </html>

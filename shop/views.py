@@ -1,43 +1,79 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout
+from django.contrib.auth import login
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView
 from django.core.cache import cache
-
+from django.core.mail import send_mail
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.forms import UserCreationForm
+from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import ProfileForm  # Ensure this imports your ProfileForm
+from django.views.generic import UpdateView
+from django.db.models import Avg
+from django.views.generic import ListView
+from .models import Order 
+from .models import SMSMessage
 from .forms import (
-    CustomUserCreationForm, UserUpdateForm, ProfileUpdateForm, MusicForm, 
-    UserPreferenceForm, ReviewForm, FeedbackForm
+    CustomUserCreationForm, UserUpdateForm, ProfileUpdateForm, 
+    MusicForm, UserPreferenceForm, ReviewForm, FeedbackForm, 
+    DiscountCodeForm, LoyaltyPointsForm, ProfileImageForm
 )
 from .models import (
-    Product, Cart, CartItem, Review, Order, Category, UserPreference, Music, 
-    LoyaltyPoints, DiscountCode, Feedback, Notification
+    Product, Cart, CartItem, Review, Order, Category, UserPreference, 
+    Music, LoyaltyPoints, DiscountCode, Feedback, Notification, Profile
 )
 from .payment_integration import (
     initiate_mpesa_payment, initiate_mtn_payment, initiate_airtel_payment
 )
-from django.shortcuts import render
-from .models import Product  # Import the Product model from models.py
-
-def recommended_products_view(request):
-    recommended_products = Product.objects.filter(is_recommended=True)
-    return render(request, 'shop/recommended.html', {'products': recommended_products})
-
+from .mtn_service import get_api_user_info
 import paypalrestsdk
 import stripe
-from django.shortcuts import render
-from .models import Profile
+import requests
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Feedback  # Adjust the import based on your app structure
+from .forms import FeedbackForm  # Assuming you're using a form for feedback
+from django.views.generic import TemplateView
+from .models import Product, PageView
 
-def profile_view(request):
-    if request.user.is_authenticated:
-        profile = Profile.objects.get(user=request.user)
-    else:
-        profile = None
-    return render(request, 'profile.html', {'profile': profile})
+@login_required
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    # Log the page view
+    PageView.objects.create(user=request.user, product=product)
+
+    return render(request, 'shop/product_detail.html', {'product': product})
+@login_required
+def mark_as_read(request, notification_id):
+    notification = Notification.objects.get(id=notification_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return redirect('some_view')  # Redirect to a relevant view
+def some_event_triggered(user):
+    create_notification(user, "You have a new message!")
+class ProfileView(TemplateView):
+    template_name = 'shop/profile.html'  # Adjust path as necessary
+def some_action(request):
+    # Implement your action logic here
+    return JsonResponse({'message': 'Action performed successfully!'})
+def create_notification(user, message):
+    Notification.objects.create(user=user, message=message)
+@login_required
+def feedback_view(request):
+    if request.method == 'POST':
+        feedback_content = request.POST.get('feedback')
+        if feedback_content:
+            Feedback.objects.create(content=feedback_content)  # Save the feedback
+            return redirect('shop:thank_you')  # Redirect to the thank you page
+    return render(request, 'shop/feedback.html')  # Render the feedback form
+def thank_you_view(request):
+    return render(request, 'shop/thank_you.html')  # Render the thank you template
 
 # PayPal setup
 paypalrestsdk.configure({
@@ -45,57 +81,11 @@ paypalrestsdk.configure({
     "client_id": settings.PAYPAL_CLIENT_ID,
     "client_secret": settings.PAYPAL_CLIENT_SECRET
 })
-# shop/views.py
-
-from django.shortcuts import render
-from .mtn_service import get_api_user_info
-
-def api_user_info_view(request):
-    api_user_id = 'c72025f5-5cd1-4630-99e4-8ba4722fad56'  # Or get from settings/environment variables
-    subscription_key = 'd484a1f0d34f4301916d0f2c9e9106a2'  # Or get from settings/environment variables
-
-    user_info = get_api_user_info(api_user_id, subscription_key)
-
-    return render(request, 'your_template.html', {'user_info': user_info})
-from django.shortcuts import render
-import requests
-
-def mtn_view(request):
-    # Define your constants
-    BASE_URL = 'https://momodeveloper.mtn.com/apiuser/'
-    API_USER_ID = 'c72025f5-5cd1-4630-99e4-8ba4722fad56'
-    SUBSCRIPTION_KEY = 'd484a1f0d34f4301916d0f2c9e9106a2'
-
-    # Construct the full URL
-    url = f"{BASE_URL}{API_USER_ID}"
-
-    # Set up the headers
-    headers = {
-        'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY,
-        'Content-Type': 'application/json',
-    }
-
-    # Make the GET request
-    response = requests.get(url, headers=headers)
-
-    # Check the response status
-    if response.status_code == 200:
-        # Successful request
-        response_data = response.json()
-    else:
-        # Handle error response
-        response_data = None
-
-    # Render the mtn.html template
-    return render(request, 'shop/mtn.html', {'response': response_data})
 
 # Stripe setup
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-# Custom Login View
-class CustomLoginView(LoginView):
-    template_name = 'shop/login.html'
-    success_url = reverse_lazy('shop:home')
+# Views
 
 # Home View
 def home(request):
@@ -151,13 +141,32 @@ def product_list(request):
     categories = Category.objects.all()
     return render(request, 'shop/product_list.html', {'products': products, 'categories': categories})
 
-# Cart View
-class CartView(View):
+#from django.shortcuts import redirect
+
+from django.contrib.auth.models import AnonymousUser
+
+class CartView(LoginRequiredMixin, View):
+    login_url = '/accounts/login/'  # URL to redirect to if the user is not logged in
+
     def get(self, request):
+        if isinstance(request.user, AnonymousUser):
+            return redirect(self.login_url)
+        
+        # Fetch or create a cart for the authenticated user
         cart, _ = Cart.objects.get_or_create(user=request.user)
+        
+        # Retrieve cart items associated with this cart
         cart_items = CartItem.objects.filter(cart=cart)
+        
+        # Calculate total cost of items in the cart
         cart_total = sum(item.product.price * item.quantity for item in cart_items)
-        return render(request, 'shop/cart.html', {'cart': cart, 'cart_items': cart_items, 'cart_total': cart_total})
+        
+        # Render the cart page with the necessary context
+        return render(request, 'shop/cart.html', {
+            'cart': cart,
+            'cart_items': cart_items,
+            'cart_total': cart_total
+        })
 
 # Add to Cart
 @login_required
@@ -182,71 +191,57 @@ def update_cart_item(request, item_id):
         cart_item.save()
     return redirect('shop:cart_view')
 
+def send_order_confirmation_email(user, order):
+    subject = "Order Confirmation"
+    message = f"Thank you for your order #{order.id}!"
+    send_mail(subject, message, 'from@example.com', [user.email])
+
 # Remove from Cart
 @login_required
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(CartItem, id=item_id)
     cart_item.delete()
     return redirect('shop:cart_view')
-
+def create_order_notification(user, order):
+    message = f"Your order #{order.id} has been placed successfully!"
+    Notification.objects.create(user=user, message=message)
 # Checkout View
-import requests
-from django.conf import settings
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
 
 def checkout(request):
     if request.method == 'POST':
         BASE_URL = settings.MOBILE_MONEY_CONFIG['API_BASE_URL']
-        API_USER_ID = 'c72025f5-5cd1-4630-99e4-8ba4722fad56'  # Your actual API User ID
+        API_USER_ID = 'c72025f5-5cd1-4630-99e4-8ba4722fad56'
         SUBSCRIPTION_KEY = settings.MOBILE_MONEY_CONFIG['MTN_API_KEY']
 
-        # Construct the full URL for initiating the payment
-        url = f"{BASE_URL}{API_USER_ID}/mtn/initiate"  # Ensure there is no leading slash
+        # Get selected currency and amount from the form (for now assuming UGX is the default)
+        amount = request.POST.get('amount', 100)  # Defaulting to 100
+        currency = request.POST.get('currency', 'UGX')  # Default to Uganda Shilling (UGX)
 
+        url = f"{BASE_URL}{API_USER_ID}/mtn/initiate"
         headers = {
             'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY,
             'Content-Type': 'application/json',
         }
-
-        # Sample payload for initiating a payment
         payload = {
-            'amount': 100,  # Replace with the actual amount you want to send
-            'currency': 'USD',  # Replace with the actual currency
+            'amount': amount,
+            'currency': currency,
             'description': 'Payment for order',
-            # Add any other necessary fields required by the API
         }
 
         try:
             response = requests.post(url, headers=headers, json=payload)
-            response.raise_for_status()  # Raises an error for bad HTTP responses
+            response.raise_for_status()
             return JsonResponse({'success': True, 'data': response.json()})
         except requests.exceptions.RequestException as e:
             return JsonResponse({'error': str(e)}, status=400)
 
-    return render(request, 'shop/checkout.html')  # Render your checkout template
+    # Add the supported currencies to pass to the template
+    supported_currencies = ['UGX', 'USD', 'KES', 'TZS']  # Uganda Shilling, US Dollar, Kenyan Shilling, Tanzanian Shilling
 
-from django.shortcuts import render, get_object_or_404
-from .models import Product
-from django.views.generic.detail import DetailView  # Add this line
-
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = 'shop/product_detail.html'  # Create this template
-    context_object_name = 'product'
-
-    def get_object(self, queryset=None):
-        id = self.kwargs.get('id')  # Get the ID from the URL
-        return get_object_or_404(Product, id=id)
-
-# Payment Success View
-def payment_success(request):
-    return render(request, 'shop/payment_success.html')
-
-# Payment Failure View
-def payment_failure(request):
-    return render(request, 'shop/payment_failure.html')
-
+    return render(request, 'shop/checkout.html', {'supported_currencies': supported_currencies})
+def mtn_view(request):
+    # Your logic here
+    return render(request, 'mtn.html')
 # Profile View
 @login_required
 def profile(request):
@@ -273,6 +268,94 @@ def profile(request):
         'reviews': reviews,
         'orders': orders
     })
+@login_required  # Ensure only logged-in users can access this view
+def update_profile_picture(request):
+    if request.method == 'POST':
+        form = ProfileImageForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Redirect to the profile page after saving
+    else:
+        form = ProfileImageForm(instance=request.user.profile)
+    return render(request, 'shop/update_profile_picture.html', {'form': form})
+
+class ProductDetailView(View):
+    def get(self, request, *args, **kwargs):
+        # Get the product ID (primary key) from the URL kwargs
+        product_id = kwargs.get('pk')  # Use 'pk' if your URL pattern uses 'pk'
+
+        # Retrieve the product, or return a 404 if not found
+        product = get_object_or_404(Product, pk=product_id)
+        
+        # Calculate average rating if reviews are present
+        average_rating = product.reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+        
+        # Fetch related products (e.g., based on category), excluding the current product
+        related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
+        
+        # Initialize the review form
+        review_form = ReviewForm()
+
+        # Prepare the context data to be passed to the template
+        context = {
+            'product': product,
+            'average_rating': average_rating,
+            'related_products': related_products,
+            'reviews': product.reviews.all(),  # Fetch all reviews for the product
+            'form': review_form,  # Pass the review form to the template
+        }
+        
+        # Render the product detail template with the context
+        return render(request, 'shop/product_detail.html', context)
+    def post(self, request, *args, **kwargs):
+        # Get the product ID from the URL kwargs
+        product_id = kwargs.get('id')
+        product = get_object_or_404(Product, id=product_id)
+        
+        # Handle review submission form
+        review_form = ReviewForm(request.POST)
+        if review_form.is_valid():
+            review = review_form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            return redirect('product_detail', id=product_id)  # Redirect after submission
+
+        # If the form is not valid, recalculate average rating and render the page again
+        average_rating = product.reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+        related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4]
+
+        context = {
+            'product': product,
+            'average_rating': average_rating,
+            'related_products': related_products,
+            'reviews': product.reviews.all(),
+            'form': review_form,  # Pass the review form with validation errors
+        }
+
+        return render(request, 'shop/product_detail.html', context)
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}!')
+            return redirect('login')  # Redirect to the login page or wherever you want
+    else:
+        form = UserCreationForm()
+    return render(request, 'shop/signup.html', {'form': form})
+def chat_bot_view(request):
+    return render(request, 'shop/chat_bot.html')  # Make sure you have this template
+def account_home(request):
+    return render(request, 'shop/account_home.html')  # Adjust the template name as necessary
+def payment_success(request):
+    return render(request, 'shop/payment_success.html')  # Adjust the template name as necessary
+def payment_failure(request):
+    return render(request, 'shop/payment_failure.html')  # Adjust the template name as necessary
+def ar_view(request, pk):
+    product = get_object_or_404(Product, pk=pk)  # Retrieve the product based on the primary key
+    return render(request, 'shop/ar_view.html', {'product': product})  # Adjust the template name as necessary
 # Add Review
 def add_review(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -288,354 +371,418 @@ def add_review(request, product_id):
         form = ReviewForm()
     return render(request, 'shop/add_review.html', {'form': form, 'product': product})
 
-# Upload Music
-def upload_music(request):
-    if request.method == 'POST':
-        form = MusicForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('shop:music_list')
-    else:
-        form = MusicForm()
-    return render(request, 'shop/upload_music.html', {'form': form})
-
-# Music List
-def music_list(request):
-    musics = Music.objects.all()
-    return render(request, 'shop/music_list.html', {'musics': musics})
-
-# Other Views (Feedback, Notifications, etc.)
-# Implement feedback_view, loyalty_points_view, notification_view, etc.
-
-# AR View
-def ar_view(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'shop/ar_view.html', {'product': product})
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate
-
-def register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('shop:home')  # Redirect to home or any other page after registration
-    else:
-        form = UserCreationForm()
-    
-    return render(request, 'shop/register.html', {'form': form})
-from django.shortcuts import render
-
-def chat_bot_view(request):
-    return render(request, 'shop/chat_bot.html')  # Assuming you have a 'chat_bot.html' template
-from django.shortcuts import render
-
-def account_home(request):
-    return render(request, 'shop/account_home.html')  # Assuming you have an 'account_home.html' template
-from django.shortcuts import render
-
-def chat_room(request, room_name):
-    context = {
-        'room_name': room_name
-    }
-    return render(request, 'shop/chat_room.html', context)
-from django.shortcuts import render
-
+# Other views (e.g. for feedback, notifications, AR, discount codes, loyalty points) would be added here in the same way.
+# Feedback View
+@login_required
 def feedback_view(request):
     if request.method == 'POST':
-        # Handle feedback form submission
-        feedback = request.POST.get('feedback')
-        # Process feedback, save to database, etc.
-        # For now, just render a thank you page
-        return render(request, 'shop/feedback_thank_you.html')
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Thank you for your feedback!')
+            return redirect('shop:feedback_thank_you')
     else:
-        # Render feedback form
-        return render(request, 'shop/feedback_form.html')
-from django.shortcuts import render
+        form = FeedbackForm()
+    return render(request, 'shop/feedback_form.html', {'form': form})
 
-def music_view(request):
-    # Implement the functionality for this view
-    return render(request, 'shop/music_view.html')
-from django.shortcuts import render
+@login_required
+def feedback_thank_you(request):
+    return render(request, 'shop/feedback_thank_you.html')
 
-def loyalty_point_view(request):
-    # Implement the functionality for this view
-    return render(request, 'shop/loyalty_point.html')
-from django.shortcuts import render
 
-def notification_view(request):
-    # Implement the functionality for this view
-    return render(request, 'shop/notification.html')
-from django.shortcuts import render
+# Notification View
+@login_required
+def notification_list(request):
+    notifications = Notification.objects.filter(user=request.user)
+    return render(request, 'shop/notification_list.html', {'notifications': notifications})
 
-def setup_view(request):
-    # Implement the functionality for this view
-    return render(request, 'shop/setup.html')
-from django.shortcuts import render
 
+# AR (Augmented Reality) View for products
+def ar_product_view(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'shop/ar_view.html', {'product': product})
+
+
+# Discount Code Views
+@login_required
 def discount_code_list(request):
-    # Fetch discount codes and pass them to the template
-    # This is a placeholder, adjust according to your model and logic
-    discount_codes = []  # Replace with actual query
+    discount_codes = DiscountCode.objects.all()  # Assuming admin views all discount codes
     return render(request, 'shop/discount_code_list.html', {'discount_codes': discount_codes})
+
 @login_required
-def delete_discount_code(request, code_id):
-    try:
-        discount_code = DiscountCode.objects.get(id=code_id)
-        discount_code.delete()
-    except DiscountCode.DoesNotExist:
-        # Handle the case where the discount code does not exist
-        pass
-    return redirect('shop:discount_code_list')
+def apply_discount_code(request, code):
+    discount_code = get_object_or_404(DiscountCode, code=code)
+    # Apply discount code logic here
+    return redirect('shop:cart_view')
+
+
+# Loyalty Points Views
 @login_required
-def create_discount_code(request):
-    if request.method == 'POST':
-        form = DiscountCodeForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('shop:discount_code_list')
-    else:
-        form = DiscountCodeForm()
-    return render(request, 'shop/create_discount_code.html', {'form': form})
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import DiscountCode
-from .forms import DiscountCodeForm
+def loyalty_points_list(request):
+    loyalty_points = LoyaltyPoints.objects.filter(user=request.user)
+    return render(request, 'shop/loyalty_points_list.html', {'loyalty_points': loyalty_points})
 
-def update_discount_code(request, code_id):
-    code = get_object_or_404(DiscountCode, id=code_id)
-    if request.method == 'POST':
-        form = DiscountCodeForm(request.POST, instance=code)
-        if form.is_valid():
-            form.save()
-            return redirect('some_view_name')  # replace with your redirect view
-    else:
-        form = DiscountCodeForm(instance=code)
-
-    return render(request, 'shop/update_discount_code.html', {'form': form})
-from django.shortcuts import render, redirect
-from .models import LoyaltyPoints
-from .forms import LoyaltyPointsForm
-
+@login_required
 def update_loyalty_points(request):
     if request.method == 'POST':
         form = LoyaltyPointsForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('some_view_name')  # Update with your desired redirect
+            messages.success(request, 'Loyalty points updated successfully!')
+            return redirect('shop:loyalty_points_list')
     else:
         form = LoyaltyPointsForm()
-
     return render(request, 'shop/update_loyalty_points.html', {'form': form})
-from django.http import HttpResponse
 
-def test_view(request):
-    return HttpResponse("This is a test view.")
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+# Thank You View for Discount Codes
+@login_required
+def discount_thank_you(request):
+    return render(request, 'shop/discount_thank_you.html')
+def upload_music(request):
+    if request.method == 'POST' and request.FILES['music_file']:
+        music_file = request.FILES['music_file']
+        fs = FileSystemStorage()
+        filename = fs.save(music_file.name, music_file)
+        uploaded_file_url = fs.url(filename)
+        # You can also save the file path to the database if needed
 
-def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('login')  # Redirect to the login page after successful registration
-    else:
-        form = UserCreationForm()
-    
-    return render(request, 'shop/register.html', {'form': form})
-from django.shortcuts import render, redirect
-from .models import DiscountCode
-from .forms import DiscountCodeForm
+        return render(request, 'shop/upload_success.html', {
+            'uploaded_file_url': uploaded_file_url
+        })
+    return render(request, 'shop/upload_music.html')
+def music_list(request):
+    # Fetch all uploaded music files from the database
+    music_files = Music.objects.all()  # Adjust according to your model
+    return render(request, 'shop/music_list.html', {'music_files': music_files})
+def chat_room(request, room_name):
+    return render(request, 'shop/chat_room.html', {'room_name': room_name})
+class NotificationListView(View):
+    def get(self, request):
+        notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+        return render(request, 'shop/notifications.html', {'notifications': notifications})
 
-def create_discount_code(request):
-    if request.method == 'POST':
-        form = DiscountCodeForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('discount_code_list')  # Adjust this to the appropriate view
-    else:
-        form = DiscountCodeForm()
-    
-    return render(request, 'shop/create_discount_code.html', {'form': form})
-# shop/views.py
-
-from django.shortcuts import render, redirect
-from .forms import DiscountCodeForm
-from .models import DiscountCode
-
-def create_discount_code(request):
-    if request.method == 'POST':
-        form = DiscountCodeForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('shop:discount_code_list')
-    else:
-        form = DiscountCodeForm()
-    return render(request, 'shop/create_discount_code.html', {'form': form})
-# In views.py
-def loyalty_points_list(request):
-    loyalty_points = LoyaltyPoints.objects.filter(user=request.user)
-    return render(request, 'shop/loyalty_points_list.html', {'loyalty_points': loyalty_points})
-def notification_view(request):
-    return render(request, 'shop/notification.html')
-from django.shortcuts import render
+    def post(self, request, notification_id):
+        notification = Notification.objects.get(id=notification_id, user=request.user)
+        notification.is_read = True
+        notification.save()
+        return JsonResponse({'status': 'success'})
 
 def order_history(request):
-    # Example logic for order history
-    orders = []  # Replace with actual logic to get order history
+    # Fetch the user's orders
+    orders = Order.objects.filter(user=request.user).order_by('-date_created')  # Adjust the field name as needed
     return render(request, 'shop/order_history.html', {'orders': orders})
-from django.shortcuts import render, redirect
-
 def create_discount_code(request):
-    # Example logic for creating a discount code
     if request.method == 'POST':
-        # Process the form and create the discount code
-        pass
-    return render(request, 'shop/create_discount_code.html')
-from django.shortcuts import render
-
-def create_discount_code(request):
-    # Logic to handle creating discount code
-    return render(request, 'shop/create_discount_code.html')
-from django.shortcuts import render
-
-def create_discount_code(request):
-    # Logic for creating a discount code
-    return render(request, 'shop/create_discount_code.html')
-# shop/views.py
-from django.shortcuts import render
-
-def music_view(request):
-    # Your view logic here
-    return render(request, 'shop/music_view.html')
-# shop/views.py
-from django.shortcuts import render
-
-def account_home(request):
-    # Your view logic here
-    return render(request, 'shop/account_home.html')
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .forms import ProfileImageForm
-
-@login_required
-def update_profile_picture(request):
-    if request.method == 'POST':
-        form = ProfileImageForm(request.POST, request.FILES, instance=request.user.profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Your profile picture was successfully updated!')
-            return redirect('shop:profile')
-    else:
-        form = ProfileImageForm(instance=request.user.profile)
-
-    return render(request, 'shop/profile.html', {'form': form})
-
-# shop/views.py
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import DiscountCode
-from .forms import DiscountCodeForm
-
-def update_discount_code(request, code_id):
+        # Logic to create a discount code
+        code = request.POST.get('code')
+        discount = request.POST.get('discount')
+        # Save the discount code (you may need to adjust the fields according to your model)
+        DiscountCode.objects.create(code=code, discount=discount)
+        return redirect('some_redirect_view')  # Redirect to an appropriate view after creation
+    
+    return render(request, 'shop/create_discount_code.html')  # Render a template for creating discount codes
+def delete_discount_code(request, code_id):
+    # Get the discount code by ID
     discount_code = get_object_or_404(DiscountCode, id=code_id)
+    
+    # Delete the discount code
+    if request.method == 'POST':
+        discount_code.delete()
+        return redirect('some_redirect_view')  # Redirect to a view after deletion
+
+    return render(request, 'shop/confirm_delete_discount_code.html', {'discount_code': discount_code})
+def update_discount_code(request, code_id):
+    # Get the discount code by ID
+    discount_code = get_object_or_404(DiscountCode, id=code_id)
+
     if request.method == 'POST':
         form = DiscountCodeForm(request.POST, instance=discount_code)
         if form.is_valid():
-            form.save()
-            return redirect('shop:discount_code_list')
+            form.save()  # Save the updated discount code
+            return redirect('some_redirect_view')  # Redirect to a view after updating
     else:
-        form = DiscountCodeForm(instance=discount_code)
-    return render(request, 'shop/update_discount_code.html', {'form': form})
-# shop/paypal_utils.py
+        form = DiscountCodeForm(instance=discount_code)  # Pre-fill the form with current data
 
-from paypalrestsdk import Payment
-import paypalrestsdk
-
-# Configure PayPal SDK with your credentials
-paypalrestsdk.configure({
-    "mode": "sandbox",  # or "live" for production
-    "client_id": "YOUR_CLIENT_ID",
-    "client_secret": "YOUR_CLIENT_SECRET"
-})
-
-def initiate_paypal_payment(amount, return_url, cancel_url):
-    payment = Payment({
-        "intent": "sale",
-        "payer": {
-            "payment_method": "paypal"
-        },
-        "redirect_urls": {
-            "return_url": return_url,
-            "cancel_url": cancel_url
-        },
-        "transactions": [{
-            "amount": {
-                "total": amount,
-                "currency": "USD"
-            },
-            "description": "Payment description"
-        }]
-    })
-
-    if payment.create():
-        return payment
+    return render(request, 'shop/update_discount_code.html', {'form': form, 'discount_code': discount_code})
+def test_view(request):
+    return render(request, 'shop/test.html', {})
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful! Welcome!")
+            return redirect('home')
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
-        return None
-from django.shortcuts import render
-from .models import Product  # Assuming you have a Product model
+        form = CustomUserCreationForm()
 
-def recommended_products_view(request):
-    # Logic to get recommended products (you can customize this)
-    recommended_products = Product.objects.filter(is_recommended=True)  # Example filter
+    return render(request, 'shop/register.html', {'form': form})
+def music_view(request, music_id):
+    music_item = get_object_or_404(Music, id=music_id)
+    return render(request, 'shop/music_view.html', {'music': music_item})
+def music_list(request):
+    music_files = Music.objects.all()  # Fetch all music files
+    no_music = not music_files.exists()  # Check if there are no music files
+    context = {
+        'music_files': music_files,
+        'no_music': no_music,  # Pass the no_music flag to the template
+    }
+    return render(request, 'shop/music_list.html', context)
+from .forms import MusicForm
 
-    # Render the recommended products in a template
-    return render(request, 'shop/recommended_products.html', {'recommended_products': recommended_products})
-
-import yaml
-from django.conf import settings  # Import the settings where you defined the YAML path
-
-def load_yaml_data():
-    yaml_file_path = settings.YAML_FILE_PATH
-
-    # Open and load the YAML file
-    try:
-        with open(yaml_file_path, 'r') as file:
-            data = yaml.safe_load(file)
-            return data  # Now you can use the loaded YAML data
-    except FileNotFoundError:
-        print(f"YAML file not found at: {yaml_file_path}")
-        return None
-    except yaml.YAMLError as exc:
-        print(f"Error while parsing YAML: {exc}")
-        return None
-from django.shortcuts import render, get_object_or_404
-from .models import Profile  # or wherever your Profile model is located
-
-def profile_view(request):
-    user_profile = get_object_or_404(Profile, user=request.user)
-    return render(request, 'shop/profile.html', {'profile': user_profile})
-from django.shortcuts import render, redirect
-from django.views import View
-from .models import Profile
-from .forms import ProfileForm  # Make sure to create a ProfileForm
-
-class EditProfileView(View):
-    def get(self, request):
-        profile = Profile.objects.get(user=request.user)
-        form = ProfileForm(instance=profile)
-        return render(request, 'shop/edit_profile.html', {'form': form})
-
-    def post(self, request):
-        profile = Profile.objects.get(user=request.user)
-        form = ProfileForm(request.POST, instance=profile)
+def create_music(request):
+    if request.method == 'POST':
+        form = MusicForm(request.POST, request.FILES)  # Ensure to include request.FILES
         if form.is_valid():
             form.save()
-            return redirect('shop:profile')  # Redirect to profile page after saving
-        return render(request, 'shop/edit_profile.html', {'form': form})
+            return redirect('music_list')  # Adjust this according to your URLs
+    else:
+        form = MusicForm()
+    return render(request, 'music_view.html', {'form': form})
+def recommended_products_view(request):
+    # Retrieve recommended products, this is just an example
+    recommended_products = Product.objects.filter(is_recommended=True)  # Adjust your filtering criteria
+    context = {
+        'recommended_products': recommended_products
+    }
+    return render(request, 'shop/recommended_products.html', context)
+class EditProfileView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    form_class = ProfileForm
+    template_name = 'shop/edit_profile.html'
+    success_url = reverse_lazy('profile')  # Redirect to profile page after successful edit
 
-def home(request):
-    return render(request, 'shop/home.html')  # Adjust the template name as needed
+    def get_object(self, queryset=None):
+        return self.request.user.profile  # Get the logged-in user's profile
+def order_history(request):
+    # Instead of using 'date_created', use 'created_at'
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')  # Example query
+    return render(request, 'shop/order_history.html', {'orders': orders})
+def notification_view(request):
+    notifications = request.user.notifications.all()
+    return render(request, 'shop/notification.html', {'notifications': notifications})
+# shop/views.py
+
+from django.db.models import Count
+
+def most_viewed_products(request):
+    most_viewed = Product.objects.annotate(view_count=Count('pageview')).order_by('-view_count')[:10]
+    return render(request, 'shop/most_viewed.html', {'most_viewed': most_viewed})
+from .models import UserRegistrationStatistic
+
+def user_registration_stats(request):
+    registrations = UserRegistrationStatistic.objects.all().order_by('-registered_at')
+    return render(request, 'shop/registration_stats.html', {'registrations': registrations})
+
+@login_required
+def submit_review(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+
+            # Return success response
+            return JsonResponse({
+                'success': True,
+                'username': review.user.username,
+                'comment': review.comment,
+                'rating': review.rating,
+            })
+        
+        # Return error response if form is not valid
+        return JsonResponse({'success': False, 'error': 'Invalid review data.'})
+
+    # If it's a GET request, you might want to return an error
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+class NotificationView(View):
+    def get(self, request):
+        notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+        context = {
+            'notifications': notifications,
+        }
+        return render(request, 'shop/notifications.html', context)
+
+    def post(self, request, notification_id):
+        # Mark notification as read
+        notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+        notification.is_read = True
+        notification.save()
+        return redirect('shop:notifications')
+from .models import ViewedProduct
+from django.http import HttpResponse
+class ViewedProductsView(View):
+    def get(self, request):
+        viewed_products = ViewedProduct.objects.filter(user=request.user)
+        no_products_viewed = viewed_products.count() == 0
+        
+        context = {
+            'viewed_products': viewed_products,
+            'no_products_viewed': no_products_viewed,
+        }
+        
+        return render(request, 'shop/viewed_products.html', context)
+class ProductDetailView(View):
+    def get(self, request, id):
+        # Retrieve the product using the primary key (id)
+        product = get_object_or_404(Product, id=id)
+        # Render the product detail template with the product context
+        return render(request, 'shop/product_detail.html', {'product': product})
+
+    def post(self, request, id):
+        # Handle the POST request (e.g., adding to cart or submitting a review)
+        product = get_object_or_404(Product, id=id)
+        
+        # Here you can add your logic for handling the POST request
+        # For example, you might want to add the product to the user's cart
+        # Assuming you have a form submission to add the product to cart:
+        
+        # Add your logic to handle the POST data
+        # e.g., request.POST.get('quantity') or similar
+        
+        return HttpResponse("Product updated")  # Customize this response as needed
+class HomeView(View):
+    def get(self, request, *args, **kwargs):
+        # Render the home page
+        return render(request, 'shop/home.html') 
+import json
+
+async def receive(self, text_data):
+    text_data_json = json.loads(text_data)
+
+    # Check if the received data indicates typing status
+    if 'typing' in text_data_json:
+        is_typing = text_data_json['typing']
+        # Broadcast typing status to the group
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'typing_message',  # This should correspond to a method in your consumer to handle typing status
+                'is_typing': is_typing,
+            }
+        )
+
+from .models import Message  # Ensure you import the Message model
+
+def chat_room(request, room_name):
+    # Fetch messages for the specific room
+    messages = Message.objects.filter(room_name=room_name)
+    return render(request, 'shop/chat_room.html', {'room_name': room_name, 'messages': messages})
+ #shop/views.py
+from django.views.generic import ListView
+from .models import Order  # Ensure this points to your Order model
+
+class OrderHistoryView(ListView):
+    model = Order
+    template_name = 'shop/order_history.html'  # Ensure this template exists
+    context_object_name = 'orders'
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)  # Adjust as needed
+
+def account_settings_view(request):
+    return render(request, 'shop/account_settings.html')
+from django.shortcuts import render
+
+def wishlist_view(request):
+    # Replace with your actual logic for fetching wishlist items
+    wishlist_items = []  # Example: Fetch user's wishlist items here
+    return render(request, 'shop/wishlist.html', {'wishlist_items': wishlist_items})
+def account_home(request):
+    # Logic to retrieve and display account information
+    return render(request, 'shop/account_home.html')  # En
+
+@login_required
+def update_account_settings(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        password = request.POST.get('password')
+        profile_picture = request.FILES.get('profile_picture')
+
+        # Update user info
+        user = request.user
+        user.username = username
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+
+        if password:  # Only change password if a new one is provided
+            user.set_password(password)
+
+        if profile_picture:  # Handle profile picture upload
+            user.profile_picture = profile_picture  # Assuming you have a profile_picture field
+        user.save()
+        messages.success(request, "Account settings updated successfully.")
+        return redirect('shop:account_settings')  # Redirect to the settings page or any other page
+
+    return render(request, 'shop/account_settings.html')
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        messages.success(request, "Your account has been deleted successfully.")
+        return redirect('shop:home')  # Redirect to a suitable page after deletion
+
+    return render(request, 'shop/delete_account_confirmation.html')  # A confirmation page (optional)
+class WishlistView(View):
+    def get(self, request):
+        # Logic to retrieve and display the wishlist
+        return render(request, 'shop/wishlist.html')  # Ens
+    class OffersView(View):
+     def get(self, request):
+        # Logic to retrieve and display offers
+        return render(request, 'shop/offers.html')
+     from django.shortcuts import render, redirect
+from django.views.generic import ListView
+from .models import Offer, Wishlist, Feedback  # Make sure these models exist
+from django.contrib import messages
+from .forms import FeedbackForm  # Ensure you have a FeedbackForm defined in forms.py
+
+
+class OffersView(ListView):
+    model = Offer
+    template_name = 'shop/offers.html'  # Template for displaying offers
+    context_object_name = 'offers'
+
+    def get_queryset(self):
+        # Filter to get only active offers
+        return Offer.objects.filter(is_active=True)
+
+
+def wishlist_view(request):
+    """View for displaying and managing the user's wishlist."""
+    if request.user.is_authenticated:
+        wishlist_items = Wishlist.objects.filter(user=request.user)
+        return render(request, 'shop/wishlist.html', {'wishlist_items': wishlist_items})
+    else:
+        messages.error(request, "You need to be logged in to view your wishlist.")
+        return redirect('login')  # Redirect to login if not authenticated
+
+
+def feedback_view(request):
+    """View for submitting feedback."""
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            feedback.user = request.user  # Associate feedback with the logged-in user
+            feedback.save()
+            messages.success(request, "Thank you for your feedback!")
+            return redirect('feedback')  # Redirect to feedback page or another page
+    else:
+        form = FeedbackForm()
+
+    return render(request, 'shop/feedback_form.html', {'form': form})  # Render feedback form
+
+
