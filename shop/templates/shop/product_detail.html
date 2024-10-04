@@ -76,7 +76,7 @@
                 </form>
             </div>
         {% else %}
-            <p><a href="{% url 'login' %}">Log in</a> to submit a review.</p>
+            <p><a href="{% url 'shop:login' %}">Log in</a> to submit a review.</p>
         {% endif %}
     </div>
 
@@ -103,7 +103,7 @@
             <h3>Your Loyalty Points: {{ user.loyaltypoints.points }}</h3>
             <p>Earn more points by purchasing this product!</p>
         {% else %}
-            <p><a href="{% url 'login' %}">Log in</a> to view and earn loyalty points.</p>
+            <p><a href="{% url 'shop:login' %}">Log in</a> to view and earn loyalty points.</p>
         {% endif %}
     </div>
 

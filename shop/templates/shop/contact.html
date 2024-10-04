@@ -4,7 +4,63 @@
 {% block title %}Contact Us - Enoch Shopping Center{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<!-- Inline CSS for the contact form -->
+<style>
+    /* Basic reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    /* Contact form section */
+    .contact-form {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-form h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #343a40;
+    }
+
+    /* Form elements */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #495057;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    
+</style>
 
 <section class="contact-form">
     <h2>Send Us a Message</h2>
@@ -12,15 +68,15 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" class="form-control" required>
         </div>
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" class="form-control" required>
         </div>
         <div class="form-group">
             <label for="message">Message:</label>
-            <textarea id="message" name="message" rows="4" required></textarea>
+            <textarea id="message" name="message" class="form-control" rows="4" required></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Send Message</button>
     </form>

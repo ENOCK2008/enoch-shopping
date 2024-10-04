@@ -10,7 +10,8 @@ from django.contrib.auth.views import LogoutView
 from .views import mtn_view, ProductDetailView, ProfileView, some_action, mark_as_read, notification_view
 from shop.views import ViewedProductsView, HomeView, OrderHistoryView, register
 from .views import CartView, wishlist_view, OffersView, feedback_view
-
+from .views import register_view
+from django.contrib.auth.views import LoginView
 app_name = 'shop'
 
 # WebSocket URL patterns
@@ -42,6 +43,7 @@ urlpatterns = [
     path('product/<int:id>/', ProductDetailView.as_view(), name='product_detail'),
     path('categories/', views.categories, name='categories'),
     path('shop/', views.shop, name='shop'),
+    path('shop/login/', LoginView.as_view(template_name='shop/login.html'), name='login'),
     path('notifications/', notification_view, name='notifications'),
     path('checkout/', views.checkout, name='checkout'),
     path('payment_success/', views.payment_success, name='payment_success'),
@@ -58,6 +60,7 @@ urlpatterns = [
     path('loyalty_points/', views.loyalty_points_list, name='loyalty_points_list'),
     path('notification/', views.notification_view, name='notification'),
     path('order-history/', OrderHistoryView.as_view(), name='order_history'),
+     path('order-history/', views.order_history, name='order_history'),
     path('account-settings/', views.account_settings_view, name='account_settings'),
     path('wishlist/', wishlist_view, name='wishlist'),
 
@@ -87,6 +90,10 @@ urlpatterns = [
 
     # Correct user registration path
     path('register/', views.register_view, name='register'),
+    path('register/', register_view, name='register'),
+    path('privacy/', views.privacy_policy, name='privacy'),
+    path('terms/', views.terms_of_service, name='terms'),
+    path('contact/', views.contact_us, name='contact'),
 
 
     # Two-factor authentication views

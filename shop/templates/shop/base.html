@@ -76,7 +76,6 @@
                         <a class="dropdown-item" href="{% url 'shop:loyalty_points_list' %}">Loyalty Points</a>
                         <a class="dropdown-item" href="{% url 'shop:notification' %}">Notifications</a>
                         <a class="dropdown-item" href="{% url 'shop:recommended_products' %}">Recommended Products</a>
-                        <a class="dropdown-item" href="{% url 'shop:cart' %}">Cart</a>
                         <a class="dropdown-item" href="{% url 'shop:wishlist' %}">Wishlist</a>
                         <a class="dropdown-item" href="{% url 'shop:offers' %}">Offers</a>
                         <a class="dropdown-item" href="{% url 'shop:feedback' %}">Feedback</a>
@@ -84,7 +83,7 @@
                         {% if user.is_staff %}
                             <a class="dropdown-item" href="{% url 'shop:setup' %}">Setup</a>
                         {% endif %}
-                        <a class="dropdown-item" href="{% url 'shop:order_history' %}">Order History</a>
+                       
                     </div>
                 </li>
                 {% if user.is_authenticated %}

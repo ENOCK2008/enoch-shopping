@@ -513,13 +513,13 @@ def register(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful! Welcome!")
-            return redirect('home')
+            return redirect('home')  # Make sure 'home' is a valid URL name
         else:
             messages.error(request, "Please correct the errors below.")
     else:
         form = CustomUserCreationForm()
 
-    return render(request, 'shop/register.html', {'form': form})
+    return render(request, 'shop/signup.html', {'form': form})  
 def music_view(request, music_id):
     music_item = get_object_or_404(Music, id=music_id)
     return render(request, 'shop/music_view.html', {'music': music_item})
@@ -557,13 +557,26 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user.profile  # Get the logged-in user's profile
+@login_required
 def order_history(request):
-    # Instead of using 'date_created', use 'created_at'
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')  # Example query
-    return render(request, 'shop/order_history.html', {'orders': orders})
+    # Ensure request.user is an authenticated user
+    if request.user.is_authenticated:
+        orders = Order.objects.filter(user=request.user).order_by('-created_at')
+        return render(request, 'shop/order_history.html', {'orders': orders})
+    else:
+        return redirect('login')  # Redirect to the login page if not authenticated
+
 def notification_view(request):
-    notifications = request.user.notifications.all()
-    return render(request, 'shop/notification.html', {'notifications': notifications})
+    if request.user.is_authenticated:
+        user_notifications = request.user.notifications.all()
+        context = {
+            'notifications': user_notifications,
+        }
+        return render(request, 'shop/notification.html', context)
+    else:
+        # Redirect to login or show a message for anonymous users
+        return redirect('shop:login')  # or render a message template
+
 # shop/views.py
 
 from django.db.models import Count
@@ -786,3 +799,11 @@ def feedback_view(request):
     return render(request, 'shop/feedback_form.html', {'form': form})  # Render feedback form
 
 
+def privacy_policy(request):
+    return render(request, 'shop/privacy_policy.html')
+
+def terms_of_service(request):
+    return render(request, 'shop/terms_of_service.html')
+
+def contact_us(request):
+    return render(request, 'shop/contact_us.html')
