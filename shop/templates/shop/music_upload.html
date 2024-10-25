@@ -1,0 +1,115 @@
+{% extends 'shop/base.html' %}
+
+{% load static %}
+
+{% block title %}Music{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        .upload-section,
+        .music-list {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .upload-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .music-items {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .music-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fefefe;
+        }
+    </style>
+
+    <h1>Music Library</h1>
+    
+    <!-- Section for uploading new music -->
+    <section class="upload-section">
+        <h2>Upload New Music</h2>
+        <form action="{% url 'shop:upload_music' %}" method="post" enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="artist">Artist:</label>
+                <input type="text" id="artist" name="artist" required class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="audio_file">Audio File:</label>
+                <input type="file" id="audio_file" name="audio_file" accept="audio/*" required class="form-control">
+            </div>
+            
+            <button type="submit" class="btn">Upload</button>
+        </form>
+    </section>
+    
+    <!-- Section for displaying music items -->
+    <section class="music-list">
+        <h2>Available Music</h2>
+        {% if music_list %}
+            <ul class="music-items">
+                {% for music in music_list %}
+                    <li class="music-item">
+                        <strong>Title:</strong> {{ music.title }} <br>
+                        <strong>Artist:</strong> {{ music.artist }} <br>
+                        <audio controls>
+                            <source src="{{ music.audio_file.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No music available at the moment.</p>
+        {% endif %}
+    </section>
+{% endblock %}

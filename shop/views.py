@@ -40,6 +40,11 @@ from .models import Feedback  # Adjust the import based on your app structure
 from .forms import FeedbackForm  # Assuming you're using a form for feedback
 from django.views.generic import TemplateView
 from .models import Product, PageView
+from django.views.generic import ListView
+from .models import Offer, Wishlist, Feedback  # Make sure these models exist
+from django.contrib import messages
+from .forms import FeedbackForm  # Ensure you have a FeedbackForm defined in forms.py
+
 
 @login_required
 def product_detail(request, product_id):
@@ -118,10 +123,6 @@ def categories(request):
     categories = Category.objects.all()
     return render(request, 'shop/categories.html', {'categories': categories, 'current_year': 2024})
 
-# Product Detail View
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'shop/product_detail.html', {'product': product})
 
 # Product List View
 def product_list(request):
@@ -146,41 +147,42 @@ def product_list(request):
 from django.contrib.auth.models import AnonymousUser
 
 class CartView(LoginRequiredMixin, View):
-    login_url = '/accounts/login/'  # URL to redirect to if the user is not logged in
+    login_url = '/accounts/login/'
 
     def get(self, request):
-        if isinstance(request.user, AnonymousUser):
-            return redirect(self.login_url)
-        
-        # Fetch or create a cart for the authenticated user
-        cart, _ = Cart.objects.get_or_create(user=request.user)
-        
-        # Retrieve cart items associated with this cart
+        cart, created = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
-        
-        # Calculate total cost of items in the cart
         cart_total = sum(item.product.price * item.quantity for item in cart_items)
         
-        # Render the cart page with the necessary context
-        return render(request, 'shop/cart.html', {
+        return render(request, 'shop/cart_view.html', {
             'cart': cart,
             'cart_items': cart_items,
-            'cart_total': cart_total
+            'cart_total': cart_total,
         })
 
-# Add to Cart
 @login_required
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    cart, _ = Cart.objects.get_or_create(user=request.user)
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product, defaults={'quantity': 1})
+
+    if product.stock <= 0:
+        messages.warning(request, "Sorry, this product is out of stock.")
+        return redirect('shop:product_detail', product_id=product.id)
+
+    cart, created = Cart.objects.get_or_create(user=request.user)
+
+    cart_item, created = CartItem.objects.get_or_create(
+        cart=cart,
+        product=product,
+        defaults={'quantity': 1}
+    )
     
     if not created:
         cart_item.quantity += 1
         cart_item.save()
+
+    messages.success(request, f"{product.name} has been added to your cart.")
     
     return redirect('shop:cart_view')
-
 # Update Cart Item
 @login_required
 def update_cart_item(request, item_id):
@@ -190,6 +192,12 @@ def update_cart_item(request, item_id):
         cart_item.quantity = new_quantity
         cart_item.save()
     return redirect('shop:cart_view')
+@login_required
+def cart_view(request):
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    cart_items = CartItem.objects.filter(cart=cart)
+    cart_total = sum(item.product.price * item.quantity for item in cart_items)
+    return render(request, 'shop/cart_view.html', {'cart_items': cart_items, 'cart_total': cart_total})
 
 def send_order_confirmation_email(user, order):
     subject = "Order Confirmation"
@@ -207,7 +215,7 @@ def create_order_notification(user, order):
     Notification.objects.create(user=user, message=message)
 # Checkout View
 
-def checkout(request):
+def checkout_view(request):
     if request.method == 'POST':
         BASE_URL = settings.MOBILE_MONEY_CONFIG['API_BASE_URL']
         API_USER_ID = 'c72025f5-5cd1-4630-99e4-8ba4722fad56'
@@ -504,35 +512,53 @@ def update_discount_code(request, code_id):
         form = DiscountCodeForm(instance=discount_code)  # Pre-fill the form with current data
 
     return render(request, 'shop/update_discount_code.html', {'form': form, 'discount_code': discount_code})
-def test_view(request):
-    return render(request, 'shop/test.html', {})
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import login
+from .forms import CustomUserCreationForm
+
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user)  # Automatically log in the user after registration
             messages.success(request, "Registration successful! Welcome!")
-            return redirect('home')  # Make sure 'home' is a valid URL name
+            return redirect('shop:home')  # Redirect to home or another page
         else:
             messages.error(request, "Please correct the errors below.")
     else:
         form = CustomUserCreationForm()
 
-    return render(request, 'shop/signup.html', {'form': form})  
+    context = {
+        'form': form,
+        'registered': request.method == 'POST' and form.is_valid()
+    }
+    return render(request, 'shop/register.html', context)
+
 def music_view(request, music_id):
     music_item = get_object_or_404(Music, id=music_id)
     return render(request, 'shop/music_view.html', {'music': music_item})
+
+
 def music_list(request):
     music_files = Music.objects.all()  # Fetch all music files
     no_music = not music_files.exists()  # Check if there are no music files
+
+    if request.method == 'POST':
+        form = MusicForm(request.POST, request.FILES)  # Handle form submission
+        if form.is_valid():
+            form.save()  # Save the new music file
+            return redirect('shop:music_list')  # Redirect after successful upload
+    else:
+        form = MusicForm()  # Create an empty form for GET requests
+
     context = {
         'music_files': music_files,
         'no_music': no_music,  # Pass the no_music flag to the template
+        'form': form,  # Pass the form to the template
     }
     return render(request, 'shop/music_list.html', context)
-from .forms import MusicForm
-
 def create_music(request):
     if request.method == 'POST':
         form = MusicForm(request.POST, request.FILES)  # Ensure to include request.FILES
@@ -682,11 +708,9 @@ async def receive(self, text_data):
             }
         )
 
-from .models import Message  # Ensure you import the Message model
-
 def chat_room(request, room_name):
-    # Fetch messages for the specific room
-    messages = Message.objects.filter(room_name=room_name)
+    # Fetch SMS messages for the specific room
+    messages = SMSMessage.objects.filter(phone_number=room_name)  # Update this logic as needed
     return render(request, 'shop/chat_room.html', {'room_name': room_name, 'messages': messages})
  #shop/views.py
 from django.views.generic import ListView
@@ -711,34 +735,39 @@ def wishlist_view(request):
 def account_home(request):
     # Logic to retrieve and display account information
     return render(request, 'shop/account_home.html')  # En
-
+from .models import Profile
 @login_required
 def update_account_settings(request):
+    user_profile = Profile.objects.get(user=request.user)
+
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        password = request.POST.get('password')
-        profile_picture = request.FILES.get('profile_picture')
+        # Update user basic information
+        request.user.username = request.POST['username']
+        request.user.email = request.POST['email']
+        request.user.first_name = request.POST['first_name']
+        request.user.last_name = request.POST['last_name']
 
-        # Update user info
-        user = request.user
-        user.username = username
-        user.email = email
-        user.first_name = first_name
-        user.last_name = last_name
+        # Update password if provided
+        if request.POST['password']:
+            request.user.set_password(request.POST['password'])
 
-        if password:  # Only change password if a new one is provided
-            user.set_password(password)
+        # Update profile picture if provided
+        if request.FILES.get('profile_picture'):
+            user_profile.profile_picture = request.FILES['profile_picture']
 
-        if profile_picture:  # Handle profile picture upload
-            user.profile_picture = profile_picture  # Assuming you have a profile_picture field
-        user.save()
-        messages.success(request, "Account settings updated successfully.")
-        return redirect('shop:account_settings')  # Redirect to the settings page or any other page
+        # Update additional settings
+        user_profile.two_factor_auth = 'two_factor_auth' in request.POST
+        user_profile.newsletter = 'newsletter' in request.POST
+        user_profile.privacy_settings = request.POST['privacy_settings']
+        
+        # Save changes
+        request.user.save()
+        user_profile.save()
 
-    return render(request, 'shop/account_settings.html')
+        messages.success(request, 'Your account settings have been updated successfully.')
+        return redirect('shop:account_settings')
+
+    return render(request, 'shop/account_settings.html', {'user': request.user, 'profile': user_profile})
 @login_required
 def delete_account(request):
     if request.method == 'POST':
@@ -756,12 +785,6 @@ class WishlistView(View):
      def get(self, request):
         # Logic to retrieve and display offers
         return render(request, 'shop/offers.html')
-     from django.shortcuts import render, redirect
-from django.views.generic import ListView
-from .models import Offer, Wishlist, Feedback  # Make sure these models exist
-from django.contrib import messages
-from .forms import FeedbackForm  # Ensure you have a FeedbackForm defined in forms.py
-
 
 class OffersView(ListView):
     model = Offer
@@ -807,3 +830,739 @@ def terms_of_service(request):
 
 def contact_us(request):
     return render(request, 'shop/contact_us.html')
+# shop/views.py
+
+from django.db.models import Q
+
+def search_view(request):
+    query = request.GET.get('q', '').strip()  # Get the query and strip whitespace
+    products = Product.objects.none()  # Initialize products as an empty queryset
+
+    if query:  # Only search if there's a non-empty query
+        # Filter products based on the search query
+        products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+
+    product_count = products.count()  # Using count() on queryset
+
+    return render(request, 'shop/search_results.html', {
+        'products': products,
+        'product_count': product_count,
+        'query': query,
+    })
+
+
+def filter_view(request):
+    min_price = request.GET.get('min_price', '')
+    max_price = request.GET.get('max_price', '')
+    
+    products = Product.objects.all()
+
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
+
+    return render(request, 'shop/product_list.html', {'products': products})
+from .models import Category, Product
+
+def category_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+    return render(request, 'shop/categories.html', {'category': category, 'products': products})
+# views.py
+
+def most_viewed_view(request):
+    # Logic to retrieve most viewed products
+    most_viewed_products = []  # Replace with actual logic to get products
+    context = {
+        'most_viewed_products': most_viewed_products,
+    }
+    return render(request, 'shop/most_viewed.html', context)
+
+
+from .models import Offer
+
+def offer_list_view(request):
+    # Fetch active offers from the Offer model
+    offers = Offer.objects.filter(active=True)  # Assuming 'active' is a Boolean field
+
+    # Convert each offer into a dictionary format
+    offers_data = [
+        {
+            "title": offer.title,
+            "description": offer.description,  # Including description for more context
+            "discount": offer.discount_percentage,
+            "start_date": offer.start_date,    # Optionally include start and end dates
+            "end_date": offer.end_date,
+        }
+        for offer in offers
+    ]
+
+    context = {
+        'offers': offers_data,
+    }
+    return render(request, 'shop/offer_list.html', context)
+from django.shortcuts import render
+
+def privacy_policy_view(request):
+    return render(request, 'shop/privacy_policy.html')
+
+def dashboard_view(request):
+    recommended_products = Product.objects.filter(on_sale=True)
+    all_products = Product.objects.all()  # Modify this as per your needs
+
+    context = {
+        'recommended_products': recommended_products,
+        'all_products': all_products,
+        'user': request.user,
+        # other context variables as needed
+    }
+    return render(request, 'shop/dashboard.html', context)
+from .models import LoyaltyPointHistory  # Import your model for points history
+
+def loyalty_points(request):
+    # Assuming you have a user model with a loyalty_points field
+    user = request.user
+    loyalty_points = user.loyalty_points  # Fetch user's loyalty points
+
+    # Fetch points history for the user
+    points_history = LoyaltyPointHistory.objects.filter(user=user).order_by('-date')
+
+    context = {
+        'loyalty_points': loyalty_points,
+        'points_history': points_history,
+    }
+    return render(request, 'shop/loyalty_points.html', context)
+
+def discount_codes_view(request):
+    discount_codes = DiscountCode.objects.filter(active=True)  # Optionally filter active codes
+    return render(request, 'shop/discount_code_list.html', {'discount_codes': discount_codes})
+class DiscountCodeListView(ListView):
+    model = DiscountCode
+    template_name = 'shop/discount_code_list.html'
+    context_object_name = 'discount_codes'
+
+    def get_queryset(self):
+        return DiscountCode.objects.filter(active=True)
+    from django.shortcuts import render
+
+def faq_view(request):
+    return render(request, 'shop/faq.html')
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import LoyaltyPoints  # Adjust the import according to your project structure
+from django.contrib.auth.decorators import login_required
+
+@login_required  # Ensure the user is logged in to access this view
+def redeem_points_view(request):
+    # Fetch the user's loyalty points
+    user_points = LoyaltyPoints.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        # Handle the redemption request
+        points_to_redeem = request.POST.get('points')
+
+        try:
+            points_to_redeem = int(points_to_redeem)
+            if points_to_redeem <= 0:
+                messages.error(request, "Please enter a valid number of points to redeem.")
+            elif points_to_redeem > user_points.points:
+                messages.error(request, "You do not have enough points to redeem this amount.")
+            else:
+                # Deduct points from the user's account
+                user_points.points -= points_to_redeem
+                user_points.save()
+                
+                # You can also add logic here for what the user receives in return
+                messages.success(request, f"You have successfully redeemed {points_to_redeem} points!")
+                return redirect('shop:loyalty_points_list')  # Redirect to loyalty points list or another page
+        except ValueError:
+            messages.error(request, "Invalid input. Please enter a number.")
+
+    return render(request, 'shop/redeem_points.html', {'user_points': user_points})
+from django.http import Http404
+
+def loyalty_terms_view(request):
+    try:
+        # You could pass any context data if needed
+        context = {
+            'terms': "Here are the terms and conditions of our loyalty program..."
+        }
+        return render(request, 'shop/loyalty_terms.html', context)
+    except Exception as e:
+        # Log the exception or handle it as needed
+        raise Http404("Page not found.")
+from django.shortcuts import render
+from .models import LoyaltyPoints  # Ensure this imports your LoyaltyPoints model
+
+def redeem_points_view(request):
+    try:
+        # Assuming you want to get loyalty points for the current user
+        loyalty_points = LoyaltyPoints.objects.get(user=request.user)  # Adjust as necessary
+    except LoyaltyPoints.DoesNotExist:
+        # Handle the case where there are no loyalty points for the user
+        loyalty_points = None  # Set loyalty_points to None if not found
+
+    # Render the template with loyalty points data
+    context = {
+        'loyalty_points': loyalty_points
+    }
+    return render(request, 'shop/redeem_points.html', context)
+from django.contrib import messages
+
+def add_payment_method(request):
+    if request.method == 'POST':
+        # Logic for adding the payment method
+        card_number = request.POST.get('card_number')
+        expiry_date = request.POST.get('expiry_date')
+        # Process the payment method (e.g., save to the database)
+        
+        messages.success(request, "Payment method added successfully.")
+        return redirect('shop:account_settings')  # Redirect to the account settings or another page
+
+    return render(request, 'shop/account_settings.html')  # Render the template if GET request
+from django.contrib import messages
+
+def add_shipping_address(request):
+    if request.method == 'POST':
+        # Logic for adding the shipping address
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        # Process and save the address (e.g., save to the database)
+        
+        messages.success(request, "Shipping address added successfully.")
+        return redirect('shop:account_settings')  # Redirect to the account settings or another page
+
+    return render(request, 'shop/account_settings.html')  # Render the template if GET request
+from django.contrib.auth.models import User
+
+def send_verification_email(request):
+    if request.method == 'POST':
+        # Logic to send a verification email
+        user = request.user
+        if user.is_authenticated and not user.is_verified:
+            # Assuming you have a method to send verification email
+            user.send_verification_email()  # Implement this method in your User model
+            messages.success(request, "Verification email sent successfully.")
+        else:
+            messages.error(request, "You cannot resend a verification email.")
+
+    return render(request, 'shop/account_settings.html')  # Render the template if GET request
+def generate_referral_link(request):
+    if request.method == 'POST':
+        # Logic to generate referral link
+        user = request.user
+        if user.is_authenticated:
+            referral_link = f"http://yourdomain.com/referral?ref={user.id}"  # Example link generation
+            messages.success(request, f"Your referral link: {referral_link}")
+        else:
+            messages.error(request, "You must be logged in to generate a referral link.")
+
+    return render(request, 'shop/account_settings.html')  # Render the template
+def update_security_questions(request):
+    if request.method == 'POST':
+        # Logic to update security questions and answers
+        security_question_1 = request.POST.get('security_question_1')
+        security_answer_1 = request.POST.get('security_answer_1')
+        
+        # Save the security question and answer to the user's profile
+        user = request.user
+        user.profile.security_question_1 = security_question_1
+        user.profile.security_answer_1 = security_answer_1
+        user.profile.save()
+
+        messages.success(request, "Your security questions have been updated.")
+
+    return render(request, 'shop/account_settings.html')  # Render the template
+def deactivate_account(request):
+    if request.method == 'POST':
+        # Logic to deactivate the user's account
+        user = request.user
+        user.is_active = False  # Or whatever logic you use for deactivation
+        user.save()
+
+        messages.success(request, "Your account has been deactivated.")
+        return redirect('shop:home')  # Redirect to a safe page after deactivation
+
+    return render(request, 'shop/account_settings.html')  
+def update_theme_preferences(request):
+    if request.method == 'POST':
+        theme = request.POST.get('theme')
+        request.user.profile.theme = theme  # Assuming you have a Profile model linked to the User
+        request.user.profile.save()
+
+        messages.success(request, "Theme preferences updated successfully.")
+        return redirect('shop:account_settings')  # Redirect back to the account settings
+
+    return render(request, 'shop/account_settings.html')  # Render the template for the form
+from django.http import JsonResponse  # or HttpResponse, depending on your data format
+
+def export_data(request):
+    if request.method == 'POST':
+        # Logic to export user data
+        user_data = {
+            'username': request.user.username,
+            'email': request.user.email,
+            # Add other fields as needed
+        }
+        # You can either return this as JSON or create a CSV/excel file depending on your requirement
+        return JsonResponse(user_data)  # Example of returning JSON data
+
+    # If GET request, render a template or redirect as needed
+    return render(request, 'shop/account_settings.html')  # Adjust as necessary
+def submit_feedback(request):
+    if request.method == 'POST':
+        feedback = request.POST.get('feedback')
+        # Logic to process the feedback (e.g., save it to the database)
+        # For example:
+        # FeedbackModel.objects.create(user=request.user, feedback=feedback)
+
+        messages.success(request, 'Thank you for your feedback!')
+        return redirect('shop:account_settings')  # Redirect to a relevant page after submission
+
+    # If the request method is GET, render the account settings page or redirect
+    return render(request, 'shop/account_settings.html')  # Adjust as necessary
+def link_social_account(request):
+    if request.method == 'POST':
+        # Check if the user wants to link a Facebook account
+        if request.POST.get('link_facebook'):
+            # Add logic here to link Facebook account
+            # For example, use the Facebook API to authenticate and link the account
+            messages.success(request, 'Facebook account linked successfully!')
+
+        # Check if the user wants to link a Google account
+        elif request.POST.get('link_google'):
+            # Add logic here to link Google account
+            # For example, use the Google API to authenticate and link the account
+            messages.success(request, 'Google account linked successfully!')
+
+        else:
+            messages.error(request, 'No valid account type selected to link.')
+
+        return redirect('shop:account_settings')  # Redirect to the account settings page
+
+    # If the request method is GET, render the account settings page
+    return render(request, 'shop/account_settings.html')
+def update_accessibility(request):
+    if request.method == 'POST':
+        text_size = request.POST.get('text_size')
+
+        # Save the text size to the user's profile
+        request.user.profile.text_size = text_size
+        request.user.profile.save()
+        
+        messages.success(request, 'Accessibility settings updated successfully!')
+        return redirect('shop:account_settings')  # Redirect to the account settings page
+
+    # If the request method is GET, render the account settings page
+    return render(request, 'shop/account_settings.html')
+from .models import Music  # Import your Music model
+from django.core.files.storage import FileSystemStorage
+
+def music_list(request):
+    # Fetch all music items from the database
+    music_list = Music.objects.all()
+    no_music = not music_list  # Check if there are no music items
+    return render(request, 'shop/music_list.html', {'music_list': music_list, 'no_music': no_music})
+
+def upload_music(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        artist = request.POST.get('artist')
+        audio_file = request.FILES.get('audio_file')
+
+        if title and artist and audio_file:
+            # Create a new Music object and save it
+            music = Music(title=title, artist=artist, audio_file=audio_file)
+            music.save()  # Save the music instance to the database
+            messages.success(request, 'Music uploaded successfully!')
+            return redirect('shop:music_list')  # Redirect to the music list page
+        else:
+            messages.error(request, 'Please fill in all fields.')
+
+    # If the request method is GET, render the upload form
+    return render(request, 'shop/upload_music.html')  # Adjust the template name if needed
+from .models import Product, Review  # Assuming you have a Review model
+
+def submit_review(request, product_id):
+    if request.method == 'POST':
+        product = get_object_or_404(Product, id=product_id)
+        comment = request.POST.get('comment')
+        rating = request.POST.get('rating')
+
+        # Create a new review (ensure you have a Review model defined)
+        Review.objects.create(
+            product=product,
+            user=request.user,  # Assuming you're associating the review with the user
+            comment=comment,
+            rating=rating
+        )
+
+        messages.success(request, 'Your review has been submitted!')
+        return redirect('shop:product_detail', product_id=product.id)
+
+    # Redirect or render appropriate response if method is not POST
+    return redirect('shop:product_detail', product_id=product_id)
+from django.contrib.auth.decorators import login_required
+from .models import Profile
+
+@login_required
+def update_social_media(request):
+    if request.method == 'POST':
+        profile = request.user.profile
+        profile.whatsapp = request.POST.get('whatsapp', '')
+        profile.facebook = request.POST.get('facebook', '')
+        profile.twitter = request.POST.get('twitter', '')
+        profile.instagram = request.POST.get('instagram', '')
+        profile.linkedin = request.POST.get('linkedin', '')
+        profile.save()
+        return redirect('shop:account_settings')  # Redirect to account settings or another page
+    return render(request, 'shop/account_settings.html')
+login_required
+def update_two_factor(request):
+    if request.method == 'POST':
+        profile = request.user.profile
+        profile.two_factor_enabled = not profile.two_factor_enabled  # Toggle the setting
+        profile.save()
+        return redirect('shop:account_settings')  # Redirect back to account settings
+    return redirect('shop:account_settings')  # Redirect if not a POST request
+def update_subscription(request):
+    if request.method == 'POST':
+        # Logic to update the subscription
+        user_profile = request.user.profile
+        user_profile.newsletter_subscription = request.POST.get('newsletter_subscription') == 'on'
+        user_profile.save()
+        messages.success(request, 'Subscription updated successfully!')
+        return redirect('shop:account_settings')  # Adjust redirect as necessary
+    return render(request, 'shop/account_settings.html')
+def update_privacy(request):
+    if request.method == 'POST':
+        # Logic to update privacy settings
+        user_profile = request.user.profile
+        user_profile.visibility = request.POST.get('profile_visibility')
+        user_profile.save()
+        messages.success(request, 'Privacy settings updated successfully!')
+        return redirect('shop:account_settings')  # Redirect to account settings after update
+    return render(request, 'shop/account_settings.html')
+def update_language(request):
+    if request.method == 'POST':
+        # Logic to update language preference
+        user_profile = request.user.profile
+        user_profile.language = request.POST.get('language')
+        user_profile.save()
+        messages.success(request, 'Language preferences updated successfully!')
+        return redirect('shop:account_settings')  # Redirect to account settings after update
+    return render(request, 'shop/account_settings.html')
+from .forms import CheckoutForm  # Import your form here
+from .models import Order  # Assuming you have an Order model
+
+def track_order(request):
+    tracking_number = request.POST.get('tracking_number') if request.method == 'POST' else None
+    order = None
+
+    if tracking_number:
+        try:
+            order = Order.objects.get(tracking_number=tracking_number)
+        except Order.DoesNotExist:
+            messages.error(request, "No order found with that tracking number.")
+
+    return render(request, 'shop/track_order.html', {'order': order})
+from .models import ReturnRequest  # Assuming you have a model for handling return requests
+from .forms import ReturnRequestForm  # Assuming you have a form for return requests
+
+def returns_view(request):
+    if request.method == 'POST':
+        form = ReturnRequestForm(request.POST)
+        if form.is_valid():
+            return_request = form.save(commit=False)
+            return_request.user = request.user  # Associate the request with the logged-in user
+            return_request.save()
+            messages.success(request, 'Your return request has been submitted successfully.')
+            return redirect('shop:returns')  # Redirect to the same returns page after submission
+    else:
+        form = ReturnRequestForm()
+
+    return render(request, 'shop/returns.html', {'form': form})
+from .models import GiftCard  # Assuming you have a GiftCard model to manage gift cards
+
+def gift_cards_view(request):
+    # Fetch available gift cards from the database
+    gift_cards = GiftCard.objects.filter(is_active=True)  # Assuming you have an is_active field
+
+    context = {
+        'gift_cards': gift_cards,
+        'messages': request.messages if hasattr(request, 'messages') else [],
+    }
+
+    # Render the gift cards template with the gift card data
+    return render(request, 'shop/gift_cards.html', context)
+from .models import BlogPost  # Assuming you have a BlogPost model
+from django.core.paginator import Paginator
+def blog_view(request):
+    all_posts = BlogPost.objects.all()
+    paginator = Paginator(all_posts, 5)  # Show 5 posts per page
+
+    page_number = request.GET.get('page')
+    paginated_posts = paginator.get_page(page_number)
+
+    comments = {}  # Create a dictionary to store comments for each post
+
+    for post in paginated_posts:
+        # Assuming you have a Comment model that relates to BlogPost
+        comments[post.id] = post.comments.all()  # Get comments for each post
+
+    context = {
+        'posts': paginated_posts,
+        'comments': comments,  # Pass the comments dictionary to the template
+    }
+
+    return render(request, 'shop/blog.html', context)
+from .models import NewsletterSubscription  # Make sure to create this model
+
+def subscribe(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if email:
+            # Save the email to your database
+            NewsletterSubscription.objects.create(email=email)
+            messages.success(request, 'Thank you for subscribing!')
+        else:
+            messages.error(request, 'Please enter a valid email address.')
+        return redirect('shop:home')  # Redirect to the home page or any page you prefer
+    return render(request, 'shop/home.html')
+class CategoryView(View):
+    template_name = 'shop/category.html'
+
+    def get(self, request, slug):
+        category = get_object_or_404(Category, slug=slug)
+        products = Product.objects.filter(category=category)
+
+        context = {
+            'category': category,
+            'products': products,
+        }
+
+        return render(request, self.template_name, context)
+from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
+from django import forms
+from django.urls import reverse_lazy
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100, required=True, label='Your Name')
+    email = forms.EmailField(required=True, label='Your Email')
+    message = forms.CharField(widget=forms.Textarea, required=True, label='Your Message')
+
+class PrivacyPolicyView(TemplateView):
+    template_name = 'shop/privacy_policy.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Privacy Policy'
+        return context
+
+class ContactView(FormView):
+    template_name = 'shop/contact_us.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('shop:contact')  # Redirect after successful form submission
+
+    def form_valid(self, form):
+        # Here you would handle the form submission, e.g., send an email
+        # For example:
+        name = form.cleaned_data['name']
+        email = form.cleaned_data['email']
+        message = form.cleaned_data['message']
+        
+        # You could implement your email sending logic here
+        # send_mail(subject, message, from_email, recipient_list)
+        
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Contact Us'
+        return context
+def calculate_profile_completion(user):
+    total_fields = 5  # Adjust based on the number of fields
+    completed = 0
+    if user.profile.profile_picture:
+        completed += 1
+    if user.email:
+        completed += 1
+    if user.profile.bio:
+        completed += 1
+    # Add more field checks here...
+
+    return int((completed / total_fields) * 100)
+from .forms import ProfileForm
+
+def profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('shop:profile')  # Ensure this matches the URL pattern name
+    else:
+        form = ProfileForm(instance=request.user.profile)
+    
+    profile_completion = calculate_profile_completion(request.user)
+    context = {
+        'form': form,
+        'user': request.user,
+        'profile_completion': profile_completion,
+    }
+    return render(request, 'shop/profile.html', context)
+class FilteredProductsView(View):
+    def get(self, request):
+        price_filter = request.GET.get('price')
+        products = Product.objects.all()
+
+        if price_filter == 'low-to-high':
+            products = products.order_by('price')
+        elif price_filter == 'high-to-low':
+            products = products.order_by('-price')
+
+        return render(request, 'shop/categories.html', {'products': products})
+
+from .models import Product, Comment  # Adjust imports as necessary
+
+class AddCommentView(View):
+    def post(self, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
+        comment_text = request.POST.get('comment')
+        # Assuming you have a Comment model with a foreign key to Product and User
+        Comment.objects.create(
+            user=request.user,
+            product=product,
+            text=comment_text,
+        )
+        return redirect('shop:product_detail', product_id=product.id)  # Redirect to the product detail page
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+import json
+import time
+
+# Rate limit configuration
+RATE_LIMIT_SECONDS = 10  # Time window in seconds
+USER_REQUESTS_KEY = "user_requests"  # Key to track user requests in the session
+
+@csrf_exempt
+@login_required
+def chat_response(request):
+    if request.method == "POST":
+        # Rate limiting
+        user_requests = request.session.get(USER_REQUESTS_KEY, [])
+        current_time = time.time()
+
+        # Remove timestamps older than the rate limit window
+        user_requests = [timestamp for timestamp in user_requests if current_time - timestamp < RATE_LIMIT_SECONDS]
+        
+        if len(user_requests) >= 5:  # Allow up to 5 requests in the time window
+            return JsonResponse({"error": "Rate limit exceeded, please try again later."}, status=429)
+
+        # Record the new request timestamp
+        user_requests.append(current_time)
+        request.session[USER_REQUESTS_KEY] = user_requests
+
+        try:
+            data = json.loads(request.body.decode("utf-8"))
+            user_message = data.get("message", "")
+            user = request.user
+
+            if user_message:
+                # Generate a response based on user message
+                response_message = generate_ai_response(user_message, user)
+                return JsonResponse({"response": response_message}, status=200)
+            else:
+                return JsonResponse({"error": "No message provided"}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON input"}, status=400)
+    else:
+        return JsonResponse({"error": "POST request required"}, status=405)
+
+def generate_ai_response(user_message, user=None):
+    user_message = user_message.lower()  # Normalize input to lowercase
+
+    if "help" in user_message:
+        return "Sure! I can help you with your shopping."
+
+    if "latest deals" in user_message:
+        return "Here are our latest deals:http://127.0.0.1:8000/blog/."
+
+    if "view my cart" in user_message:
+        # You might want to return a cart summary here
+        return "You have 3 items in your cart: http://127.0.0.1:8000/cart/."
+
+    if "recommended products" in user_message:
+        return "Here are some recommended products for you: http://127.0.0.1:8000/recommended/."
+
+    if "faqs" in user_message or "frequently asked questions" in user_message:
+        return "You can find our FAQs here: http://127.0.0.1:8000/faq/."
+
+    return "I'm here to assist you with your shopping needs!"
+from .models import Product, Wishlist  # Import your models appropriately
+
+def add_to_wishlist(request, product_id):
+    # Check if the user is authenticated
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to add items to your wishlist.")
+        return redirect('shop:login')  # Redirect to login page
+
+    # Get the product or return a 404 error if it does not exist
+    product = get_object_or_404(Product, id=product_id)
+
+    # Check if the product is already in the user's wishlist
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+
+    if product in wishlist.products.all():  # Assuming you have a many-to-many relationship
+        messages.info(request, f"{product.name} is already in your wishlist.")
+    else:
+        wishlist.products.add(product)  # Add product to the wishlist
+        messages.success(request, f"{product.name} has been added to your wishlist.")
+
+    return redirect('shop:wishlist')  # Redirect to the wishlist page
+from .models import Wishlist, Product
+
+def remove_from_wishlist(request, item_id):
+    # Check if the user is authenticated
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to remove items from your wishlist.")
+        return redirect('shop:login')  # Redirect to login page
+
+    # Get the user's wishlist
+    wishlist = get_object_or_404(Wishlist, user=request.user)
+
+    # Get the product to remove
+    product = get_object_or_404(Product, id=item_id)
+
+    # Remove the product from the wishlist
+    if product in wishlist.products.all():
+        wishlist.products.remove(product)
+        messages.success(request, f"{product.name} has been removed from your wishlist.")
+    else:
+        messages.info(request, f"{product.name} was not found in your wishlist.")
+
+    return redirect('shop:wishlist')  # Redirect to the wishlist page
+def wishlist(request):
+    if request.user.is_authenticated:
+        wishlist_items = Wishlist.objects.filter(user=request.user)  # Get user's wishlist items
+        return render(request, 'shop/wishlist.html', {'wishlist_items': wishlist_items})
+    else:
+        messages.error(request, "You need to be logged in to view your wishlist.")
+        return redirect('shop:login')  # Redirect to login page
+
+def add_to_wishlist(request, product_id):
+    # Your logic for adding to wishlist
+    return redirect('shop:wishlist')  # Redirect to the wishlist or another page
+
+def remove_from_wishlist(request, item_id):
+    # Logic to remove item from wishlist (as discussed before)
+    return redirect('shop:wishlist')  # Redirect to the wishlist or another page
+class ProductDetailView(View):
+    def get(self, request, product_id):  # Accept product_id instead of id
+        # Attempt to retrieve the product by its ID
+        product = get_object_or_404(Product, id=product_id)  # Use product_id here
+        context = {
+            'product': product,
+        }
+        return render(request, 'shop/product_detail.html', context)

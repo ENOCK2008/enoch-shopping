@@ -1,14 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Add Review</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Review for {{ product.name }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #007bff;
+        }
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Add Review for {{ product.name }}</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit Review</button>
-    </form>
+    <div class="container mt-5">
+        <h1 class="mb-4">Add Review for {{ product.name }}</h1>
+        <form method="post" class="form-container shadow p-4">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <div>
+                    {% for i in "12345"|make_list %}
+                        <input type="radio" name="rating" value="{{ i }}" id="rating{{ i }}" required>
+                        <label for="rating{{ i }}" class="star">&#9733;</label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="review">Your Review:</label>
+                <textarea class="form-control" id="review" name="review" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+        <div class="mt-4">
+            <a href="{% url 'shop:product_detail' product.id %}" class="btn btn-secondary">Back to Product</a>
+        </div>
+
+        <h2>Existing Reviews:</h2>
+        <ul class="list-group">
+            {% for review in product.reviews.all %}
+                <li class="list-group-item">
+                    <strong>{{ review.user.username }}:</strong> {{ review.text }} 
+                    <span class="text-muted">({{ review.rating }} stars)</span>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No reviews yet.</li>
+            {% endfor %}
+        </ul>
+
+        <div class="social-share mt-4">
+            <p>Share your review:</p>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" class="btn btn-primary">Share on Facebook</a>
+            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" class="btn btn-info">Share on Twitter</a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

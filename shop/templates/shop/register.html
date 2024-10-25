@@ -17,48 +17,131 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
+            flex-direction: column; /* Align elements in a column */
         }
 
         .form-container {
             background: white;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
+            text-align: center;
+            position: relative; /* Position relative for potential absolute children */
         }
 
         h2 {
-            margin-bottom: 1rem;
-            color: #007BFF; /* Change to your primary color */
+            margin-bottom: 1.5rem;
+            color: #007BFF; /* Primary color */
         }
 
         button.btn {
-            background-color: #007BFF; /* Change to your primary color */
+            background-color: #007BFF; /* Primary color */
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 12px 15px; /* Slightly increased padding for better touch targets */
             border-radius: 5px;
             cursor: pointer;
             width: 100%;
+            font-size: 16px; /* Increased font size for better readability */
+            transition: background-color 0.3s;
         }
 
         button.btn:hover {
             background-color: #0056b3; /* Darker shade for hover */
         }
 
-        footer {
+        .success-message,
+        .error-message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none; /* Initially hidden */
+            font-size: 14px; /* Consistent font size for messages */
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .social-login {
+            margin: 1rem 0;
+        }
+
+        .social-login button {
+            width: 48%;
+            margin: 0 1%;
+        }
+
+        .password-strength {
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .footer-container {
             margin-top: 2rem;
             text-align: center;
+            background-color: #007BFF; /* Match the primary color */
+            color: white; /* White text for better contrast */
+            padding: 1rem; /* Add padding */
+            border-top-left-radius: 10px; /* Rounded top left */
+            border-top-right-radius: 10px; /* Rounded top right */
+            width: 100%; /* Full width for footer */
+            position: relative; /* For positioning relative to other elements */
+        }
+
+        a {
+            color: #fff; /* White text for links in the footer */
+            text-decoration: none;
+            transition: text-decoration 0.3s;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
         <h2>Create Your Account</h2>
+
+        {% if registered %}
+            <div class="success-message" id="success-message">
+                You have been registered successfully!
+            </div>
+        {% endif %}
+
+        {% if form.errors %}
+            <div class="error-message" id="error-message">
+                Please correct the errors below.
+            </div>
+        {% endif %}
+
         <form method="post" action="{% url 'shop:register' %}">
             {% csrf_token %}
             {{ form.as_p }}
+
+            <div class="password-strength">
+                <label for="id_password">Password:</label>
+                <input type="password" id="id_password" name="password" required>
+                <div id="password-strength-indicator"></div>
+            </div>
+
+            <div>
+                <input type="checkbox" id="terms" required>
+                <label for="terms">I agree to the <a href="{% url 'shop:terms' %}">terms and conditions</a></label>
+            </div>
+
             <button type="submit" class="btn">Register</button>
         </form>
         <p>Already have an account? <a href="{% url 'shop:login' %}">Login here</a>.</p>
@@ -67,7 +150,37 @@
     <footer>
         <div class="footer-container">
             <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
+            <p><a href="{% url 'shop:privacy_policy' %}">Privacy Policy</a> | <a href="{% url 'shop:contact' %}">Contact Us</a></p>
         </div>
     </footer>
+
+    <script>
+        // Password strength indicator
+        const passwordInput = document.getElementById('id_password');
+        const strengthIndicator = document.getElementById('password-strength-indicator');
+
+        passwordInput.addEventListener('input', function() {
+            const strength = calculatePasswordStrength(this.value);
+            strengthIndicator.textContent = `Strength: ${strength}`;
+            // Update style based on strength
+            if (strength === 'Strong') {
+                strengthIndicator.style.color = 'green';
+            } else if (strength === 'Medium') {
+                strengthIndicator.style.color = 'orange';
+            } else {
+                strengthIndicator.style.color = 'red';
+            }
+        });
+
+        function calculatePasswordStrength(password) {
+            // Simple strength calculation logic
+            if (password.length >= 8) {
+                return 'Strong';
+            } else if (password.length >= 5) {
+                return 'Medium';
+            }
+            return 'Weak';
+        }
+    </script>
 </body>
 </html>

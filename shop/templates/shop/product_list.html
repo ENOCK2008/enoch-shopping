@@ -1,33 +1,36 @@
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
-<h2>Products</h2>
+<h2 class="section-title">Products</h2>
 
 <!-- Filter Form for Products -->
 <form method="get" class="product-filter-form">
-    <!-- Search by Name -->
-    <input type="text" name="q" placeholder="Search products..." value="{{ request.GET.q }}">
-    
-    <!-- Filter by Category -->
-    <select name="category">
-        <option value="">All Categories</option>
-        {% for category in categories %}
-            <option value="{{ category.name }}" {% if request.GET.category == category.name %}selected{% endif %}>{{ category.name }}</option>
-        {% endfor %}
-    </select>
-    
-    <!-- Filter by Price Range -->
-    <input type="number" name="min_price" placeholder="Min Price" value="{{ request.GET.min_price }}">
-    <input type="number" name="max_price" placeholder="Max Price" value="{{ request.GET.max_price }}">
-    
-    <!-- Sort Products -->
-    <select name="sort_by">
-        <option value="name_asc" {% if request.GET.sort_by == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
-        <option value="name_desc" {% if request.GET.sort_by == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
-        <option value="price_asc" {% if request.GET.sort_by == 'price_asc' %}selected{% endif %}>Price (Low to High)</option>
-        <option value="price_desc" {% if request.GET.sort_by == 'price_desc' %}selected{% endif %}>Price (High to Low)</option>
-    </select>
-    
-    <!-- Filter Button -->
+    <div class="form-group">
+        <!-- Search by Name -->
+        <input type="text" name="q" class="form-control" placeholder="Search products..." value="{{ request.GET.q }}">
+    </div>
+    <div class="form-group">
+        <!-- Filter by Category -->
+        <select name="category" class="form-control">
+            <option value="">All Categories</option>
+            {% for category in categories %}
+                <option value="{{ category.name }}" {% if request.GET.category == category.name %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <!-- Filter by Price Range -->
+        <input type="number" name="min_price" class="form-control" placeholder="Min Price" value="{{ request.GET.min_price }}">
+        <input type="number" name="max_price" class="form-control" placeholder="Max Price" value="{{ request.GET.max_price }}">
+    </div>
+    <div class="form-group">
+        <!-- Sort Products -->
+        <select name="sort_by" class="form-control">
+            <option value="name_asc" {% if request.GET.sort_by == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
+            <option value="name_desc" {% if request.GET.sort_by == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
+            <option value="price_asc" {% if request.GET.sort_by == 'price_asc' %}selected{% endif %}>Price (Low to High)</option>
+            <option value="price_desc" {% if request.GET.sort_by == 'price_desc' %}selected{% endif %}>Price (High to Low)</option>
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Filter</button>
 </form>
 
@@ -35,7 +38,7 @@
 <ul class="product-list">
     {% for product in products %}
         <li class="product-item">
-            <a href="{% url 'product_detail' product.id %}">
+            <a href="{% url 'product_detail' product.id %}" class="product-link">
                 <strong>{{ product.name }}</strong> - ${{ product.price }}
             </a>
         </li>
@@ -43,3 +46,96 @@
         <li>No products found matching your criteria.</li>
     {% endfor %}
 </ul>
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Light background for contrast */
+        color: #333; /* Dark text for readability */
+        font-family: 'Roboto', sans-serif; /* Clean font */
+    }
+
+    .section-title {
+        text-align: center; /* Centered title */
+        color: #007bff; /* Bright blue for the title */
+        font-size: 2em; /* Larger title size */
+        margin-bottom: 20px; /* Space below title */
+    }
+
+    .product-filter-form {
+        display: flex;
+        flex-wrap: wrap; /* Wraps items on smaller screens */
+        gap: 15px; /* Space between form elements */
+        margin-bottom: 30px; /* Space below the form */
+        justify-content: center; /* Center the form */
+    }
+
+    .form-group {
+        flex: 1 1 200px; /* Flex-grow and minimum width */
+        min-width: 150px; /* Ensures form elements don't get too small */
+    }
+
+    .form-control {
+        width: 100%; /* Full-width inputs */
+        padding: 10px; /* Padding for inputs */
+        border: 1px solid #ccc; /* Border color */
+        border-radius: 5px; /* Rounded corners */
+        transition: border-color 0.3s; /* Smooth transition */
+    }
+
+    .form-control:focus {
+        border-color: #007bff; /* Change border color on focus */
+        outline: none; /* Remove default outline */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Subtle glow effect */
+    }
+
+    .btn {
+        padding: 10px 20px; /* Padding for buttons */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+
+    .btn-primary {
+        background-color: #007bff; /* Primary button color */
+        color: white; /* White text on buttons */
+        border: none; /* Remove border */
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        cursor: pointer; /* Pointer cursor on hover */
+    }
+
+    .product-list {
+        list-style-type: none; /* Remove bullet points */
+        padding: 0; /* Remove default padding */
+    }
+
+    .product-item {
+        background: white; /* White background for product items */
+        margin-bottom: 15px; /* Space below each product */
+        padding: 15px; /* Padding inside product items */
+        border-radius: 5px; /* Rounded corners */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        transition: transform 0.3s; /* Smooth scaling effect */
+    }
+
+    .product-item:hover {
+        transform: scale(1.02); /* Slightly scale up on hover */
+    }
+
+    .product-link {
+        text-decoration: none; /* Remove underline */
+        color: #007bff; /* Blue text for product links */
+        font-weight: bold; /* Bold text for product names */
+    }
+
+    .product-link:hover {
+        text-decoration: underline; /* Underline on hover */
+    }
+
+    @media (max-width: 600px) {
+        .product-filter-form {
+            flex-direction: column; /* Stack form elements on small screens */
+        }
+    }
+</style>

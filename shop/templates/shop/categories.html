@@ -22,18 +22,76 @@
     </header>
 
     <main>
-        <h2>Available Categories</h2>
-        <ul class="category-list">
-            {% for category in categories %}
-                <li>
-                    <a href="{% url 'shop:product_detail' category.id %}" class="category-item">
-                        {{ category.name }}
-                    </a>
-                </li>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'shop:home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+            </ol>
+        </nav>
+
+        <h1>{{ category.name }}</h1>
+
+        <div class="filter-options">
+            <h5>Filter By:</h5>
+            <form method="GET" action="{% url 'shop:filtered_products' %}">
+                <div>
+                    <label for="price">Price:</label>
+                    <select name="price" id="price">
+                        <option value="">Select</option>
+                        <option value="low-to-high">Low to High</option>
+                        <option value="high-to-low">High to Low</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </form>
+        </div>
+
+        <div class="product-list">
+            {% for product in products %}
+                <div class="product-item">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <h3>{{ product.name }}</h3>
+                    <p>${{ product.price }}</p>
+                    <div class="product-rating">
+                        <span class="star-rating">
+                            {% for i in "1 2 3 4 5" %}
+                                <i class="fas fa-star{% if product.rating < i %}-o{% endif %}"></i>
+                            {% endfor %}
+                        </span>
+                        <p>{{ product.review_count }} reviews</p>
+                    </div>
+                    <a href="{% url 'shop:product_detail' product.id %}" class="btn btn-secondary">View Details</a>
+                </div>
             {% empty %}
-                <li>No categories available.</li>
+                <p>No products available in this category.</p>
             {% endfor %}
-        </ul>
+        </div>
+
+        <div class="pagination">
+            {% if products.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ products.previous_page_number }}">Previous</a>
+            {% endif %}
+            <span>Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
+            {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}">Next</a>
+                <a href="?page={{ products.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
+        </div>
+
+        <h2>Related Products</h2>
+        <div class="product-list">
+            {% for related_product in related_products %}
+                <div class="product-item">
+                    <img src="{{ related_product.image.url }}" alt="{{ related_product.name }}">
+                    <h3>{{ related_product.name }}</h3>
+                    <p>${{ related_product.price }}</p>
+                    <a href="{% url 'shop:product_detail' related_product.id %}" class="btn btn-secondary">View Details</a>
+                </div>
+            {% empty %}
+                <p>No related products available.</p>
+            {% endfor %}
+        </div>
     </main>
 
     <footer>
@@ -47,87 +105,133 @@
                 </address>
             </section>
             <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
-            <p>
-                <a href="{% url 'shop:contact' %}">Contact Us</a> | 
-                <a href="{% url 'shop:about' %}">About Us</a>
-            </p>
+
+            <div class="social-media">
+                <h5>Follow Us</h5>
+                <a href="https://facebook.com/Magololo Enock" target="_blank" class="text-primary"><i class="fab fa-facebook"></i></a>
+                <a href="https://instagram.com/magololoenock" target="_blank" class="text-danger"><i class="fab fa-instagram"></i></a>
+                <a href="https://twitter.com/@magololoe" target="_blank" class="text-info"><i class="fab fa-twitter"></i></a>
+                <a href="https://www.linkedin.com/in/magololo-enock-002a3b268" target="_blank" class="text-primary"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@magololoenock4124" target="_blank" class="text-danger"><i class="fab fa-youtube"></i></a>
+                <a href="https://wa.me/+256777483027" target="_blank" class="text-success"><i class="fab fa-whatsapp"></i></a>
+            </div>
         </div>
     </footer>
 
     <script src="{% static 'shop/scripts.js' %}"></script>
-    
+
     <style>
-       body {
-        font-family: 'Roboto', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f0f4f8; /* Softer light background */
-        color: #444; /* Slightly lighter text color */
-        line-height: 1.6;
-    }
-    header {
-        background-color: #e0e7ef; /* Light blue */
-        color: #333333; /* Darker text color for contrast */
-        padding: 15px;
-        text-align: center;
-        border-bottom: 2px solid #007bff; /* Accent border */
-    }
-    nav {
-        margin-top: 10px;
-    }
-    .nav-list {
-        list-style-type: none;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-    }
-    .nav-button {
-        color: #333333;
-        text-decoration: none;
-        margin: 0 15px;
-        padding: 10px 15px;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-    }
-    .nav-button:hover {
-        background-color: #d1e0f2; /* Lighter blue on hover */
-        text-decoration: underline;
-    }
-    main {
-        padding: 20px;
-    }
-    h2 {
-        font-size: 1.8em;
-        color: #007bff; /* Bright blue for headings */
-        margin-bottom: 15px;
-    }
-    .category-list {
-        list-style-type: none;
-        padding: 0;
-    }
-    .category-item {
-        text-decoration: none;
-        color: #007bff; /* Bright blue for links */
-        padding: 10px 0;
-        display: block;
-        transition: color 0.3s;
-    }
-    .category-item:hover {
-        color: #0056b3; /* Darker blue on hover */
-        text-decoration: underline;
-    }
-    footer {
-        text-align: center;
-        padding: 15px;
-        background-color: #e0e7ef; /* Lighter footer to match header */
-        color: #333333;
-        margin-top: 20px;
-        border-top: 2px solid #007bff; /* Accent border */
-    }
-    .footer-container {
-        max-width: 800px;
-        margin: auto;
-    }
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #fff;
+            color: #333;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        nav {
+            margin-top: 10px;
+        }
+
+        .nav-list {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-button {
+            color: #333;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 15px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            transition: background-color 0.3s, border 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .filter-options {
+            margin-bottom: 20px;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .product-item {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            color: #333;
+            margin-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .contact-info {
+            margin-bottom: 15px;
+        }
+
+        .social-media {
+            margin-top: 15px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .nav-list {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                margin: 5px 0;
+            }
+        }
     </style>
 </body>
 </html>

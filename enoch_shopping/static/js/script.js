@@ -1,11 +1,12 @@
 let chatSocket; // Ensure this is declared only once.
-let roomName = "{{ room_name }}"; 
+let roomName = "{{ room_name|escapejs }}";  // Ensure roomName is correctly passed from Django template
 let userTypingTimeout;
 
 function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-            navigator.serviceWorker.register('{% static "js/serviceworker.js" %}').then(function(registration) {
+            // Ensure static tag is inside template curly braces
+            navigator.serviceWorker.register("{% static 'js/serviceworker.js' %}").then(function(registration) {
                 console.log('Service Worker registered with scope:', registration.scope);
             }).catch(function(error) {
                 console.error('Service Worker registration failed:', error);
@@ -23,7 +24,9 @@ function updateStatus(message) {
 
 function connectWebSocket() {
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-    chatSocket = new WebSocket(protocol + '127.0.0.1:8001/ws/chat/' + encodeURIComponent(roomName) + '/');
+    // Dynamically building the WebSocket URL with the room name
+    const wsUrl = protocol + '127.0.0.1:8001/ws/chat/' + encodeURIComponent(roomName) + '/';
+    chatSocket = new WebSocket(wsUrl);
 
     chatSocket.onopen = function() {
         console.log('WebSocket connection established');
@@ -54,7 +57,12 @@ function handleIncomingMessage(data) {
         const messageElement = document.createElement('div');
         const messageTime = new Date().toLocaleTimeString();
         messageElement.className = data.is_bot ? 'message bot' : 'message user';
-        messageElement.innerHTML = `<strong>[${messageTime}]</strong> ${data.message}`;
+
+        // Add avatar image based on sender
+        const avatarSrc = data.is_bot ? '/static/images/bot_avatar.png' : '/static/images/user_avatar.png';
+        const avatar = `<img src="${avatarSrc}" alt="Avatar" class="avatar">`;
+
+        messageElement.innerHTML = `${avatar}<strong>[${messageTime}]</strong> ${data.message}`;
 
         const chatLog = document.querySelector('#chat-log');
         if (chatLog) {
@@ -124,26 +132,5 @@ function handleTypingIndication() {
         userTypingTimeout = setTimeout(() => {
             chatSocket.send(JSON.stringify({ 'is_typing': false })); 
         }, 1000);
-    }
-}
-function handleIncomingMessage(data) {
-    if (data.is_typing !== undefined) {
-        updateTypingStatus(data);
-    } else {
-        const messageElement = document.createElement('div');
-        const messageTime = new Date().toLocaleTimeString();
-        messageElement.className = data.is_bot ? 'message bot' : 'message user';
-
-        // Add avatar image based on sender
-        const avatarSrc = data.is_bot ? 'path/to/bot_avatar.png' : 'path/to/user_avatar.png';
-        const avatar = `<img src="${avatarSrc}" alt="Avatar" class="avatar">`;
-
-        messageElement.innerHTML = `${avatar}<strong>[${messageTime}]</strong> ${data.message}`;
-
-        const chatLog = document.querySelector('#chat-log');
-        if (chatLog) {
-            chatLog.appendChild(messageElement);
-            chatLog.scrollTop = chatLog.scrollHeight; 
-        }
     }
 }

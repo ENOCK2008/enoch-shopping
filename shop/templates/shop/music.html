@@ -1,46 +1,108 @@
-{%load static%}
 {% extends 'shop/base.html' %}
-{% block title %}Music{% endblock %}
+{% load static %}
+
+{% block title %}Music List - Enoch Shopping Center{% endblock %}
 
 {% block content %}
-    <h1>Music Library</h1>
-    
-    <!-- Section for uploading new music -->
-    <section class="upload-section">
-        <h2>Upload New Music</h2>
-        <form action="{% url 'shop:upload_music' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required>
-            
-            <label for="artist">Artist:</label>
-            <input type="text" id="artist" name="artist" required>
-            
-            <label for="audio_file">Audio File:</label>
-            <input type="file" id="audio_file" name="audio_file" accept="audio/*" required>
-            
-            <button type="submit">Upload</button>
-        </form>
-    </section>
-    
-    <!-- Section for displaying music items -->
-    <section class="music-list">
-        <h2>Available Music</h2>
-        {% if music_list %}
-            <ul>
-                {% for music in music_list %}
-                    <li>
-                        <strong>Title:</strong> {{ music.title }} <br>
-                        <strong>Artist:</strong> {{ music.artist }} <br>
-                        <audio controls>
-                            <source src="{{ music.audio_file.url }}" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No music available at the moment.</p>
-        {% endif %}
-    </section>
+<section class="music-list">
+    <h2>Music List</h2>
+
+    {% if music_files %}
+        <ul class="music-items">
+            {% for music in music_files %}
+                <li class="music-item">
+                    <div class="music-info">
+                        <h3>{{ music.title }} - {{ music.artist }}</h3> <!-- Display the artist name -->
+
+                        {% if music.cover_image %}
+                            <img src="{{ music.cover_image.url }}" alt="{{ music.title }} Cover" class="cover-image">
+                        {% endif %}
+
+                        <!-- Audio Player -->
+                        {% if music.audio_file %}
+                            <audio controls class="audio-player">
+                                <source src="{{ music.audio_file.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        {% endif %}
+
+                        <!-- Video Player -->
+                        {% if music.video_file %}
+                            <video controls class="video-player" width="320" height="240">
+                                <source src="{{ music.video_file.url }}" type="video/mp4">
+                                Your browser does not support the video element.
+                            </video>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No music files available.</p>
+    {% endif %}
+</section>
+
+<!-- Add a form for uploading new music -->
+<section class="upload-music">
+    <h3>Upload New Music</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Render the form here -->
+        <button type="submit" class="upload-button">Upload</button>
+    </form>
+</section>
+
+<style>
+    .music-list {
+        margin: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .music-items {
+        list-style: none;
+        padding: 0;
+    }
+
+    .music-item {
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #f9f9f9;
+    }
+
+    .cover-image {
+        max-width: 150px;
+        height: auto;
+        border-radius: 5px;
+    }
+
+    .audio-player, .video-player {
+        width: 100%;
+        max-width: 320px; /* or desired width */
+        margin-top: 10px;
+    }
+
+    .upload-music {
+        margin-top: 30px;
+        padding: 15px;
+        border: 1px solid #4CAF50;
+        border-radius: 5px;
+        background-color: #e7ffe7; /* Light green background */
+    }
+
+    .upload-button {
+        padding: 10px 15px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .upload-button:hover {
+        background-color: #45a049;
+    }
+</style>
+
 {% endblock %}

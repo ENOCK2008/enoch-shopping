@@ -1,0 +1,210 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center">Shopping Cart</h2>
+
+    <div class="row">
+        <!-- Cart Items Section -->
+        <div class="col-md-8">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart.items %}
+                    <tr class="cart-item" data-item-id="{{ item.id }}">
+                        <td>{{ item.product.name }}</td>
+                        <td>
+                            <input type="number" value="{{ item.quantity }}" class="form-control quantity-input" data-item-id="{{ item.id }}">
+                        </td>
+                        <td>${{ item.product.price|floatformat:2 }}</td>
+                        <td>${{ item.total_price|floatformat:2 }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm remove-item" data-item-id="{{ item.id }}">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">Your cart is empty</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Cart Summary Section -->
+        <div class="col-md-4">
+            <div class="card summary-card">
+                <div class="card-body">
+                    <h5 class="card-title">Cart Summary</h5>
+                    <p>Items in cart: <strong>{{ cart.total_items }}</strong></p>
+                    <p>Total price: <strong>${{ cart.total_price|floatformat:2 }}</strong></p>
+                    <a href="{% url 'shop:checkout' %}" class="btn btn-dark btn-block checkout-btn">Proceed to Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Suggestions Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4>You might also like</h4>
+            <div class="row">
+                {% for product in recommended_products %}
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">${{ product.price|floatformat:2 }}</p>
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-dark">View Product</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastNotification" class="toast align-items-center text-white bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Inline CSS -->
+<style>
+    /* General Styling */
+    body {
+        background-color: #f8f9fa; /* Light grey background */
+        color: #333; /* Dark text for readability */
+    }
+
+    h2, h4 {
+        color: #111; /* Dark heading color */
+    }
+
+    table thead th {
+        background-color: #e9ecef; /* Light grey background for table headers */
+        color: #333;
+    }
+
+    table tbody tr {
+        background-color: #fff; /* White background for rows */
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1; /* Slightly darker hover effect */
+    }
+
+    input[type="number"] {
+        width: 60px;
+        text-align: center;
+    }
+
+    /* Button Styling */
+    .btn {
+        border-radius: 0; /* Flat button design */
+    }
+
+    .btn-dark, .btn-outline-dark {
+        background-color: #333; /* Dark color scheme for buttons */
+        color: #fff;
+    }
+
+    .btn-danger {
+        background-color: #555; /* Neutral grey for remove button */
+        color: #fff;
+    }
+
+    /* Cart Summary Styling */
+    .summary-card {
+        background-color: #f7f7f7; /* Soft background for cart summary */
+    }
+
+    .checkout-btn {
+        background-color: #111; /* Dark checkout button */
+        border: none;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+        z-index: 1000; /* Make sure it's above other content */
+    }
+
+    .toast {
+        background-color: #333; /* Dark background for toast */
+        color: #fff;
+    }
+
+</style>
+
+<!-- JavaScript for Cart Interaction -->
+<script>
+    // Toast Notification Function
+    function showToast(message) {
+        const toastBody = document.querySelector('#toastNotification .toast-body');
+        toastBody.textContent = message;
+        const toast = new bootstrap.Toast(document.getElementById('toastNotification'));
+        toast.show();
+    }
+
+    // Remove item with AJAX request
+    document.querySelectorAll('.remove-item').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.getAttribute('data-item-id');
+            fetch(`/cart/remove/${itemId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            }).then(response => {
+                if (response.ok) {
+                    document.querySelector(`.cart-item[data-item-id="${itemId}"]`).remove();
+                    showToast("Item removed from cart");
+                } else {
+                    showToast("Error removing item");
+                }
+            });
+        });
+    });
+
+    // Update quantity dynamically with AJAX
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', function() {
+            const itemId = this.getAttribute('data-item-id');
+            const newQuantity = this.value;
+
+            fetch(`/cart/update/${itemId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ quantity: newQuantity })
+            }).then(response => {
+                if (response.ok) {
+                    showToast("Quantity updated");
+                    location.reload();
+                } else {
+                    showToast("Error updating quantity");
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

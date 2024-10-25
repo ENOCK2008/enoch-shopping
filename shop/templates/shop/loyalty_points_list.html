@@ -1,50 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Loyalty Points</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <header>
-        <nav>
-            <ul class="nav-list">
-                <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
-                <!-- Add additional navigation items here -->
-            </ul>
-        </nav>
-    </header>
+{% extends 'shop/base.html' %}
 
-    <div class="form-container">
-        <h1>Update Loyalty Points</h1>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="points">Points to Add:</label>
-                <input type="number" id="points" name="points" min="1" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Update Points</button>
-        </form>
+{% block content %}
+<div class="loyalty-points-container">
+    <h2>Loyalty Points</h2>
+    
+    <div class="loyalty-points-info">
+        <p>Welcome back, {{ user.username }}!</p>
+        <p>Your current loyalty points: <strong>{{ loyalty_points }}</strong></p>
     </div>
 
-    <footer>
-        <div class="footer-container">
-            <h2>Contact Us</h2>
-            <section class="contact-info">
-                <address>
-                    <p>Email: <a href="mailto:info@enochshopping.com">info@enochshopping.com</a></p>
-                    <p>Phone: (256) 756679314</p>
-                    <p>Address: Kampala, Uganda, Shopping City.</p>
-                </address>
-            </section>
-            <p>&copy; 2024 Enock Shopping Center. All rights reserved.</p>
-            <p>
-                <a href="{% url 'shop:contact' %}">Contact Us</a> | 
-                <a href="{% url 'shop:about' %}">About Us</a>
-            </p>
-        </div>
-    </footer>
-</body>
-</html>
+    <div class="loyalty-points-details mt-4">
+        <h5>About Our Loyalty Program</h5>
+        <p>
+            Our loyalty program rewards you for every purchase you make. 
+            Accumulate points and redeem them for discounts on future purchases!
+        </p>
+        <p>
+            For every $1 spent, you earn 1 loyalty point. 
+            Redeem your points for exciting rewards!
+        </p>
+    </div>
+
+    <div class="loyalty-points-actions mt-4">
+        <h5>Your Actions</h5>
+        <ul class="list-unstyled">
+            <li>
+                <a href="{% url 'shop:redeem_points' %}" class="btn btn-primary">Redeem Points</a>
+            </li>
+            <li>
+                <a href="{% url 'shop:loyalty_terms' %}" class="btn btn-link">Loyalty Program Terms</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="loyalty-points-history mt-4">
+        <h5>Points History</h5>
+        {% if points_history %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Transaction</th>
+                    <th>Points Earned</th>
+                    <th>Points Redeemed</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in points_history %}
+                <tr>
+                    <td>{{ entry.date }}</td>
+                    <td>{{ entry.transaction }}</td>
+                    <td>{{ entry.points_earned }}</td>
+                    <td>{{ entry.points_redeemed }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>You have no points history yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .loyalty-points-container {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .loyalty-points-info {
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    .loyalty-points-details {
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    .loyalty-points-actions {
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    .loyalty-points-history {
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+    }
+
+    table {
+        width: 100%;
+        margin-top: 15px;
+    }
+</style>
+{% endblock %}

@@ -3,44 +3,93 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<!-- You can include your previous styles or any new ones here -->
+
+<style>
+.home-container {
+    text-align: center; /* Center-align text for better presentation */
+    padding: 20px; /* Add some padding around the container */
+}
+
+.welcome-heading {
+    font-size: 2.5rem; /* Larger font size for the heading */
+    margin-bottom: 20px; /* Space below the heading */
+    color: #343a40; /* Darker text color for better contrast */
+}
+
+.banner-image {
+    width: 100%; /* Full width for the banner image */
+    max-width: 1200px; /* Limit maximum width for larger screens */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Slightly rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    margin-bottom: 30px; /* Space below the banner image */
+}
+
+.product-list {
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Allow wrapping of product items */
+    justify-content: center; /* Center-align product items */
+}
+
+.product-item {
+    background-color: #ffffff; /* White background for product items */
+    border: 1px solid #e0e0e0; /* Light border for separation */
+    border-radius: 5px; /* Slightly rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 15px; /* Padding inside each product item */
+    margin: 10px; /* Margin around each product item */
+    width: calc(30% - 20px); /* Set width for 3 items per row with space */
+    transition: transform 0.3s; /* Smooth hover effect */
+}
+
+.product-item:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.product-item h2 {
+    font-size: 1.5rem; /* Font size for product names */
+    color: #007bff; /* Primary color for product names */
+    margin-bottom: 10px; /* Space below product name */
+}
+
+.product-item p {
+    color: #555; /* Dark gray text for descriptions and prices */
+    margin: 5px 0; /* Space between text elements */
+}
+
+.product-item a {
+    display: inline-block; /* Make link a block element */
+    margin-top: 10px; /* Space above the link */
+    padding: 10px 15px; /* Padding for the button */
+    background-color: #007bff; /* Button background color */
+    color: white; /* Button text color */
+    border-radius: 5px; /* Rounded corners for the button */
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s; /* Smooth transition for background */
+}
+
+.product-item a:hover {
+    background-color: #0056b3; /* Darker background on hover */
+}
+</style>
+
 <div class="home-container">
-    <h1 class="welcome-heading">Welcome to Enock Shopping Center</h1>
+    <h1 class="welcome-heading">Welcome to Enoch Shopping Center</h1>
     <img src="{% static 'images/banner.jpg' %}" alt="Banner" class="banner-image">
 
-    <div class="hero-section">
-        <h2>Shop the Latest Products</h2>
-        <p>Discover our featured products and enjoy great discounts!</p>
-        <a href="{% url 'shop:categories' %}" class="cta-button">Explore Categories</a>
-    </div>
-
-    <!-- Display Profile Picture -->
-    <div class="profile-section">
-        {% if user.is_authenticated %}
-            <h2>Your Profile</h2>
-            {% if user.profile.profile_picture %}
-                <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile-image">
-            {% else %}
-                <img src="{% static 'images/default_profile_picture.jpg' %}" alt="Default Profile Picture" class="profile-image">
-            {% endif %}
-            <p>Hello, {{ user.username }}!</p>
-        {% else %}
-            <p>Please <a href="{% url 'shop:login' %}">log in</a> to see your profile.</p>
-        {% endif %}
-    </div>
-    
-
-    <div class="featured-products">
-        <h2>Featured Products</h2>
-        <div class="product-list">
-            {% for product in featured_products %}
-                <div class="product-item">
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
-                    <h3 class="product-name">{{ product.name }}</h3>
-                    <p class="product-price">${{ product.price }}</p>
-                    <a href="{% url 'shop:product_detail' product.id %}" class="product-link">View Details</a>
-                </div>
-            {% endfor %}
-        </div>
+    <!-- Your existing content goes here -->
+    <p>Explore our wide range of products and enjoy amazing deals!</p>
+    <div class="product-list">
+        <!-- Loop through your products here -->
+        {% for product in products %}
+            <div class="product-item">
+                <h2>{{ product.name }}</h2>
+                <p>{{ product.description }}</p>
+                <p>Price: {{ product.price }}</p>
+                <a href="{% url 'shop:product_detail' product.id %}">View Details</a>
+            </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

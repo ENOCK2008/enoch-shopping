@@ -1,144 +1,201 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile - Enock Shopping Center</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+    
     <style>
-        /* General body styling */
         body {
-            background-color: #f4f4f4; /* Light grey background */
-            color: #333; /* Darker text for better contrast */
-            font-family: 'Roboto', sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
         }
 
-        /* Header and Navigation styling */
-        header {
-            background-color: #ffffff; /* White background for header */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-        }
-
-        .nav-list {
-            list-style-type: none;
-            margin: 0;
-            padding: 10px;
-            display: flex;
-            justify-content: space-around; /* Space out nav items */
-        }
-
-        .nav-button {
-            text-decoration: none;
-            color: #007bff; /* Blue color for links */
-            font-weight: 700; /* Bold text */
-        }
-
-        .nav-button:hover {
-            text-decoration: underline; /* Underline on hover */
-        }
-
-        /* Container styling */
         .container {
-            background-color: #ffffff; /* White background for content */
+            max-width: 900px;
+            margin: 30px auto;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-            margin: 20px auto; /* Center the container */
-            max-width: 600px; /* Max width for the container */
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
-            color: #333; /* Darker title */
-            text-align: center; /* Center title */
-            margin-bottom: 20px; /* Space below title */
-        }
-
-        /* Form styling */
-        form {
+        .profile-header {
             display: flex;
-            flex-direction: column; /* Stack form elements */
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
         }
 
-        form input[type="text"], 
-        form input[type="email"], 
-        form input[type="file"],
-        form textarea {
-            padding: 10px; /* Padding inside input fields */
-            margin-bottom: 15px; /* Space below each input */
-            border: 1px solid #ccc; /* Light grey border */
-            border-radius: 4px; /* Rounded corners */
+        .profile-info {
+            display: flex;
+            align-items: center;
         }
 
-        form button {
+        .profile-info img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+
+        .profile-info h2 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #333;
+        }
+
+        .profile-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .profile-actions {
+            text-align: right;
+        }
+
+        .profile-actions a {
+            text-decoration: none;
+            color: #4CAF50;
+            padding: 10px 20px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .profile-actions a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .profile-content {
+            margin-top: 20px;
+        }
+
+        .profile-section {
+            margin-bottom: 30px;
+        }
+
+        .profile-section h3 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .profile-section p {
+            color: #666;
+        }
+
+        .order-history table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-history th, .order-history td {
             padding: 10px;
-            background-color: #007bff; /* Primary button color */
-            color: #ffffff; /* White text */
-            border: none; /* No border */
-            border-radius: 4px; /* Rounded corners */
-            cursor: pointer; /* Pointer cursor on hover */
-            font-size: 16px; /* Larger text */
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
 
-        form button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+        .order-history th {
+            background-color: #f4f4f4;
+            color: #333;
         }
 
-        /* Footer styling */
-        footer {
-            background-color: #f8f9fa; /* Light footer background */
-            color: #555; /* Darker text for contrast */
-            padding: 20px 0;
-            margin-top: 30px;
+        .order-history tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .footer {
             text-align: center;
-        }
-
-        footer p {
-            margin: 0; /* No margin for footer text */
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+            margin-top: 30px;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul class="nav-list">
-                <li><a href="{% url 'shop:home' %}" class="nav-button">Home</a></li>
-                <li><a href="{% url 'shop:profile' %}" class="nav-button">Profile</a></li>
-                <li><a href="javascript:void(0);" onclick="logout()">Logout</a></li>
-                <form id="logout-form" action="{% url 'shop:logout' %}" method="post" style="display:none;">
-                    {% csrf_token %}
-                </form>
-            </ul>
-        </nav>
-    </header>
 
     <div class="container">
-        <h1>Edit Profile</h1>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" value="{{ profile.user.username }}" required>
+        <div class="profile-header">
+            <div class="profile-info">
+                <!-- Display the uploaded profile picture or default image -->
+                {% if user.profile.profile_picture %}
+                    <img src="{{ user.profile.profile_picture.url }}" alt="User Profile Picture">
+                {% else %}
+                    <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Picture">
+                {% endif %}
+                <div>
+                    <h2>{{ user.username }}</h2>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Member since: {{ user.date_joined }}</p>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <a href="{% url 'shop:edit_profile' %}">Edit Profile</a>
+            </div>
+        </div>
 
-            <label for="phone_number">Phone Number:</label>
-            <input type="text" id="phone_number" name="phone_number" value="{{ profile.phone_number }}" required>
+        <div class="profile-content">
+            <div class="profile-section">
+                <h3>Personal Information</h3>
+                <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                <p><strong>Phone Number:</strong> {{ user.profile.phone_number }}</p>
+                <p><strong>Address:</strong> {{ user.profile.address }}</p>
+            </div>
 
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address" value="{{ profile.address }}" required>
-
-            <label for="profile_image">Profile Picture:</label>
-            <input type="file" id="profile_image" name="image">
-
-            <button type="submit" class="nav-button">Save Changes</button>
-        </form>
+            <div class="profile-section order-history">
+                <h3>Order History</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.date_ordered }}</td>
+                            <td>{{ order.status }}</td>
+                            <td>${{ order.total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <footer>
-        <p>&copy; 2024 Enock Shopping Center. All rights reserved.</p>
+    <footer class="footer">
+        <div class="footer-container">
+            <h2>Contact Us</h2>
+            <section class="contact-info">
+                <address>
+                    <p>Email: <a href="mailto:info@enochshopping.com">info@enochshopping.com</a></p>
+                    <p>Phone: (256) 756679314</p>
+                    <p>Address: Kampala, Uganda, Shopping City.</p>
+                </address>
+            </section>
+            <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
+            <p>
+                <a href="{% url 'shop:contact' %}">Contact Us</a> | 
+                <a href="{% url 'shop:about' %}">About Us</a>
+            </p>
+        </div>
     </footer>
+
 </body>
 </html>

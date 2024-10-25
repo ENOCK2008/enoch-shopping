@@ -1,0 +1,225 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<div class="faq-container">
+    <h1>Frequently Asked Questions (FAQs)</h1>
+
+    <div class="faq-search">
+        <input type="text" id="faq-search-input" placeholder="Search FAQs..." />
+    </div>
+
+    <div class="faq-categories">
+        <button class="category-filter" data-category="all">All</button>
+        <button class="category-filter" data-category="payments">Payments</button>
+        <button class="category-filter" data-category="shipping">Shipping</button>
+        <button class="category-filter" data-category="returns">Returns</button>
+    </div>
+
+    <button id="toggle-all" class="btn btn-secondary">Expand All</button>
+
+    <div class="faq-item" data-category="payments">
+        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">What is Enoch Shopping Center?</h2>
+        <p class="faq-answer" aria-hidden="true">Enoch Shopping Center is an online platform where you can find a variety of products at competitive prices.</p>
+        <div class="faq-feedback">
+            <button class="btn-upvote">👍</button>
+            <span class="vote-count">0</span>
+            <button class="btn-downvote">👎</button>
+        </div>
+    </div>
+
+    <div class="faq-item" data-category="shipping">
+        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">How can I track my order?</h2>
+        <p class="faq-answer" aria-hidden="true">You can track your order by logging into your account and visiting the order history section.</p>
+        <div class="faq-feedback">
+            <button class="btn-upvote">👍</button>
+            <span class="vote-count">0</span>
+            <button class="btn-downvote">👎</button>
+        </div>
+    </div>
+
+    <div class="faq-item" data-category="payments">
+        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">What payment methods do you accept?</h2>
+        <p class="faq-answer" aria-hidden="true">We accept all major credit cards, PayPal, and other popular payment methods.</p>
+        <div class="faq-feedback">
+            <button class="btn-upvote">👍</button>
+            <span class="vote-count">0</span>
+            <button class="btn-downvote">👎</button>
+        </div>
+    </div>
+
+    <div class="faq-item" data-category="returns">
+        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">How can I return an item?</h2>
+        <p class="faq-answer" aria-hidden="true">To return an item, please visit our returns page and follow the instructions provided.</p>
+        <div class="faq-feedback">
+            <button class="btn-upvote">👍</button>
+            <span class="vote-count">0</span>
+            <button class="btn-downvote">👎</button>
+        </div>
+    </div>
+
+    <div class="faq-item" data-category="customer-support">
+        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">Do you offer customer support?</h2>
+        <p class="faq-answer" aria-hidden="true">Yes, we offer customer support via email and live chat. Please visit our support page for more details.</p>
+        <div class="faq-feedback">
+            <button class="btn-upvote">👍</button>
+            <span class="vote-count">0</span>
+            <button class="btn-downvote">👎</button>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .faq-search {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    #faq-search-input {
+        width: 80%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .faq-categories {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .category-filter {
+        margin: 0 10px;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+    }
+
+    .category-filter:hover {
+        background-color: #0056b3;
+    }
+
+    .faq-item {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        padding: 15px;
+        transition: background-color 0.3s ease;
+    }
+
+    .faq-item:hover {
+        background-color: #f1f1f1;
+    }
+
+    .faq-question {
+        font-size: 18px;
+        color: #007bff;
+        cursor: pointer;
+    }
+
+    .faq-answer {
+        margin-top: 10px;
+        color: #555;
+        display: none;
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+    }
+
+    .faq-item.active .faq-answer {
+        display: block;
+        max-height: 200px; /* Adjust based on content */
+        opacity: 1;
+    }
+
+    .faq-feedback {
+        margin-top: 10px;
+    }
+
+    .btn-upvote,
+    .btn-downvote {
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    .btn-secondary {
+        margin-bottom: 20px;
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .btn-secondary:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const questions = document.querySelectorAll('.faq-question');
+        const faqItems = document.querySelectorAll('.faq-item');
+        const searchInput = document.getElementById('faq-search-input');
+        const toggleAllButton = document.getElementById('toggle-all');
+        let isExpanded = false;
+
+        questions.forEach(question => {
+            question.addEventListener('click', function () {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+
+        searchInput.addEventListener('input', function () {
+            const filter = searchInput.value.toLowerCase();
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                item.style.display = question.includes(filter) ? 'block' : 'none';
+            });
+        });
+
+        toggleAllButton.addEventListener('click', function () {
+            isExpanded = !isExpanded;
+            faqItems.forEach(item => {
+                item.classList.toggle('active', isExpanded);
+                const answer = item.querySelector('.faq-answer');
+                answer.style.display = isExpanded ? 'block' : 'none';
+            });
+            toggleAllButton.textContent = isExpanded ? 'Collapse All' : 'Expand All';
+        });
+
+        const upvoteButtons = document.querySelectorAll('.btn-upvote');
+        upvoteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const voteCount = this.nextElementSibling;
+                voteCount.textContent = parseInt(voteCount.textContent) + 1;
+            });
+        });
+    });
+</script>
+{% endblock %}

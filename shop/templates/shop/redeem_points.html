@@ -1,0 +1,117 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="page-title">Redeem Your Loyalty Points</h1>
+        
+        {% if user_points %}
+            <p class="points-info">You have <strong>{{ user_points.points }}</strong> loyalty points available.</p>
+        
+            <div class="redemption-form">
+                <form method="POST" class="form">
+                    {% csrf_token %}
+                    <label for="points">Enter points to redeem:</label>
+                    <input type="number" name="points" id="points" min="1" max="{{ user_points.points }}" required>
+                    <button type="submit" class="btn btn-primary">Redeem Points</button>
+                </form>
+        
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="no-points">You currently have no loyalty points to redeem.</p>
+            <a href="{% url 'shop:loyalty_points_list' %}" class="btn btn-secondary">View Loyalty Points</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block css %}
+<style>
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-title {
+        text-align: center;
+        color: #343a40;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .points-info, .no-points {
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    .redemption-form {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    input[type="number"] {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+    .btn {
+        padding: 10px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .messages {
+        margin-top: 20px;
+    }
+
+    .alert {
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+    }
+
+    .alert.success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .alert.error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+</style>
+{% endblock %}

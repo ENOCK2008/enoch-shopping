@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #e7f8e7;
+            color: rgb(16, 14, 14);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2, h3 {
+            color: #4CAF50;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #e7f8e7;
+            color: rgb(16, 14, 14);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Terms of Service</h1>
+    </header>
+    
+    <main class="container">
+        <section class="terms-content">
+            <h2>Welcome to Enoch Shopping Center!</h2>
+            <p>These Terms of Service outline the rules and regulations for the use of our website and services.</p>
+            
+            <h3>1. Acceptance of Terms</h3>
+            <p>By accessing this website and using our services, you accept these Terms of Service in full. If you disagree with any part of these terms, you must not use our website.</p>
+            
+            <h3>2. Changes to Terms</h3>
+            <p>We may update our Terms of Service from time to time. You are advised to review this page periodically for any changes. Changes to these terms are effective when they are posted on this page.</p>
+            
+            <h3>3. User Accounts</h3>
+            <p>To use certain features of our website, you may need to create an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.</p>
+            
+            <h3>4. Privacy Policy</h3>
+            <p>Your privacy is important to us. Please refer to our <a href="{% url 'shop:privacy' %}">Privacy Policy</a>
+                for more information regarding the collection, use, and disclosure of your personal information.</p>
+            
+            <h3>5. Product Information</h3>
+            <p>All products listed on our platform are subject to availability. We reserve the right to discontinue any product at any time without notice. Pricing errors may occur, and we reserve the right to cancel orders based on incorrect pricing.</p>
+            
+            <h3>6. Order Acceptance</h3>
+            <p>Your order is an offer to purchase a product. We may accept or decline your order for any reason, including unavailability of the product or errors in pricing or product description.</p>
+            
+            <h3>7. Payment Terms</h3>
+            <p>We accept various payment methods. By providing your payment information, you authorize us to charge the payment method for your order. Refunds and cancellations will be handled according to our Return Policy.</p>
+            
+            <h3>8. Limitation of Liability</h3>
+            <p>To the fullest extent permitted by law, Enoch Shopping Center is not liable for any indirect, incidental, or consequential damages arising from your use of or inability to use our services.</p>
+            
+            <h3>9. Governing Law</h3>
+            <p>These Terms of Service are governed by the laws of [Your Jurisdiction]. Any disputes arising from these terms shall be resolved in the courts located in [Your Jurisdiction].</p>
+            
+            <h3>10. Contact Us</h3>
+            <p>If you have any questions about these Terms of Service, please contact us at <a href="mailto:support@enochshopping.com">support@enochshopping.com</a>.</p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <h2>Contact Us</h2>
+            <section class="contact-info">
+                <address>
+                    <p>Email: <a href="mailto:info@enochshopping.com">info@enochshopping.com</a></p>
+                    <p>Phone: (256) 756679314</p>
+                    <p>Address: Kampala, Uganda, Shopping City.</p>
+                </address>
+            </section>
+            <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
+            <p>
+                <a href="{% url 'shop:contact' %}">Contact Us</a> | 
+                <a href="{% url 'shop:about' %}">About Us</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script> <!-- Link to your JavaScript file -->
+</body>
+</html>
