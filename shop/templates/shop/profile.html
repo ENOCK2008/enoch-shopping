@@ -121,6 +121,46 @@
             margin-top: 30px;
             border-radius: 10px;
         }
+
+        /* Loading Spinner Styles */
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+
+        /* Referral Link Styles */
+        .referral-link {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .referral-link input {
+            width: calc(100% - 100px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .referral-link button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .referral-link button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -172,9 +212,20 @@
                             <td>{{ order.status }}</td>
                             <td>${{ order.total }}</td>
                         </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4">No orders found.</td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Referral Link Section -->
+            <div class="profile-section referral-link">
+                <h3>Your Referral Link</h3>
+                <input type="text" value="{{ referral_link }}" readonly>
+                <button onclick="copyToClipboard('{{ referral_link }}')">Copy Link</button>
             </div>
         </div>
     </div>
@@ -196,6 +247,28 @@
             </p>
         </div>
     </footer>
+
+    <!-- Loading Spinner -->
+    <div class="loading">
+        <img src="{% static 'images/loading-spinner.gif' %}" alt="Loading...">
+    </div>
+
+    <script>
+        // Show loading spinner when form is submitted
+        document.querySelector('.profile-form').addEventListener('submit', function() {
+            document.querySelector('.loading').style.display = 'block';
+        });
+
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert('Referral link copied to clipboard!');
+        }
+    </script>
 
 </body>
 </html>

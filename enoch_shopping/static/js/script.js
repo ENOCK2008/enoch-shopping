@@ -25,7 +25,7 @@ function updateStatus(message) {
 function connectWebSocket() {
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     // Dynamically building the WebSocket URL with the room name
-    const wsUrl = protocol + '127.0.0.1:8001/ws/chat/' + encodeURIComponent(roomName) + '/';
+    const wsUrl = protocol + window.location.host + '/ws/chat/' + encodeURIComponent(roomName) + '/';
     chatSocket = new WebSocket(wsUrl);
 
     chatSocket.onopen = function() {
@@ -74,7 +74,9 @@ function handleIncomingMessage(data) {
 
 function updateTypingStatus(data) {
     const typingStatus = document.querySelector('#typing-status');
-    typingStatus.textContent = data.is_typing ? `${data.users.join(', ')} is typing...` : ''; 
+    if (typingStatus) {
+        typingStatus.textContent = data.is_typing ? `${data.users.join(', ')} is typing...` : ''; 
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -82,15 +84,17 @@ document.addEventListener('DOMContentLoaded', function() {
     connectWebSocket();
 
     const roomSelectorForm = document.getElementById('room-selector-form');
-    roomSelectorForm.onsubmit = function(e) {
-        e.preventDefault();
-        const newRoomName = document.getElementById('room-name-input').value.trim();
-        if (newRoomName && newRoomName !== roomName) {
-            roomName = newRoomName;
-            chatSocket.close(); // Close existing socket before reconnecting
-            connectWebSocket();
-        }
-    };
+    if (roomSelectorForm) {
+        roomSelectorForm.onsubmit = function(e) {
+            e.preventDefault();
+            const newRoomName = document.getElementById('room-name-input').value.trim();
+            if (newRoomName && newRoomName !== roomName) {
+                roomName = newRoomName;
+                chatSocket.close(); // Close existing socket before reconnecting
+                connectWebSocket();
+            }
+        };
+    }
 
     document.querySelector('#chat-message-submit').onclick = function() {
         sendMessage();

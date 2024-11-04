@@ -6,7 +6,7 @@
     
     <div class="loyalty-points-info">
         <p>Welcome back, {{ user.username }}!</p>
-        <p>Your current loyalty points: <strong>{{ loyalty_points }}</strong></p>
+        <p>Your current loyalty points: <strong>{{ total_points }}</strong></p> <!-- Updated to show total points -->
     </div>
 
     <div class="loyalty-points-details mt-4">
@@ -25,33 +25,34 @@
         <h5>Your Actions</h5>
         <ul class="list-unstyled">
             <li>
-                <a href="{% url 'shop:redeem_points' %}" class="btn btn-primary">Redeem Points</a>
+                <a href="{% url 'shop:redeem_loyalty_points' %}" class="btn btn-primary">Redeem Points</a>
             </li>
             <li>
                 <a href="{% url 'shop:loyalty_terms' %}" class="btn btn-link">Loyalty Program Terms</a>
+                <li><a href="{% url 'shop:feedback' %}">Feedback</a></li> 
             </li>
         </ul>
     </div>
 
     <div class="loyalty-points-history mt-4">
         <h5>Points History</h5>
-        {% if points_history %}
+        {% if loyalty_points %}
         <table class="table">
             <thead>
                 <tr>
-                    <th>Date</th>
+                    <th>Date Earned</th>
                     <th>Transaction</th>
                     <th>Points Earned</th>
                     <th>Points Redeemed</th>
                 </tr>
             </thead>
             <tbody>
-                {% for entry in points_history %}
+                {% for point in loyalty_points %}
                 <tr>
-                    <td>{{ entry.date }}</td>
-                    <td>{{ entry.transaction }}</td>
-                    <td>{{ entry.points_earned }}</td>
-                    <td>{{ entry.points_redeemed }}</td>
+                    <td>{{ point.created_at|date:"Y-m-d H:i" }}</td> <!-- Date formatting -->
+                    <td>{{ point.transaction }}</td>
+                    <td>{{ point.points }}</td> <!-- Updated to match your model -->
+                    <td>{{ point.points_redeemed }}</td> <!-- Assuming points_redeemed is a field in your model -->
                 </tr>
                 {% endfor %}
             </tbody>
@@ -70,35 +71,15 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
-    .loyalty-points-info {
-        padding: 15px;
-        background-color: #fff;
-        border: 1px solid #e0e0e0;
-        border-radius: 4px;
-        margin-bottom: 20px;
-    }
-
-    .loyalty-points-details {
-        padding: 15px;
-        background-color: #fff;
-        border: 1px solid #e0e0e0;
-        border-radius: 4px;
-        margin-bottom: 20px;
-    }
-
-    .loyalty-points-actions {
-        padding: 15px;
-        background-color: #fff;
-        border: 1px solid #e0e0e0;
-        border-radius: 4px;
-        margin-bottom: 20px;
-    }
-
+    .loyalty-points-info,
+    .loyalty-points-details,
+    .loyalty-points-actions,
     .loyalty-points-history {
         padding: 15px;
         background-color: #fff;
         border: 1px solid #e0e0e0;
         border-radius: 4px;
+        margin-bottom: 20px;
     }
 
     table {

@@ -1,121 +1,186 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <!-- Bootstrap CSS for responsive design -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Register | Enoch Shopping Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> <!-- Google Font -->
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            overflow: hidden;
+            flex-direction: column; /* Align elements in a column */
         }
-        .signup-container {
-            background-color: white;
+
+        .form-container {
+            background: white;
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
-            margin-bottom: auto;
-        }
-        .signup-container h2 {
-            margin-bottom: 1.5rem;
             text-align: center;
-            color: #343a40;
+            position: relative; /* Position relative for potential absolute children */
         }
-        .form-control:focus {
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #007BFF; /* Primary color */
         }
-        .form-label {
-            font-weight: bold;
-            color: #495057;
-        }
-        .signup-btn {
-            background-color: #007bff;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 5px;
-            font-size: 1rem;
+
+        button.btn {
+            background-color: #007BFF; /* Primary color */
             color: white;
+            border: none;
+            padding: 12px 15px; /* Slightly increased padding for better touch targets */
+            border-radius: 5px;
             cursor: pointer;
             width: 100%;
-            transition: background-color 0.3s ease;
+            font-size: 16px; /* Increased font size for better readability */
+            transition: background-color 0.3s;
         }
-        .signup-btn:hover {
-            background-color: #0056b3;
+
+        button.btn:hover {
+            background-color: #0056b3; /* Darker shade for hover */
         }
-        .already-account {
-            margin-top: 1rem;
+
+        .success-message,
+        .error-message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none; /* Initially hidden */
+            font-size: 14px; /* Consistent font size for messages */
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .social-login {
+            margin: 1rem 0;
+        }
+
+        .social-login button {
+            width: 48%;
+            margin: 0 1%;
+        }
+
+        .password-strength {
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .footer-container {
+            margin-top: 2rem;
             text-align: center;
+            background-color: #007BFF; /* Match the primary color */
+            color: white; /* White text for better contrast */
+            padding: 1rem; /* Add padding */
+            border-top-left-radius: 10px; /* Rounded top left */
+            border-top-right-radius: 10px; /* Rounded top right */
+            width: 100%; /* Full width for footer */
+            position: relative; /* For positioning relative to other elements */
         }
-        .already-account a {
-            color: #007bff;
+
+        a {
+            color: #fff; /* White text for links in the footer */
             text-decoration: none;
+            transition: text-decoration 0.3s;
         }
-        .already-account a:hover {
-            text-decoration: underline;
-        }
-        /* Footer styling */
-        footer {
-            background-color: #343a40;
-            color: white;
-            padding: 1.5rem 0;
-            text-align: center;
-            width: 100%;
-            margin-top: auto;
-        }
-        footer a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        footer a:hover {
+
+        a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="signup-container">
-        <h2>Create an Account</h2>
-        <form method="POST" action="{% url 'shop:register' %}">
+    <div class="form-container">
+        <h2>Create Your Account</h2>
+
+        {% if registered %}
+            <div class="success-message" id="success-message">
+                You have been registered successfully!
+            </div>
+        {% endif %}
+
+        {% if form.errors %}
+            <div class="error-message" id="error-message">
+                Please correct the errors below.
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'shop:register' %}">
             {% csrf_token %}
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+            {{ form.as_p }}
+
+            <div class="password-strength">
+                <label for="id_password">Password:</label>
+                <input type="password" id="id_password" name="password" required>
+                <div id="password-strength-indicator"></div>
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+
+            <div>
+                <input type="checkbox" id="terms" required>
+                <label for="terms">I agree to the <a href="{% url 'shop:terms' %}">terms and conditions</a></label>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <div class="mb-3">
-                <label for="confirm_password" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
-            </div>
-            <button type="submit" class="signup-btn">Sign Up</button>
+
+            <button type="submit" class="btn">Register</button>
         </form>
-        <div class="already-account">
-            <p>Already have an account? <a href="{% url 'shop:login' %}">Log In</a></p>
-        </div>
+        <p>Already have an account? <a href="{% url 'shop:login' %}">Login here</a>.</p>
     </div>
 
-    <!-- Footer section for Enoch Shopping -->
     <footer>
-        <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
-        <p><a href="{% url 'shop:contact' %}">Contact Us</a> | <a href="{% url 'shop:privacy' %}">Privacy Policy</a> | <a href="{% url 'shop:terms' %}">Terms of Service</a></p>
+        <div class="footer-container">
+            <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
+            <p><a href="{% url 'shop:privacy_policy' %}">Privacy Policy</a> | <a href="{% url 'shop:contact' %}">Contact Us</a></p>
+        </div>
     </footer>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Password strength indicator
+        const passwordInput = document.getElementById('id_password');
+        const strengthIndicator = document.getElementById('password-strength-indicator');
+
+        passwordInput.addEventListener('input', function() {
+            const strength = calculatePasswordStrength(this.value);
+            strengthIndicator.textContent = `Strength: ${strength}`;
+            // Update style based on strength
+            if (strength === 'Strong') {
+                strengthIndicator.style.color = 'green';
+            } else if (strength === 'Medium') {
+                strengthIndicator.style.color = 'orange';
+            } else {
+                strengthIndicator.style.color = 'red';
+            }
+        });
+
+        function calculatePasswordStrength(password) {
+            // Simple strength calculation logic
+            if (password.length >= 8) {
+                return 'Strong';
+            } else if (password.length >= 5) {
+                return 'Medium';
+            }
+            return 'Weak';
+        }
+    </script>
 </body>
 </html>

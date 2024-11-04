@@ -1,0 +1,76 @@
+{% extends "shop/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Return Request</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- Link to your stylesheet -->
+</head>
+<body>
+    <div class="container">
+        <h2>Submit a Return Request</h2>
+
+        <!-- Display messages -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Order Information -->
+            <div class="form-group">
+                <label for="id_order">Order ID</label>
+                {{ form.order }}
+            </div>
+
+            <!-- Return Reason -->
+            <div class="form-group">
+                <label for="id_reason">Reason for Return</label>
+                {{ form.reason }}
+            </div>
+
+            <!-- Additional Comments -->
+            <div class="form-group">
+                <label for="id_additional_comments">Additional Comments</label>
+                {{ form.additional_comments }}
+            </div>
+
+            <hr>
+
+            <!-- User Information -->
+            <h3>Personal Information</h3>
+
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password">Password</label>
+                {{ form.password }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_bio">Bio</label>
+                {{ form.bio }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_phone_number">Phone Number</label>
+                {{ form.phone_number }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Return Request</button>
+        </form>
+    </div>
+</body>
+</html>

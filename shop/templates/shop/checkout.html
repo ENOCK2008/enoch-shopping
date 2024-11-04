@@ -5,49 +5,178 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 <div class="container my-5">
-    <h1 class="text-center">Checkout</h1>
+
+    <div class="shipping-info card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Shipping Address</h5>
+            <form id="shipping-form">
+                <div class="form-group">
+                    <label for="shipping_name">Name</label>
+                    <input type="text" id="shipping_name" class="form-control" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="shipping_address">Address Line 1</label>
+                    <input type="text" id="shipping_address" class="form-control" placeholder="Enter your address" required>
+                </div>
+                <div class="form-group">
+                    <label for="shipping_city">City</label>
+                    <input type="text" id="shipping_city" class="form-control" placeholder="Enter your city" required>
+                </div>
+                <div class="form-group">
+                    <label for="shipping_region">Region</label>
+                    <input type="text" id="shipping_region" class="form-control" placeholder="Enter your region" required>
+                </div>
+                
+                <button type="button" class="btn btn-success mt-3" onclick="saveShippingAddress()">Save Address</button>
+            </form>
+        </div>
+    </div>
     
-    <form method="post" class="checkout-form">
-        {% csrf_token %}
-        
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="phone_number">Phone Number:</label>
-                    <input type="tel" id="phone_number" name="phone_number" class="form-control" required pattern="[0-9]{10}" placeholder="Enter your phone number">
-                    <small class="form-text text-muted">Enter your phone number without the country code.</small>
-                </div>
+    
+    </script>
+    
+    <div class="gift-options card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Choose Gift Options</h5>
+            <div class="gift-item mb-3">
+                <p class="font-weight-bold">Nintendo Switch with Gray Joy-Con - HAC-001(-01)</p>
+                <label>
+                    <input type="checkbox"> This item is a gift
+                </label>
+                <textarea class="form-control mt-2" placeholder="Gift message (205 characters max)" rows="3"></textarea>
+                <small class="form-text text-muted">Enjoy your gift!</small>
+                <p class="mt-2">From: Default Name</p>
             </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="amount">Amount:</label>
-                    <input type="number" id="amount" name="amount" class="form-control" required min="1" placeholder="Enter the amount">
-                </div>
+            <div class="add-ons mb-3">
+                <label>
+                    <input type="checkbox"> Wrap in a gift bag (100% recycled) - $3.99
+                </label>
             </div>
+            <div class="gift-receipt mb-3">
+                <label for="recipient_email">Email the recipient a copy of their gift receipt:</label>
+                <input type="email" id="recipient_email" class="form-control" placeholder="Recipient's email address" required>
+                <small class="form-text text-muted">We'll send a copy of the gift receipt once the item is delivered.</small>
+            </div>
+            <button type="button" class="btn btn-primary">Save Gift Options and Continue</button>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="currency">Currency:</label>
-            <select id="currency" name="currency" class="form-control" required>
-                {% for currency in supported_currencies %}
-                    <option value="{{ currency }}">{{ currency }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="payment_method">Payment Method:</label>
+    <div class="payment-method card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Payment Method</h5>
             <select id="payment_method" name="payment_method" class="form-control" required>
+                <option value="" disabled selected>Select Payment Method</option>
                 <option value="mpesa">M-Pesa</option>
                 <option value="mtn">MTN Mobile Money</option>
                 <option value="airtel">Airtel Money</option>
+                <option value="cod">Pay on Delivery</option>
+                <option value="bank_transfer">Bank Transfer</option>
             </select>
         </div>
+    </div>
 
-        <button type="submit" class="btn btn-primary btn-block">Pay Now</button>
-    </form>
+    <div class="order-summary card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Order Summary</h5>
+            <p class="text-muted">Items and Shipping</p>
+            <p>*Why has sales tax been applied? See tax and seller information.</p>
+            <p>Upon placing your order, you will receive an email confirming your order details.</p>
+            <p>You may return new, unopened merchandise in original condition within 30 days of delivery. Exceptions may apply.</p>
+            <button type="submit" class="btn btn-success">Place Your Order</button>
+        </div>
+    </div>
+
+    <div class="help text-center">
+        <p>
+            Need to add more items to your order? 
+            {% if product %}
+                <a href="{% url 'shop:product_detail' product.pk %}">Continue shopping</a>
+            {% else %}
+                <a href="{% url 'shop:product_list' %}">Continue shopping</a>
+            {% endif %}
+            on the homepage.
+        </p>
+    </div>
+    
+    <div class="order-summary-details card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Important Information</h5>
+            <p>Products from abroad may be subject to import duties and/or taxes that are included in the price.</p>
+            <p>Shipping costs are calculated based on the delivery address and selected shipping method.</p>
+        </div>
+    </div>
 </div>
+<script>
+    function saveShippingAddress() {
+        const name = document.getElementById('shipping_name').value;
+        const address = document.getElementById('shipping_address').value;
+        const city = document.getElementById('shipping_city').value;
+        const region = document.getElementById('shipping_region').value;
+        const paymentMethod = document.getElementById('payment_method').value; // Assuming you're getting the payment method from the form
+
+        fetch("{% url 'shop:checkout' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"), // Ensure you have a function to get the CSRF token
+            },
+            body: JSON.stringify({
+                shipping_name: name,
+                shipping_address: address,
+                shipping_city: city,
+                shipping_region: region,
+                payment_method: paymentMethod,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Shipping address saved successfully!');
+                // Redirect or update the UI as needed
+            } else {
+                alert('Error saving address.');
+            }
+        });
+    }
+
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Check if this cookie string begins with the name we want
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+        function saveShippingAddress() {
+            // Here you would typically handle the form submission,
+            // for example, by sending the data to the server using AJAX.
+            // For demonstration purposes, we'll just log the values.
+            const name = document.getElementById('shipping_name').value;
+            const address = document.getElementById('shipping_address').value;
+            const city = document.getElementById('shipping_city').value;
+            const region = document.getElementById('shipping_region').value;
+            const zip = document.getElementById('shipping_zip').value;
+    
+            console.log('Shipping Address:', {
+                name,
+                address,
+                city,
+                region,
+                zip
+            });
+    
+            // Optionally, display a success message or update the UI
+            alert('Shipping address saved successfully!');
+        }
+</script>
 
 <!-- Inline CSS for additional styling -->
 <style>
@@ -56,24 +185,36 @@
         color: #333; /* Dark text for readability */
     }
 
-    .checkout-form {
-        background-color: #ffffff; /* White background for the form */
-        padding: 20px;
+    .card {
+        border: none; /* Remove border for a cleaner look */
         border-radius: 8px; /* Rounded corners */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     }
 
-    .form-group label {
-        font-weight: bold; /* Bold labels for better visibility */
+    .btn-link {
+        color: #007bff; /* Link color */
     }
 
-    .btn-primary {
-        background-color: #007bff; /* Primary button color */
-        border: none; /* Remove border */
+    .btn-link:hover {
+        text-decoration: underline; /* Underline on hover */
     }
 
-    .btn-primary:hover {
-        background-color: #0056b3; /* Darker blue on hover */
+    .form-control {
+        margin-top: 10px; /* Space above input fields */
+    }
+
+    .help {
+        margin-top: 20px; /* Space above help section */
+    }
+
+    .order-summary-details {
+        background-color: #e9ecef; /* Light gray background for summary */
+        padding: 15px;
+        border-radius: 8px; /* Rounded corners */
+    }
+
+    .font-weight-bold {
+        font-weight: 700; /* Bold text */
     }
 </style>
 

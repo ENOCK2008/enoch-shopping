@@ -5,68 +5,70 @@
     <h1>Frequently Asked Questions (FAQs)</h1>
 
     <div class="faq-search">
-        <input type="text" id="faq-search-input" placeholder="Search FAQs..." />
+        <input type="text" id="faq-search-input" placeholder="Search FAQs..." aria-label="Search FAQs" />
     </div>
 
     <div class="faq-categories">
-        <button class="category-filter" data-category="all">All</button>
+        <button class="category-filter active" data-category="all">All</button>
         <button class="category-filter" data-category="payments">Payments</button>
         <button class="category-filter" data-category="shipping">Shipping</button>
         <button class="category-filter" data-category="returns">Returns</button>
+        <button class="category-filter" data-category="customer-support">Customer Support</button>
     </div>
 
     <button id="toggle-all" class="btn btn-secondary">Expand All</button>
 
-    <div class="faq-item" data-category="payments">
-        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">What is Enoch Shopping Center?</h2>
-        <p class="faq-answer" aria-hidden="true">Enoch Shopping Center is an online platform where you can find a variety of products at competitive prices.</p>
-        <div class="faq-feedback">
-            <button class="btn-upvote">👍</button>
-            <span class="vote-count">0</span>
-            <button class="btn-downvote">👎</button>
+    <div class="faq-list">
+        <div class="faq-item" data-category="payments">
+            <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">What is Enoch Shopping Center?</h2>
+            <p class="faq-answer" aria-hidden="true">Enoch Shopping Center is an online platform where you can find a variety of products at competitive prices.</p>
+            <div class="faq-feedback">
+                <button class="btn-feedback" aria-label="Upvote">👍</button>
+                <span class="vote-count">0</span>
+                <button class="btn-feedback" aria-label="Downvote">👎</button>
+            </div>
+        </div>
+
+        <div class="faq-item" data-category="shipping">
+            <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">How can I track my order?</h2>
+            <p class="faq-answer" aria-hidden="true">You can track your order by logging into your account and visiting the order history section.</p>
+            <div class="faq-feedback">
+                <button class="btn-feedback" aria-label="Upvote">👍</button>
+                <span class="vote-count">0</span>
+                <button class="btn-feedback" aria-label="Downvote">👎</button>
+            </div>
+        </div>
+
+        <div class="faq-item" data-category="payments">
+            <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">What payment methods do you accept?</h2>
+            <p class="faq-answer" aria-hidden="true">We accept all major credit cards, PayPal, and other popular payment methods.</p>
+            <div class="faq-feedback">
+                <button class="btn-feedback" aria-label="Upvote">👍</button>
+                <span class="vote-count">0</span>
+                <button class="btn-feedback" aria-label="Downvote">👎</button>
+            </div>
+        </div>
+
+        <div class="faq-item" data-category="returns">
+            <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">How can I return an item?</h2>
+            <p class="faq-answer" aria-hidden="true">To return an item, please visit our returns page and follow the instructions provided.</p>
+            <div class="faq-feedback">
+                <button class="btn-feedback" aria-label="Upvote">👍</button>
+                <span class="vote-count">0</span>
+                <button class="btn-feedback" aria-label="Downvote">👎</button>
+            </div>
+        </div>
+
+        <div class="faq-item" data-category="customer-support">
+            <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">Do you offer customer support?</h2>
+            <p class="faq-answer" aria-hidden="true">Yes, we offer customer support via email and live chat. Please visit our support page for more details.</p>
+            <div class="faq-feedback">
+                <button class="btn-feedback" aria-label="Upvote">👍</button>
+                <span class="vote-count">0</span>
+                <button class="btn-feedback" aria-label="Downvote">👎</button>
+            </div>
         </div>
     </div>
-
-    <div class="faq-item" data-category="shipping">
-        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">How can I track my order?</h2>
-        <p class="faq-answer" aria-hidden="true">You can track your order by logging into your account and visiting the order history section.</p>
-        <div class="faq-feedback">
-            <button class="btn-upvote">👍</button>
-            <span class="vote-count">0</span>
-            <button class="btn-downvote">👎</button>
-        </div>
-    </div>
-
-    <div class="faq-item" data-category="payments">
-        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">What payment methods do you accept?</h2>
-        <p class="faq-answer" aria-hidden="true">We accept all major credit cards, PayPal, and other popular payment methods.</p>
-        <div class="faq-feedback">
-            <button class="btn-upvote">👍</button>
-            <span class="vote-count">0</span>
-            <button class="btn-downvote">👎</button>
-        </div>
-    </div>
-
-    <div class="faq-item" data-category="returns">
-        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">How can I return an item?</h2>
-        <p class="faq-answer" aria-hidden="true">To return an item, please visit our returns page and follow the instructions provided.</p>
-        <div class="faq-feedback">
-            <button class="btn-upvote">👍</button>
-            <span class="vote-count">0</span>
-            <button class="btn-downvote">👎</button>
-        </div>
-    </div>
-
-    <div class="faq-item" data-category="customer-support">
-        <h2 class="faq-question" role="button" tabindex="0" aria-expanded="false">Do you offer customer support?</h2>
-        <p class="faq-answer" aria-hidden="true">Yes, we offer customer support via email and live chat. Please visit our support page for more details.</p>
-        <div class="faq-feedback">
-            <button class="btn-upvote">👍</button>
-            <span class="vote-count">0</span>
-            <button class="btn-downvote">👎</button>
-        </div>
-    </div>
-
 </div>
 {% endblock %}
 
@@ -74,29 +76,32 @@
 <style>
     .faq-container {
         max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        font-size: 2.5rem;
         color: #333;
     }
 
     .faq-search {
-        margin-bottom: 20px;
         text-align: center;
+        margin-bottom: 30px;
     }
 
     #faq-search-input {
-        width: 80%;
-        padding: 10px;
-        border-radius: 5px;
+        width: 90%;
+        max-width: 400px;
+        padding: 12px;
+        border-radius: 25px;
         border: 1px solid #ccc;
+        font-size: 1rem;
     }
 
     .faq-categories {
@@ -107,24 +112,32 @@
 
     .category-filter {
         margin: 0 10px;
-        padding: 10px 15px;
+        padding: 12px 20px;
         border: none;
-        border-radius: 5px;
+        border-radius: 25px;
         background-color: #007bff;
         color: white;
         cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 
+    .category-filter.active,
     .category-filter:hover {
         background-color: #0056b3;
     }
 
+    .faq-list {
+        margin-top: 20px;
+    }
+
     .faq-item {
         border: 1px solid #ddd;
-        border-radius: 5px;
-        margin-bottom: 15px;
-        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        padding: 20px;
         transition: background-color 0.3s ease;
+        background-color: #f9f9f9;
+        position: relative;
     }
 
     .faq-item:hover {
@@ -132,9 +145,15 @@
     }
 
     .faq-question {
-        font-size: 18px;
+        font-size: 1.25rem;
         color: #007bff;
         cursor: pointer;
+        position: relative;
+        transition: color 0.3s ease;
+    }
+
+    .faq-question:hover {
+        color: #0056b3;
     }
 
     .faq-answer {
@@ -155,22 +174,27 @@
 
     .faq-feedback {
         margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
-    .btn-upvote,
-    .btn-downvote {
+    .btn-feedback {
         border: none;
         background: none;
         cursor: pointer;
+        font-size: 1.5rem;
     }
 
     .btn-secondary {
         margin-bottom: 20px;
-        padding: 10px 15px;
+        padding: 12px 20px;
         background-color: #007bff;
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 
     .btn-secondary:hover {
@@ -190,16 +214,21 @@
 
         questions.forEach(question => {
             question.addEventListener('click', function () {
-                const faqItem = question.parentElement;
+                const faqItem = question.closest('.faq-item');
                 faqItem.classList.toggle('active');
+                const answer = faqItem.querySelector('.faq-answer');
+                const isOpen = faqItem.classList.contains('active');
+                question.setAttribute('aria-expanded', isOpen);
+                answer.setAttribute('aria-hidden', !isOpen);
+                answer.style.display = isOpen ? 'block' : 'none';
             });
         });
 
         searchInput.addEventListener('input', function () {
             const filter = searchInput.value.toLowerCase();
             faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question').textContent.toLowerCase();
-                item.style.display = question.includes(filter) ? 'block' : 'none';
+                const questionText = item.querySelector('.faq-question').textContent.toLowerCase();
+                item.style.display = questionText.includes(filter) ? 'block' : 'none';
             });
         });
 
@@ -209,16 +238,11 @@
                 item.classList.toggle('active', isExpanded);
                 const answer = item.querySelector('.faq-answer');
                 answer.style.display = isExpanded ? 'block' : 'none';
+                const question = item.querySelector('.faq-question');
+                question.setAttribute('aria-expanded', isExpanded);
+                answer.setAttribute('aria-hidden', !isExpanded);
             });
             toggleAllButton.textContent = isExpanded ? 'Collapse All' : 'Expand All';
-        });
-
-        const upvoteButtons = document.querySelectorAll('.btn-upvote');
-        upvoteButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const voteCount = this.nextElementSibling;
-                voteCount.textContent = parseInt(voteCount.textContent) + 1;
-            });
         });
     });
 </script>

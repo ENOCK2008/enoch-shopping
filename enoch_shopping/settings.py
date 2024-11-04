@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shop',  # Your custom app
+    'shop.apps.ShopConfig',  # Your custom app
     'rest_framework',  # Django REST Framework
     'channels',  # Django Channels for WebSocket handling
     'django_otp',  # Django OTP for two-factor authentication
@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'two_factor',  # Two-factor authentication
     'django_extensions',  # Extensions for Django
 ]
+
+# Specify the custom user model
+AUTH_USER_MODEL = 'shop.User'
 
 # Middleware settings
 MIDDLEWARE = [
@@ -95,42 +98,29 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-from django.utils.translation import gettext_lazy as _
-
 LANGUAGES = [
     ('en', _('English')),
     ('es', _('Spanish')),
     ('zh-hans', _('Chinese')),  # Simplified Chinese
-    ('lg', _('Luganda')),       # ISO 639-1 code for Luganda
-    ('sw', _('Kiswahili')),     # ISO 639-1 code for Kiswahili
-    ('nyn', _('Lunyole')),      # ISO 639-3 code for Lunyole
+    ('lg', _('Luganda')),        # ISO 639-1 code for Luganda
+    ('sw', _('Kiswahili')),      # ISO 639-1 code for Kiswahili
+    ('nyn', _('Lunyole')),       # ISO 639-3 code for Lunyole
 ]
 
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
-
-import os
-
 # Media files (uploads)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Adjust the path as necessary
+MEDIA_ROOT = BASE_DIR / 'media'  # Adjust the path as necessary
 
-# Define BASE_DIR as a Path object
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Now you can use BASE_DIR with the / operator to join paths
-log_file_path = BASE_DIR / 'chat_consumer.log'
-
-
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'enoch_shopping', 'static'),
+    BASE_DIR / 'static',  # Adjust this to your actual static directory
 ]
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory where static files will be collected
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -159,6 +149,7 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'your-email@example.com')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your-email-password')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+# Channel layers configuration for Django Channels
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -168,8 +159,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-
-
 # Logging configuration
 LOGGING = {
     'version': 1,
@@ -178,18 +167,23 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'django.log',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'WARNING',  # Change to 'ERROR' to suppress more messages
         },
         'django_extensions': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'WARNING',  # This will suppress info messages from django_extensions
         },
     },
 }
+
 # Ensure the log directory exists
 log_file_path = BASE_DIR / 'chat_consumer.log'
 if not log_file_path.parent.exists():
@@ -207,3 +201,4 @@ PAYPAL_CLIENT_SECRET = os.getenv('PAYPAL_CLIENT_SECRET')
 
 # Use the PORT environment variable for deployment
 PORT = os.environ.get('PORT', '8000')
+SITE_URL = "http://127.0.0.1:8000"

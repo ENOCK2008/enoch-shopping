@@ -13,12 +13,10 @@
     {% endif %}
 
     {% if product.image %}
-        <h3>Product Image:</h3>
         <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
     {% endif %}
 
     {% if product.video_url %}
-        <h3>Product Video:</h3>
         <video width="640" height="360" controls>
             <source src="{{ product.video_url }}" type="video/mp4">
             Your browser does not support the video tag.
@@ -26,20 +24,20 @@
     {% endif %}
 
     {% if product.panoramic_image %}
-        <h3>360-Degree View:</h3>
         <img src="{{ product.panoramic_image.url }}" alt="Panoramic View" class="panoramic-image">
     {% endif %}
 
-    <form action="{% url 'shop:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Add to Cart</button>
-    </form> or
-    <!-- Add to Wishlist Button -->
-    <form method="POST" action="{% url 'shop:add_to_wishlist' product.id %}" class="add-to-wishlist-form">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-wishlist">Add to Wishlist</button>
-    </form>
-    
+    <div class="action-buttons">
+        <form action="{% url 'shop:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Add to Cart</button>
+        </form>
+
+        <form method="POST" action="{% url 'shop:add_to_wishlist' product.id %}" class="add-to-wishlist-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-wishlist">Add to Wishlist</button>
+        </form>
+    </div>
 
     <div class="product-reviews">
         <h3 class="reviews-title">Reviews:</h3>
@@ -47,18 +45,16 @@
             <ul class="review-list">
                 {% for review in product.reviews.all %}
                     <li class="review-item">
-                        <div class="review-header">
-                            <strong>{{ review.user.username }}</strong>
-                            <span class="star-rating">
-                                {% for i in "12345"|make_list %}
-                                    {% if i <= review.rating %}
-                                        <i class="fas fa-star star filled"></i>
-                                    {% else %}
-                                        <i class="far fa-star star"></i>
-                                    {% endif %}
-                                {% endfor %}
-                            </span>
-                        </div>
+                        <strong>{{ review.user.username }}</strong>
+                        <span class="star-rating">
+                            {% for i in "12345"|make_list %}
+                                {% if i <= review.rating %}
+                                    <i class="fas fa-star star filled"></i>
+                                {% else %}
+                                    <i class="far fa-star star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
                         <p class="review-comment">{{ review.comment }}</p>
                     </li>
                 {% endfor %}
@@ -66,11 +62,9 @@
         {% else %}
             <p class="no-reviews">No reviews yet. Be the first to review this product!</p>
         {% endif %}
-    
+
         {% if user.is_authenticated %}
-        <div class="submit-review">
             <h3 class="submit-review-title">Submit a Review for {{ product.name }}</h3>
-            
             <form id="review-form" method="post" action="{% url 'shop:submit_review' product.id %}">
                 {% csrf_token %}
                 <textarea name="comment" rows="4" placeholder="Write your review here..." required></textarea>
@@ -79,182 +73,141 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Submit Review</button>
             </form>
-        </div>
-        
         {% else %}
             <p class="login-prompt"><a href="{% url 'shop:login' %}">Log in</a> to submit a review.</p>
         {% endif %}
     </div>
-    
+
     <div class="ar-features">
         <h3>Try this product in AR:</h3>
         <p>Use our augmented reality feature to visualize this product in your space.</p>
         <a href="{% url 'shop:ar_view' product.id %}" class="btn btn-secondary">View in AR</a>
     </div>
 
-    <div class="discount-codes">
-        {% if active_discount %}
-            <h3>Available Discount Code:</h3>
-            <p>Use code <strong>{{ active_discount.code }}</strong> for a {{ active_discount.discount_amount }}% discount!</p>
-        {% else %}
-            <p>No discount codes available for this product.</p>
-        {% endif %}
-    </div>
-
-    <div class="loyalty-points">
-        {% if user.is_authenticated %}
-            <h3>Your Loyalty Points: {{ user.loyaltypoints.points }}</h3>
-            <p>Earn more points by purchasing this product!</p>
-        {% else %}
-            <p><a href="{% url 'shop:login' %}">Log in</a> to view and earn loyalty points.</p>
-        {% endif %}
-    </div>
-
-    <div class="user-feedback">
-        <h3>We value your feedback to improve our services!</h3>
-        <form action="{% url 'shop:feedback' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Leave Feedback</button>
-        </form>
-    </div>
+    {% if active_discount %}
+        <h3>Available Discount Code:</h3>
+        <p>Use code <strong>{{ active_discount.code }}</strong> for a {{ active_discount.discount_amount }}% discount!</p>
+    {% else %}
+        <p>No discount codes available for this product.</p>
+    {% endif %}
 
     {% if user.is_authenticated %}
-        <div class="user-notifications">
-            <h3>Your Notifications</h3>
-            <ul class="notification-list">
-                {% for notification in user.notifications.all %}
-                    <li>{{ notification.message }} ({{ notification.created_at|date:"Y-m-d H:i" }})</li>
-                {% empty %}
-                    <li>No new notifications.</li>
-                {% endfor %}
-            </ul>
-        </div>
+        <h3>Your Loyalty Points: {{ user.loyaltypoints.points }}</h3>
+        <p>Earn more points by purchasing this product!</p>
+    {% else %}
+        <p><a href="{% url 'shop:login' %}">Log in</a> to view and earn loyalty points.</p>
     {% endif %}
+    <a href="{% url 'shop:redeem_loyalty_points' %}" class="btn btn-secondary">Redeem Loyalty Points</a>
+
 </div>
 
 <style>
     .product-details-container {
-        max-width: 800px; /* Limit the width for better readability */
-        margin: 0 auto; /* Center the container */
-        padding: 20px; /* Padding around the container */
-        background-color: #fff; /* White background for contrast */
-        border-radius: 8px; /* Rounded corners */
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .product-name {
-        font-size: 2em; /* Larger font for product name */
-        color: #007bff; /* Blue color for emphasis */
+        font-size: 2em;
+        color: #007bff;
     }
 
     .product-price {
-        font-size: 1.5em; /* Slightly larger price text */
-        color: #28a745; /* Green for price */
-        margin: 10px 0; /* Space above and below price */
+        font-size: 1.5em;
+        color: #28a745;
+        margin: 10px 0;
     }
 
     .product-description {
-        margin-bottom: 20px; /* Space below description */
-        font-size: 1.1em; /* Slightly larger description text */
-        color: #333; /* Dark text for readability */
+        margin-bottom: 20px;
+        font-size: 1.1em;
+        color: #333;
     }
 
     .product-image, .panoramic-image {
-        width: 100%; /* Responsive images */
-        height: auto; /* Maintain aspect ratio */
-        border-radius: 5px; /* Rounded corners for images */
-        margin-bottom: 20px; /* Space below images */
+        width: 100%;
+        height: auto;
+        border-radius: 5px;
+        margin-bottom: 20px;
     }
 
-    .add-to-cart-form {
-        margin-bottom: 20px; /* Space below add-to-cart form */
+    .action-buttons {
+        margin-bottom: 20px;
     }
 
     .product-reviews {
-        margin-top: 30px; /* Space above reviews section */
+        margin-top: 30px;
     }
 
     .review-list {
-        list-style-type: none; /* Remove bullet points */
-        padding: 0; /* Remove default padding */
+        list-style-type: none;
+        padding: 0;
     }
 
     .review-item {
-        margin-bottom: 15px; /* Space between reviews */
-        border-bottom: 1px solid #ccc; /* Divider between reviews */
-        padding-bottom: 10px; /* Padding below each review */
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
     }
 
     .star-rating {
-        display: inline-block; /* Align stars inline */
+        display: inline-block;
     }
 
-    .submit-review {
-        margin-top: 20px; /* Space above review form */
-    }
-
-    .ar-features, .discount-codes, .loyalty-points {
-        margin-top: 30px; /* Space above these sections */
-        padding: 10px; /* Padding inside sections */
-        border: 1px solid #ccc; /* Border around sections */
-        border-radius: 5px; /* Rounded corners for sections */
-    }
-
-    .user-feedback, .user-notifications {
-        margin-top: 30px; /* Space above feedback and notifications sections */
-    }
-
-    .notification-list {
-        list-style-type: none; /* Remove bullet points */
-        padding: 0; /* Remove default padding */
+    .ar-features {
+        margin-top: 30px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
 
     .btn {
-        padding: 10px 20px; /* Button padding */
-        border-radius: 5px; /* Rounded corners for buttons */
-        transition: background-color 0.3s; /* Smooth transition */
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
     }
 
     .btn-primary {
-        background-color: #007bff; /* Primary button color */
-        color: white; /* White text on buttons */
-        border: none; /* Remove border */
+        background-color: #007bff;
+        color: white;
+        border: none;
     }
 
     .btn-primary:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-        cursor: pointer; /* Pointer cursor on hover */
+        background-color: #0056b3;
+        cursor: pointer;
     }
 
     .btn-secondary {
-        background-color: #6c757d; /* Secondary button color */
-        color: white; /* White text on buttons */
+        background-color: #6c757d;
+        color: white;
     }
 
     .btn-secondary:hover {
-        background-color: #5a6268; /* Darker gray on hover */
+        background-color: #5a6268;
+    }
+
+    .btn-wishlist {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-wishlist:hover {
+        opacity: 0.9;
     }
 
     @media (max-width: 600px) {
         .product-details-container {
-            padding: 15px; /* Reduce padding on smaller screens */
+            padding: 15px;
         }
     }
-    .btn-wishlist {
-    background-color: #28a745; /* Green color */
-    color: white;
-}
-
-.btn-wishlist:hover {
-    opacity: 0.9;
-}
-
 </style>
 
 <script>
-    const starImageUrl = "{% static 'images/star-full.png' %}";
-    const starEmptyImageUrl = "{% static 'images/star-empty.png' %}";
-
     document.getElementById('review-form').addEventListener('submit', function(event) {
         event.preventDefault();
         const formData = new FormData(this);
@@ -288,11 +241,7 @@
     function generateStars(rating) {
         let starsHtml = '';
         for (let i = 1; i <= 5; i++) {
-            if (i <= rating) {
-                starsHtml += `<img src="${starImageUrl}" alt="Star" class="star">`;
-            } else {
-                starsHtml += `<img src="${starEmptyImageUrl}" alt="Star" class="star">`;
-            }
+            starsHtml += `<i class="${i <= rating ? 'fas fa-star star filled' : 'far fa-star star'}"></i>`;
         }
         return starsHtml;
     }

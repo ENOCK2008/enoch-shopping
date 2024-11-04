@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Chat Room - {{ room_name }}</title>
+    <title>Chat Room - {{ room_name }}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <script src="{% static 'js/script.js' %}"></script>
 
@@ -37,17 +37,17 @@
 
         /* Sidebar Styles */
         .sidebar {
-            width: 25%;
+            width: 16%;
             background-color: #333;
             color: white;
             padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: fixed; /* Fixed position */
-            height: 100vh; /* Full height */
-            overflow-y: auto; /* Allow vertical scrolling if content overflows */
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar header {
@@ -60,7 +60,7 @@
         .sidebar h2 {
             text-align: center;
             font-size: 1.5em;
-            color: #f4f4f4; /* Light gray color for the title */
+            color: #f4f4f4;
             margin-bottom: 20px;
         }
 
@@ -71,7 +71,7 @@
         }
 
         .sidebar header img {
-            width: 30px;
+            width: 40px; /* Slightly larger for better visibility */
             height: 40px;
             border-radius: 50%;
             margin-right: 10px;
@@ -79,12 +79,12 @@
 
         .sidebar header span {
             font-weight: bold;
-            color: #f4f4f4; /* Light gray for username */
+            color: #f4f4f4;
         }
 
         .sidebar header p {
             font-size: 0.9em;
-            color: #777; /* Lighter gray for status text */
+            color: #777;
         }
 
         .room-list {
@@ -115,7 +115,7 @@
         /* Chat Window Styles */
         .chat-window {
             width: 75%;
-            margin-left: 250px; /* Account for sidebar width */
+            margin-left: 250px;
             display: flex;
             flex-direction: column;
             background-color: white;
@@ -123,10 +123,11 @@
 
         .chat-header {
             padding: 20px;
-            background-color: #007bff;
-            color: white;
+            background-color: #deeaf7;
+            color: #333; /* Adjusted text color for better contrast */
             text-align: center;
             font-size: 20px;
+            position: relative;
         }
 
         .chat-log {
@@ -185,6 +186,7 @@
             margin-left: 10px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            type: button; /* Ensure this button does not submit the form */
         }
 
         #chat-message-submit:hover {
@@ -193,29 +195,6 @@
 
         .file-input {
             margin-left: 10px;
-        }
-
-        .emoji-picker {
-            display: flex;
-            flex-wrap: wrap;
-            max-width: 200px;
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            visibility: hidden;
-            z-index: 10;
-        }
-
-        .emoji {
-            cursor: pointer;
-            padding: 5px;
-            font-size: 20px;
-        }
-
-        .emoji:hover {
-            background-color: #f0f0f0;
         }
 
         /* Dark Mode Styles */
@@ -232,7 +211,7 @@
 
             .chat-window {
                 width: 70%;
-                margin-left: 0; /* Remove margin on smaller screens */
+                margin-left: 0;
             }
         }
 
@@ -249,14 +228,13 @@
             .chat-window {
                 width: 100%;
                 height: auto;
-                margin-left: 0; /* Remove margin on smaller screens */
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
     <div class="chat-app">
-        <!-- Sidebar for room navigation -->
         <aside class="sidebar">
             <header>
                 <h2>Rooms</h2>
@@ -282,41 +260,20 @@
             </ul>
         </aside>
 
-        <!-- Main chat window -->
         <div class="chat-window">
             <header class="chat-header">
                 <h2>Chat Room: {{ room_name }}</h2>
-                <button id="toggle-dark-mode">Toggle Dark Mode</button>
+                <button id="toggle-dark-mode" class="btn btn-outline-secondary">Toggle Dark Mode</button>
             </header>
 
-            <!-- Chat log -->
             <div class="chat-log" id="chat-log">
-                <!-- Chat bubbles will be dynamically loaded here -->
                 <div class="message user">Hi there! How can I help you today?</div>
                 <div class="message bot">I'm here to assist with your queries!</div>
             </div>
-            <!-- Button to schedule message -->
-            <input type="datetime-local" id="schedule-message">
-            <button id="schedule-button">Schedule</button>
 
-            <!-- Typing status -->
-            <div id="typing-status" class="typing-status"></div>
-
-            <!-- Emoji Picker -->
-            <div class="emoji-picker" id="emoji-picker">
-                <span class="emoji" data-emoji="😊">😊</span>
-                <span class="emoji" data-emoji="😂">😂</span>
-                <span class="emoji" data-emoji="😍">😍</span>
-                <span class="emoji" data-emoji="😢">😢</span>
-                <span class="emoji" data-emoji="😡">😡</span>
-                <span class="emoji" data-emoji="👍">👍</span>
-                <span class="emoji" data-emoji="🎉">🎉</span>
-            </div>
-
-            <!-- Chat message input -->
             <form id="chat-form" class="chat-form">
                 <input id="chat-message-input" type="text" placeholder="Type a message..." autocomplete="off">
-                <button id="chat-message-submit">Send</button>
+                <button id="chat-message-submit" type="button">Send</button>
                 <input type="file" class="file-input" id="file-input" />
             </form>
         </div>
@@ -327,160 +284,112 @@
             const chatForm = document.getElementById('chat-form');
             const chatLog = document.getElementById('chat-log');
             const messageInput = document.getElementById('chat-message-input');
-            const typingStatus = document.getElementById('typing-status');
             const fileInput = document.getElementById('file-input');
-            const emojiPicker = document.getElementById('emoji-picker');
-            const emojiButton = document.getElementById('emoji-button');
             const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
             let darkMode = false;
-
-            // Connect to WebSocket
-            const roomName = "{{ room_name }}";
+    
+            // Create the WebSocket connection
             const chatSocket = new WebSocket(
-                'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+                'ws://' + window.location.host + '/ws/chat/' + "{{ room_name|escapejs }}" + '/'
             );
-
+    
+            // When a message is received
             chatSocket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                const message = data.message;
-                // Add handling for voice messages
-            const recordButton = document.querySelector('.voice-message');
-            recordButton.addEventListener('click', function () {
-                // Implement voice recording functionality
-            });
-
-                // Append incoming message
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', 'bot');
-                messageDiv.textContent = message;
+                messageDiv.textContent = data.message;
                 chatLog.appendChild(messageDiv);
-                chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll
+                chatLog.scrollTop = chatLog.scrollHeight;
             };
-
+    
+            // Handle errors
+            chatSocket.onerror = function(e) {
+                console.error('WebSocket error observed:', e);
+            };
+    
+            // Handle connection closure
+            chatSocket.onclose = function(e) {
+                console.warn('Chat socket closed unexpectedly, trying to reconnect...');
+                setTimeout(function() {
+                    // Reconnect logic
+                    createChatSocket();
+                }, 3000); // Wait 3 seconds before attempting to reconnect
+            };
+    
+            // Function to create a new WebSocket connection
+            function createChatSocket() {
+                const chatSocket = new WebSocket(
+                    'ws://' + window.location.host + '/ws/chat/' + "{{ room_name|escapejs }}" + '/'
+                );
+    
+                // Re-assign event handlers to the new socket
+                chatSocket.onmessage = function(e) {
+                    const data = JSON.parse(e.data);
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message', 'bot');
+                    messageDiv.textContent = data.message;
+                    chatLog.appendChild(messageDiv);
+                    chatLog.scrollTop = chatLog.scrollHeight;
+                };
+    
+                chatSocket.onerror = function(e) {
+                    console.error('WebSocket error observed:', e);
+                };
+    
+                chatSocket.onclose = function(e) {
+                    console.warn('Chat socket closed unexpectedly, trying to reconnect...');
+                    setTimeout(function() {
+                        createChatSocket();
+                    }, 3000);
+                };
+            }
+    
             // Handle form submission
             chatForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-
+                e.preventDefault(); // Prevent default form submission
+                sendMessage();
+            });
+    
+            document.getElementById('chat-message-submit').addEventListener('click', function() {
+                sendMessage();
+            });
+    
+            function sendMessage() {
                 const messageText = messageInput.value.trim();
                 if (messageText) {
-                    // Send message via WebSocket
                     chatSocket.send(JSON.stringify({
                         'message': messageText
                     }));
-
-                    // Append user message
-                    const messageDiv = document.createElement('div');
-                    messageDiv.classList.add('message', 'user');
-                    messageDiv.textContent = messageText;
-                    chatLog.appendChild(messageDiv);
-                    chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll
-                    messageInput.value = ''; // Clear input
+                    messageInput.value = ''; // Clear input after sending
                 }
-
-                // Handle file upload
-                if (fileInput.files.length > 0) {
-                    const fileMessageDiv = document.createElement('div');
-                    fileMessageDiv.classList.add('message', 'user');
-                    fileMessageDiv.textContent = `File sent: ${fileInput.files[0].name}`;
-                    chatLog.appendChild(fileMessageDiv);
-                    fileInput.value = ''; // Reset file input
-                }
-
-                // Simulate typing status
-                typingStatus.textContent = 'Typing...';
-                setTimeout(() => {
-                    typingStatus.textContent = '';
-                }, 1000); // Typing status duration
-            });
-
-            // Show emoji picker
-            emojiButton.addEventListener('click', function () {
-                emojiPicker.style.visibility = emojiPicker.style.visibility === 'visible' ? 'hidden' : 'visible';
-            });
-
-            // Add emoji to input
-            emojiPicker.addEventListener('click', function (e) {
-                if (e.target.classList.contains('emoji')) {
-                    const emoji = e.target.getAttribute('data-emoji');
-                    messageInput.value += emoji;
-                    emojiPicker.style.visibility = 'hidden'; // Hide picker after selection
+            }
+    
+            // File upload handling
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const arrayBuffer = event.target.result;
+                        // You can send the file as binary data here (if the backend supports it)
+                        chatSocket.send(arrayBuffer);
+                        fileInput.value = ''; // Clear the file input after sending
+                    };
+                    reader.readAsArrayBuffer(file); // Read the file as an ArrayBuffer
                 }
             });
-
-            // Toggle dark mode
+    
+            // Dark mode toggle functionality
             toggleDarkModeButton.addEventListener('click', function () {
                 darkMode = !darkMode;
                 document.body.classList.toggle('dark-mode', darkMode);
-                document.querySelector('.chat-window').classList.toggle('dark-mode', darkMode);
-                document.querySelector('.sidebar').classList.toggle('dark-mode', darkMode);
+                chatLog.classList.toggle('dark-mode', darkMode);
+                chatForm.classList.toggle('dark-mode', darkMode);
             });
-
-            // Simulate bot response (optional)
-            setTimeout(() => {
-                const botMessageDiv = document.createElement('div');
-                botMessageDiv.classList.add('message', 'bot');
-                botMessageDiv.textContent = "Hello! How can I help you today?";
-                chatLog.appendChild(botMessageDiv);
-                chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll
-            }, 1000);
-
-            //File Sharing with Previews
         });
-        if (fileInput.files.length > 0) {
-    const file = fileInput.files[0];
-    if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const imagePreview = document.createElement('img');
-            imagePreview.src = event.target.result;
-            imagePreview.style.maxWidth = '200px';
-            chatLog.appendChild(imagePreview);
-        };
-        reader.readAsDataURL(file);
-    }
-}
-// Update WebSocket to broadcast typing status
-chatSocket.send(JSON.stringify({
-    'typing': true
-}));
-
-chatSocket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
-    if (data.typing) {
-        typingStatus.textContent = `${data.username} is typing...`;
-    }
-};
-chatSocket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
-    const message = data.message;
-
-    // Append incoming message
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', 'bot');
-    messageDiv.textContent = message;
-    chatLog.appendChild(messageDiv);
-    chatLog.scrollTop = chatLog.scrollHeight; // Auto-scroll
-
-    // Notification logic
-    notifyUser(message);
-};
-
-// Function to handle notifications
-function notifyUser(message) {
-    // Play a notification sound
-    const audio = new Audio('{% static "sounds/notification.mp3" %}'); // Ensure you have the sound file in the static directory
-    audio.play();
-
-    // Update badge or perform any other visual notifications if needed
-    const badge = document.getElementById('notification-badge');
-    if (badge) {
-        let currentCount = parseInt(badge.textContent) || 0;
-        badge.textContent = currentCount + 1; // Increment badge count
-        badge.style.display = 'block'; // Show badge if hidden
-    }
-}
-
-
+    </script>
+    
     </script>
 </body>
 </html>

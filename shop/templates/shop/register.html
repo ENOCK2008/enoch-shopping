@@ -28,7 +28,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
-            text-align: center;
+            text-align: left;
             position: relative; /* Position relative for potential absolute children */
         }
 
@@ -116,13 +116,13 @@
         <h2>Create Your Account</h2>
 
         {% if registered %}
-            <div class="success-message" id="success-message">
+            <div class="success-message" id="success-message" style="display: block;">
                 You have been registered successfully!
             </div>
         {% endif %}
 
         {% if form.errors %}
-            <div class="error-message" id="error-message">
+            <div class="error-message" id="error-message" style="display: block;">
                 Please correct the errors below.
             </div>
         {% endif %}
@@ -147,6 +147,12 @@
         <p>Already have an account? <a href="{% url 'shop:login' %}">Login here</a>.</p>
     </div>
 
+    <!-- Inside your registration success template, e.g., registration_success.html -->
+    <div class="registration-success">
+        <h1>Welcome to Our Community!</h1>
+        <p>Thank you for signing up.</p>
+        
+        
     <footer>
         <div class="footer-container">
             <p>&copy; 2024 Enoch Shopping Center. All rights reserved.</p>
@@ -180,6 +186,14 @@
                 return 'Medium';
             }
             return 'Weak';
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Referral link copied to clipboard!");
+            }, (err) => {
+                console.error('Could not copy text: ', err);
+            });
         }
     </script>
 </body>

@@ -1,0 +1,56 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<div class="loyalty-terms-container">
+    <h2>Loyalty Program Terms and Conditions</h2>
+    
+    <div class="loyalty-terms-intro mt-4">
+        <h5>Welcome to Our Loyalty Program!</h5>
+        <p>Thank you for choosing to be part of our loyalty program. Below are the terms and conditions that govern your participation.</p>
+    </div>
+
+    <div class="loyalty-terms-details mt-4">
+        <h5>1. Earning Points</h5>
+        <p>You earn 1 loyalty point for every $1 spent on eligible purchases. Points are automatically credited to your account upon completion of your purchase.</p>
+
+        <h5>2. Redeeming Points</h5>
+        <p>Points can be redeemed for discounts on future purchases. Each point is worth $0.01. Minimum redemption is 100 points ($1).</p>
+
+        <h5>3. Expiration of Points</h5>
+        <p>Loyalty points expire 12 months after they are earned. Make sure to use your points before they expire!</p>
+
+        <h5>4. Account Management</h5>
+        <p>You can check your loyalty points balance and transaction history in your account settings. It’s your responsibility to keep your account details updated.</p>
+
+        <h5>5. Program Changes</h5>
+        <p>We reserve the right to modify or discontinue the loyalty program at any time. We will notify you of any changes via email or through your account.</p>
+
+        <h5>6. General Conditions</h5>
+        <p>This program is only available to individuals aged 18 and older. By participating, you agree to these terms and conditions.</p>
+    </div>
+
+    <div class="loyalty-terms-contact mt-4">
+        <h5>Contact Us</h5>
+        <p>If you have any questions regarding these terms, please contact our customer service at <a href="mailto:support@yourwebsite.com">support@yourwebsite.com</a>.</p>
+    </div>
+</div>
+
+<style>
+    .loyalty-terms-container {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .loyalty-terms-intro,
+    .loyalty-terms-details,
+    .loyalty-terms-contact {
+        padding: 15px;
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}

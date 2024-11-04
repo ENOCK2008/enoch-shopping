@@ -1,5 +1,5 @@
 {% extends 'shop/base.html' %}
-{% load static %}  <!-- Load static files here -->
+{% load static %}
 
 {% block content %}
 <style>
@@ -9,6 +9,7 @@
         list-style-type: none;
         padding: 0;
         margin: 0;
+        justify-content: center;
     }
 
     .product-item {
@@ -16,9 +17,11 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         overflow: hidden;
-        width: calc(25% - 30px);  /* Adjust width based on number of items per row */
+        width: calc(25% - 30px); /* Adjust width based on number of items per row */
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s;
+        background-color: #fff;
+        text-align: center;
     }
 
     .product-item:hover {
@@ -28,16 +31,16 @@
     .product-image {
         width: 100%;
         height: auto;
+        display: block;
     }
 
     h3 {
         font-size: 1.2em;
         margin: 10px 0;
-        text-align: center;
+        color: #333;
     }
 
     p {
-        text-align: center;
         color: #555;
     }
 
@@ -46,35 +49,47 @@
         color: inherit;
     }
 
-    a:hover {
-        color: #007bff;  /* Change color on hover */
+    a:hover h3 {
+        color: #007bff;
     }
 
     footer {
-        background-color :whitesmoke ;
-        color: white;
+        background-color: whitesmoke;
+        color: #333;
         padding: 20px;
-        text-align: center; /* Center align text */
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .product-item {
+            width: calc(50% - 30px);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .product-item {
+            width: 100%;
+            margin: 10px 0;
+        }
     }
 </style>
 
-<h2>Recommended Products for You</h2>
+<h2>Recommended Products for You to Purchase at an Affordable Price!</h2>
 <ul class="recommended-products-list">
     {% for product in recommended_products %}
         <li class="product-item">
-            <a href="{% url 'shop:product_detail' product.id %}">
+            <a href="{% url 'shop:product_detail' product.pk %}">  <!-- Changed product.id to product.pk -->
                 {% if product.image %}
                     <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
                 {% else %}
                     <img src="{% static 'images/default_product.png' %}" alt="Default Image" class="product-image">
                 {% endif %}
                 <h3>{{ product.name }}</h3>
-                <p>Price: ${{ product.price }}</p>
+                <p>Price: ${{ product.price|floatformat:2 }}</p>  <!-- Added floatformat for consistency -->
             </a>
         </li>
     {% empty %}
-        <li>No recommended products available.</li>
+        <li class="product-item">No recommended products available.</li>
     {% endfor %}
 </ul>
-
 {% endblock %}

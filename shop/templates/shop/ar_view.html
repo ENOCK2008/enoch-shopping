@@ -5,43 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ product.name }} - AR View</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- Optional: Add your CSS styles -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Link to your main CSS file -->
     <link rel="icon" href="{% static 'path/to/favicon.ico' %}" type="image/x-icon"> <!-- Favicon -->
     <script src="{% static 'path/to/aframe.min.js' %}"></script>
     <script src="{% static 'path/to/aframe-ar.js' %}"></script>
+    
     <style>
         :root {
-            --primary-color: #3498db; /* Example of CSS variable */
+            --primary-color: #3498db; /* Primary button color */
+            --background-color: #f8f9fa; /* Light background */
+            --text-color: #333; /* Dark text */
         }
+
         body {
             margin: 0;
             overflow: hidden;
-            font-family: Arial, sans-serif;  /* Added font for better readability */
+            font-family: Arial, sans-serif; /* Better readability */
+            background-color: var(--background-color);
+            color: var(--text-color);
         }
+
+        body.dark-mode {
+            background-color: #333; /* Dark background for dark mode */
+            color: #fff; /* Light text for dark mode */
+        }
+
         header {
             text-align: center;
             margin: 20px 0;
         }
+
         h1 {
-            color: #333;  /* Optional: Improved text color */
+            color: var(--text-color); /* Text color */
         }
+
         main {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: calc(100vh - 150px); /* Adjust height for header and footer */
         }
+
         a-scene {
             width: 100%;
             height: 100%;
         }
-        /* Optional: Loading spinner style */
+
+        /* Loading spinner style */
         .loading {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             display: none; /* Hidden by default */
+            color: var(--text-color);
+        }
+
+        /* Button styles */
+        .buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darken(var(--primary-color), 10%); /* Darken on hover */
         }
     </style>
 </head>
@@ -67,7 +104,7 @@
                         animation-mixer  <!-- Optional: Add this for animations if needed -->
                     ></a-entity>
                 {% else %}
-                    <!-- Optional: Placeholder if no panoramic image is available -->
+                    <!-- Placeholder if no panoramic image is available -->
                     <a-entity
                         geometry="primitive: box"
                         material="color: grey"
@@ -81,16 +118,39 @@
         <div class="loading">Loading AR content...</div> <!-- Loading indicator -->
     </main>
 
+    <div class="buttons">
+        <button onclick="shareAR()">Share</button>
+        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        <button>Add to Cart</button>
+    </div>
+
+    <footer>
+        <p>&copy; {{ current_year }} Your Company Name</p>
+    </footer>
+
     <script>
         // Show loading indicator
         const loadingIndicator = document.querySelector('.loading');
         loadingIndicator.style.display = 'block'; // Show loading indicator
         
-        // Optional: Add any additional JavaScript functionality here
+        // Hide loading indicator when entering AR mode
         document.querySelector('a-scene').addEventListener('enter-vr', function() {
             console.log('Entering AR mode');
             loadingIndicator.style.display = 'none'; // Hide loading indicator
         });
+
+        // Function to share the AR view link
+        function shareAR() {
+            const url = window.location.href; // Get current page URL
+            navigator.clipboard.writeText(url).then(() => {
+                alert("AR View link copied to clipboard!"); // Notify user
+            });
+        }
+
+        // Function to toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode'); // Toggle dark mode class
+        }
     </script>
 </body>
 </html>

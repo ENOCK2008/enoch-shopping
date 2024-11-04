@@ -1,5 +1,9 @@
 import json
+import logging
 from channels.generic.websocket import AsyncWebsocketConsumer
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -13,6 +17,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
+        logger.info(f'User connected to {self.room_group_name}')
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -20,19 +25,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        logger.info(f'User disconnected from {self.room_group_name}')
 
     async def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        message = text_data_json['message']
+        try:
+            text_data_json = json.loads(text_data)
+            message = text_data_json['message']
 
-        # Send message to room group
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-            }
-        )
+            # Send message to room group
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message,
+                }
+            )
+        except json.JSONDecodeError:
+            logger.error('Received invalid JSON data')
+            await self.send(text_data=json.dumps({
+                'error': 'Invalid JSON data'
+            }))
 
     async def chat_message(self, event):
         message = event['message']

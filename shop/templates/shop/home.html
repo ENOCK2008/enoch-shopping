@@ -72,6 +72,36 @@
 .product-item a:hover {
     background-color: #0056b3; /* Darker background on hover */
 }
+
+/* Referral Link Styles */
+.referral-link-container {
+    margin: 20px 0; /* Space above and below the section */
+    padding: 15px; /* Padding inside the container */
+    background-color: #f9f9f9; /* Light background for visibility */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.referral-link-container input {
+    width: 80%; /* Width for the input field */
+    padding: 10px; /* Padding inside the input */
+    border: 1px solid #ccc; /* Border for the input */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.referral-link-container button {
+    padding: 10px 15px; /* Padding for the button */
+    background-color: #007bff; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-left: 10px; /* Space between input and button */
+}
+
+.referral-link-container button:hover {
+    background-color: #0056b3; /* Darker background on hover */
+}
 </style>
 
 <div class="home-container">
@@ -92,4 +122,15 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        alert('Referral link copied to clipboard!');
+    }, function(err) {
+        alert('Could not copy text: ', err);
+    });
+}
+</script>
+
 {% endblock %}

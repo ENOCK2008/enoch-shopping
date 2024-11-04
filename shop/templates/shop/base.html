@@ -241,16 +241,17 @@ li strong + ul {
         </div>
         <li><strong>MENU</strong>
             <ul>
-                <li><a href="{% url 'shop:register' %}">Register</a></li>
+            <li><a href="{% url 'shop:register' %}">Register</a></li>
             <li><a href="{% url 'shop:account_settings' %}">Settings</a></li>
             <li><a href="{% url 'shop:faq' %}">Help Center</a></li>
             <li><a href="{% url 'shop:track_order' %}">Track Order</a></li>
+            <li><a href="{% url 'shop:order_history' %}">Order History</a></li>
             <li><a href="{% url 'shop:returns' %}">Returns & Exchanges</a></li>
             <li><a href="{% url 'shop:gift_cards' %}">Gift Cards</a></li>
-            <li><a href="{% url 'shop:recommended_products' %}">Recommended Products</a></li>
             <li><a href="{% url 'shop:blog' %}">Blog</a></li>
             <li><a href="{% url 'shop:music_list' %}">Music</a></li>
             <li><a href="{% url 'shop:cart' %}">Cart</a></li>
+            <li><a href="{% url 'shop:most_viewed_products' %}">Most Viewed Products</a></li>
                 
             </ul>
         </li>
@@ -279,7 +280,8 @@ li strong + ul {
                 <a href="{% url 'shop:about' %}">About Us</a> | 
                 <a href="{% url 'shop:contact' %}">Contact Us</a> | 
                 <a href="{% url 'shop:terms' %}">Terms of Service</a> | 
-                <a href="{% url 'shop:privacy' %}">Privacy Policy</a>
+                <a href="{% url 'shop:privacy' %}">Privacy Policy</a>| 
+                <a href="{% url 'shop:feedback' %}">Give us your Feedback</a> 
             </p>
             <div class="social-media">
                 <a href="https://facebook.com/Magololo Enock" target="_blank" class="text-primary">

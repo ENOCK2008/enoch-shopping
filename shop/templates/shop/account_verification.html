@@ -1,0 +1,28 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Account Verification</h2>
+
+    {% if messages %}
+        <div class="alert alert-info">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="text-center">
+        {% if user.is_verified %}
+            <h3 class="text-success">Your account has been successfully verified!</h3>
+            <p>Thank you for verifying your account. You can now enjoy all the features of our platform.</p>
+            <a href="{% url 'shop:account_settings' %}" class="btn btn-primary">Go to Account Settings</a>
+        {% else %}
+            <h3 class="text-danger">Verification Failed</h3>
+            <p>Invalid or expired verification link. Please check your email for a new verification link or contact support.</p>
+            <a href="{% url 'shop:send_verification_email' %}" class="btn btn-warning">Resend Verification Email</a>
+            <a href="{% url 'shop:reset_verification' %}" class="btn btn-secondary ml-2">Reset Verification Status</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

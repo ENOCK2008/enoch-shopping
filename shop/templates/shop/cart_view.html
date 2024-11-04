@@ -18,13 +18,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in cart.items %}
+                    {% for item in cart.items %}  <!-- Changed from cart.cart_items to cart.items -->
                     <tr class="cart-item" data-item-id="{{ item.id }}">
-                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.name }}</td>  <!-- Adjusted to access name directly -->
                         <td>
-                            <input type="number" value="{{ item.quantity }}" class="form-control quantity-input" data-item-id="{{ item.id }}">
+                            <input type="number" value="{{ item.quantity }}" class="form-control quantity-input" data-item-id="{{ item.id }}" min="1">
                         </td>
-                        <td>${{ item.product.price|floatformat:2 }}</td>
+                        <td>${{ item.price|floatformat:2 }}</td>
                         <td>${{ item.total_price|floatformat:2 }}</td>
                         <td>
                             <button class="btn btn-danger btn-sm remove-item" data-item-id="{{ item.id }}">
@@ -55,25 +55,28 @@
     </div>
 
     <!-- Suggestions Section -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <h4>You might also like</h4>
-            <div class="row">
-                {% for product in recommended_products %}
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text">${{ product.price|floatformat:2 }}</p>
-                            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-dark">View Product</a>
-                        </div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h4>You might also like</h4>
+        <div class="row">
+            {% for product in recommended_products %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">${{ product.price|floatformat:2 }}</p>
+                        <a href="{% url 'shop:product_detail' product.pk %}" class="btn btn-outline-dark">View Product</a>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% empty %}
+            <p>No recommendations available.</p>
+            {% endfor %}
         </div>
     </div>
+</div>
 </div>
 
 <!-- Toast Notification -->
@@ -127,7 +130,7 @@
     }
 
     .btn-danger {
-        background-color: #555; /* Neutral grey for remove button */
+        background-color: #dc3545; /* Bootstrap's default red */
         color: #fff;
     }
 
@@ -150,7 +153,6 @@
         background-color: #333; /* Dark background for toast */
         color: #fff;
     }
-
 </style>
 
 <!-- JavaScript for Cart Interaction -->
@@ -174,6 +176,7 @@
                 },
             }).then(response => {
                 if (response.ok) {
+                    // Remove the cart item from the DOM
                     document.querySelector(`.cart-item[data-item-id="${itemId}"]`).remove();
                     showToast("Item removed from cart");
                 } else {
@@ -199,7 +202,7 @@
             }).then(response => {
                 if (response.ok) {
                     showToast("Quantity updated");
-                    location.reload();
+                    location.reload(); // Reload to reflect changes in total price
                 } else {
                     showToast("Error updating quantity");
                 }

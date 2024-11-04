@@ -1,6 +1,9 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Link to your external CSS file if available -->
+
 <div class="container mt-5 feedback-section">
     <h2 class="section-title mb-4">We Value Your Feedback</h2>
     <form method="post" class="feedback-form">
@@ -81,4 +84,5 @@
         }
     }
 </style>
+
 {% endblock %}
