@@ -113,14 +113,14 @@ LOCALE_PATHS = [
 
 # Media files (uploads)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'  # Adjust the path as necessary
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # Adjust this to your actual static directory
+    BASE_DIR / 'enoch_shopping' / 'static',  # Updated path for your actual static directory
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Directory where static files will be collected
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
