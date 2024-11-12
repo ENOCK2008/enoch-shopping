@@ -1,6 +1,6 @@
 {% extends "shop/base.html" %}
 
-{% load static %}  <!-- Add this line to load static template tag -->
+{% load static %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -11,35 +11,38 @@
 
     <a href="{% url 'shop:notification' %}" class="btn btn-notification">Notifications</a>
 
-    {% if wishlist_items %}
-        <ul class="wishlist-items">
-            {% for item in wishlist_items %}
-                <li class="wishlist-item">
-                    <div class="item-details">
-                        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-image">
-                        <div class="item-info">
-                            <h3 class="item-name">{{ item.name }}</h3>
-                            <p class="item-price">Price: ${{ item.price }}</p>
+    {% if user.is_authenticated %}
+        {% if wishlist_items %}
+            <ul class="wishlist-items">
+                {% for item in wishlist_items %}
+                    <li class="wishlist-item">
+                        <div class="item-details">
+                            <img src="{{ item.image_url.url }}" alt="{{ item.name }}" class="item-image">
+                            <div class="item-info">
+                                <h3 class="item-name">{{ item.name }}</h3>
+                                <p class="item-price">Price: ${{ item.price }}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item-actions">
-                        <a href="{% url 'shop:product_detail' item.id %}" class="btn btn-view">View Item</a>
-                        <form class="remove-wishlist-form" method="POST" action="{% url 'shop:remove_from_wishlist' item.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-remove">Remove</button>
-                        </form>
-                        <form action="{% url 'shop:add_to_cart' item.id %}" method="post" class="add-to-cart-form">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary">Add to Cart</button>
-                        </form>
-                    </div>
-                    
-                </li>
-            {% endfor %}
-        </ul>
+                        <div class="item-actions">
+                            <a href="{% url 'shop:product_detail' item.id %}" class="btn btn-view">View Item</a>
+                            <form class="remove-wishlist-form" method="POST" action="{% url 'shop:remove_from_wishlist' item.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-remove">Remove</button>
+                            </form>
+                            <form action="{% url 'shop:add_to_cart' item.id %}" method="post" class="add-to-cart-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Add to Cart</button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Your wishlist is empty. Start adding items!</p>
+            <p>Stay tuned for updates on your wishlist items, such as price drops!</p>
+        {% endif %}
     {% else %}
-        <p>Your wishlist is empty. Start adding items!</p>
-        <p>Stay tuned for updates on your wishlist items, such as price drops!</p>
+    <p>To access your wishlist and manage your saved items, please <a href="{% url 'shop:login' %}">log in</a>.</p>
     {% endif %}
 </div>
 
@@ -49,13 +52,9 @@
             event.preventDefault();
             const confirmation = confirm("Are you sure you want to remove this item from your wishlist?");
             if (confirmation) {
-                const formData = new FormData(this);
                 fetch(this.action, {
                     method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    }
+                    body: new FormData(this),
                 })
                 .then(response => {
                     if (response.ok) {

@@ -1517,7 +1517,7 @@ def wishlist(request):
     else:
         messages.error(request, "You need to be logged in to view your wishlist.")
         return redirect('shop:login')  # Redirect to login page
-
+    
 class ProductDetailView(View):
     """View for displaying product details."""
     
@@ -2618,6 +2618,9 @@ class ProductListView(ListView):
     model = Product
     template_name = 'shop/product_list.html'  # Adjust the path as needed
     context_object_name = 'products'  # This will be used in the template
+class CustomLoginView(LoginView):
+    template_name = 'shop/login.html'  # Adjust to your actual template location
+
 from .models import UserPoints 
 
 def redeem_loyalty_points_view(request):

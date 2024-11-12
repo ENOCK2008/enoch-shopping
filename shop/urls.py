@@ -122,6 +122,8 @@ urlpatterns = [
     #search
      path('search/', SearchView.as_view(), name='search'),
      path('signup/', views.SignupView.as_view(), name='signup'),
+     path('wishlist/', wishlist, name='wishlist'),
+     path('login/', views.login_view, name='login'), 
      path('most-viewed-products/', MostViewedProductsView.as_view(), name='most_viewed_products'),  # Add this line
      path('loyalty-terms/', views.loyalty_terms_view, name='loyalty_terms'), 
      path('redeem-loyalty-points/', redeem_loyalty_points_view, name='redeem_loyalty_points'),
@@ -175,6 +177,8 @@ urlpatterns = [
 
     # Wishlist and Cart
     path('wishlist/', wishlist_view, name='wishlist'),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+
     path('cart/', cart_view, name='cart_view'),
     path('cart/', CartView.as_view(), name='cart'),
     path('add-to-wishlist/<int:product_id>/', add_to_wishlist, name='add_to_wishlist'),
