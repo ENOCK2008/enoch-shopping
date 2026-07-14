@@ -3,10 +3,11 @@ services:
     name: enoch-shopping
     runtime: python-3.11
     region: frankfurt
+    rootDir: .
     
     # Build and deploy commands
     buildCommand: pip install --upgrade pip && pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
-    startCommand: "gunicorn enoch_shopping.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --threads 2 --worker-class sync --timeout 60"
+    startCommand: gunicorn enoch_shopping.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --threads 2 --worker-class sync --timeout 60
     
     # Environment variables
     envVars:
