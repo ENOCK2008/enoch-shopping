@@ -1,8 +1,47 @@
-version: 1
 services:
   - type: web
     name: enoch-shopping
-    env: python
-    buildCommand: pip install -r requirements.txt && python manage.py migrate
-    startCommand: "gunicorn enoch_shopping.wsgi:application --bind 0.0.0.0:$PORT"
-    plan: free
+    runtime: python-3.11
+    region: frankfurt
+    
+    # Build and deploy commands
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
+    startCommand: "gunicorn enoch_shopping.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --threads 2 --worker-class sync --timeout 60"
+    
+    # Environment variables
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: enoch_shopping.settings
+      - key: ENVIRONMENT
+        value: production
+    
+    # Disk configuration
+    disk:
+      name: enoch-shopping-disk
+      mountPath: /var/data
+      sizeGB: 10
+    
+    # Plan and scaling
+    plan: standard
+    numInstances: 1
+    
+    # Health check
+    healthCheckPath: /
+    
+    # Headers and caching
+    headers:
+      - http:
+          - path: /static
+            name: Cache-Control
+            value: public, max-age=31536000
+          - path: /media
+            name: Cache-Control
+            value: public, max-age=604800
+
+  # Optional: Redis service for caching and Channels
+  - type: redis
+    name: enoch-shopping-redis
+    plan: starter
+    ipAllowList: []
