@@ -1,6 +1,5 @@
-from django.urls import path, re_path, include
+rom django.urls import path, re_path, include
 from django.contrib import admin
-from .views import SearchView
 from .views import BlogView  
 from django.contrib.auth import views as auth_views
 from two_factor.views import setup_view, verify_view
@@ -120,7 +119,6 @@ urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
     #search
-     path('search/', SearchView.as_view(), name='search'),
      path('signup/', views.SignupView.as_view(), name='signup'),
      path('wishlist/', wishlist, name='wishlist'),
      path('login/', views.login_view, name='login'), 
