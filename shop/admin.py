@@ -8,31 +8,24 @@ from .models import (
     Profile,
     Order,
     Cart,
-    CartItem,  # Import CartItem to use with CartItemInline
+    CartItem,
     Review,
     DiscountCode,
     LoyaltyPoints,
     Notification,
-    User  # Import User model
 )
 
 # Inline Cart Items for CartAdmin
 class CartItemInline(admin.TabularInline):
     model = CartItem
-    extra = 0  # Number of empty forms to display
+    extra = 0
 
 # Cart Admin with Cart Items inline
 class CartAdmin(admin.ModelAdmin):
     list_display = ('user', 'created_at', 'updated_at')
     search_fields = ('user__username',)
     list_filter = ('created_at',)
-    inlines = [CartItemInline]  # Display CartItems inline
-
-# Register the custom User model
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'last_login', 'is_active')
-    search_fields = ('username', 'email')
-    list_filter = ('is_active', 'is_staff')
+    inlines = [CartItemInline]
 
 # Register Discount Code Admin
 @admin.register(DiscountCode)
@@ -63,7 +56,4 @@ admin.site.register(Music)
 admin.site.register(Profile)
 admin.site.register(Order)
 admin.site.register(Review)
-
-# Register the custom User and Cart models with their specific admin configurations
-admin.site.register(User, UserAdmin)
 admin.site.register(Cart, CartAdmin)
