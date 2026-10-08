@@ -1,1 +1,514 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — sellers{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>sellers</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('sellers');</script>{% endblock %}
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Sellers — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<!-- Seller Hero -->
+
+<section class="seller-hero">
+    <div class="container">
+        <div class="seller-hero-grid">
+
+```
+        <div class="seller-hero-content">
+            <span class="eyebrow">
+                <i class="fa-solid fa-store"></i>
+                Enock Shopping Center
+            </span>
+
+            <h1>Discover trusted sellers and local businesses.</h1>
+
+            <p>
+                Shop from independent sellers, local businesses and growing
+                brands across Uganda. Find the right seller, explore their
+                products and shop with confidence.
+            </p>
+
+            <div class="seller-hero-actions">
+                <a href="{% url 'storefront:marketplace' %}" class="btn btn-primary">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    Start Shopping
+                </a>
+
+                <a href="{% url 'storefront:seller_dashboard' %}" class="btn btn-outline">
+                    <i class="fa-solid fa-store"></i>
+                    Become a Seller
+                </a>
+            </div>
+        </div>
+
+        <div class="seller-hero-card">
+            <div class="seller-hero-icon">
+                <i class="fa-solid fa-shop"></i>
+            </div>
+
+            <h3>Grow with Enock Shopping Center</h3>
+
+            <p>
+                Reach more customers and showcase your products through
+                our growing online marketplace.
+            </p>
+
+            <div class="seller-mini-stats">
+                <div>
+                    <strong>24/7</strong>
+                    <span>Online Store</span>
+                </div>
+
+                <div>
+                    <strong>UGX</strong>
+                    <span>Local Payments</span>
+                </div>
+
+                <div>
+                    <strong>Global</strong>
+                    <span>Opportunities</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+```
+
+</section>
+
+<!-- Seller Search -->
+
+<section class="section seller-search-section">
+    <div class="container">
+
+```
+    <div class="section-heading centered">
+        <span class="eyebrow">Find a seller</span>
+        <h2>Explore our seller community</h2>
+        <p>
+            Search for sellers, businesses and brands available on
+            Enock Shopping Center.
+        </p>
+    </div>
+
+    <div class="seller-search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+            type="search"
+            id="sellerSearch"
+            placeholder="Search sellers or businesses..."
+            autocomplete="off"
+        />
+
+        <button type="button" id="sellerSearchButton" class="btn btn-primary">
+            Search
+        </button>
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Seller Results -->
+
+<section class="section sellers-section">
+    <div class="container">
+
+```
+    <div class="section-heading-row">
+        <div>
+            <span class="eyebrow">Marketplace sellers</span>
+            <h2>Featured sellers</h2>
+        </div>
+
+        <a href="{% url 'storefront:marketplace' %}" class="text-link">
+            Browse products
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
+
+    <div id="pageContent" class="seller-grid">
+
+        <!-- Safe default cards -->
+        <article class="seller-card">
+            <div class="seller-card-cover">
+                <span class="seller-badge">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Trusted
+                </span>
+            </div>
+
+            <div class="seller-card-body">
+
+                <div class="seller-avatar">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+
+                <h3>Enock Marketplace</h3>
+
+                <p class="seller-location">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Uganda
+                </p>
+
+                <p class="seller-description">
+                    Discover a wide range of products and services from
+                    sellers across the marketplace.
+                </p>
+
+                <div class="seller-meta">
+                    <span>
+                        <i class="fa-solid fa-box"></i>
+                        Marketplace
+                    </span>
+
+                    <span>
+                        <i class="fa-solid fa-star"></i>
+                        Trusted
+                    </span>
+                </div>
+
+                <a href="{% url 'storefront:marketplace' %}" class="seller-link">
+                    View products
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+        </article>
+
+
+        <article class="seller-card seller-placeholder-card">
+            <div class="seller-placeholder-icon">
+                <i class="fa-solid fa-store"></i>
+            </div>
+
+            <h3>More sellers are joining</h3>
+
+            <p>
+                New businesses and independent sellers can join
+                Enock Shopping Center and reach customers online.
+            </p>
+
+            <a href="{% url 'storefront:seller_dashboard' %}" class="btn btn-outline">
+                Become a Seller
+            </a>
+        </article>
+
+    </div>
+
+    <div id="sellerEmptyState" class="empty-state" style="display:none;">
+        <div class="empty-icon">
+            <i class="fa-solid fa-store-slash"></i>
+        </div>
+
+        <h3>No sellers found</h3>
+
+        <p>
+            Try another seller or business name.
+        </p>
+
+        <button
+            type="button"
+            class="btn btn-primary"
+            onclick="clearSellerSearch()"
+        >
+            Show All Sellers
+        </button>
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Why Shop From Sellers -->
+
+<section class="section seller-benefits-section">
+    <div class="container">
+
+```
+    <div class="section-heading centered">
+        <span class="eyebrow">Shop with confidence</span>
+        <h2>Why shop from our sellers?</h2>
+        <p>
+            Enock Shopping Center is designed to connect customers with
+            local sellers and businesses.
+        </p>
+    </div>
+
+    <div class="benefit-grid">
+
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <h3>Trusted marketplace</h3>
+
+            <p>
+                Discover sellers through one convenient online
+                marketplace.
+            </p>
+        </div>
+
+
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+
+            <h3>Convenient shopping</h3>
+
+            <p>
+                Browse products, compare options and place orders
+                from your phone or computer.
+            </p>
+        </div>
+
+
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+            </div>
+
+            <h3>Flexible payments</h3>
+
+            <p>
+                The platform is designed for convenient local payment
+                options and future digital payment integrations.
+            </p>
+        </div>
+
+
+        <div class="benefit-card">
+            <div class="benefit-icon">
+                <i class="fa-solid fa-truck-fast"></i>
+            </div>
+
+            <h3>Delivery focused</h3>
+
+            <p>
+                Connect your shopping experience with delivery and
+                order tracking features.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Seller CTA -->
+
+<section class="section seller-cta-section">
+    <div class="container">
+
+```
+    <div class="seller-cta">
+
+        <div class="seller-cta-icon">
+            <i class="fa-solid fa-rocket"></i>
+        </div>
+
+        <div class="seller-cta-content">
+            <span class="eyebrow">For businesses & entrepreneurs</span>
+
+            <h2>Ready to sell online?</h2>
+
+            <p>
+                Create your seller presence, showcase your products
+                and connect with customers through Enock Shopping Center.
+            </p>
+        </div>
+
+        <div class="seller-cta-action">
+            <a href="{% url 'storefront:seller_dashboard' %}" class="btn btn-light">
+                Open Seller Center
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Help -->
+
+<section class="section seller-help-section">
+    <div class="container">
+
+```
+    <div class="help-card">
+
+        <div class="help-icon">
+            <i class="fa-solid fa-circle-question"></i>
+        </div>
+
+        <div>
+            <h3>Looking for something specific?</h3>
+
+            <p>
+                Browse the marketplace to find products from different
+                sellers and categories.
+            </p>
+        </div>
+
+        <a href="{% url 'storefront:marketplace' %}" class="btn btn-primary">
+            Explore Marketplace
+        </a>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+(function () {
+    const searchInput = document.getElementById("sellerSearch");
+    const searchButton = document.getElementById("sellerSearchButton");
+    const pageContent = document.getElementById("pageContent");
+    const emptyState = document.getElementById("sellerEmptyState");
+
+    function filterSellers() {
+        if (!searchInput || !pageContent) return;
+
+        const query = searchInput.value.trim().toLowerCase();
+        const cards = pageContent.querySelectorAll(".seller-card");
+        let visible = 0;
+
+        cards.forEach(function (card) {
+            const text = card.textContent.toLowerCase();
+
+            if (!query || text.includes(query)) {
+                card.style.display = "";
+                visible++;
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        if (emptyState) {
+            emptyState.style.display = visible === 0 ? "block" : "none";
+        }
+    }
+
+    function clearSellerSearch() {
+        if (searchInput) {
+            searchInput.value = "";
+        }
+
+        filterSellers();
+    }
+
+    window.clearSellerSearch = clearSellerSearch;
+
+    if (searchInput) {
+        searchInput.addEventListener("input", filterSellers);
+
+        searchInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                filterSellers();
+            }
+        });
+    }
+
+    if (searchButton) {
+        searchButton.addEventListener("click", filterSellers);
+    }
+
+    /*
+     * Optional backend integration.
+     *
+     * If app.js later provides seller data through
+     * window.renderSellers([...]), this page can be connected
+     * without changing the template structure.
+     */
+    window.renderSellers = function (sellers) {
+        if (!pageContent || !Array.isArray(sellers)) return;
+
+        if (sellers.length === 0) {
+            pageContent.innerHTML = "";
+            if (emptyState) emptyState.style.display = "block";
+            return;
+        }
+
+        pageContent.innerHTML = sellers.map(function (seller) {
+            const name = seller.name || seller.store_name || "Seller";
+            const location = seller.location || seller.city || "Uganda";
+            const description =
+                seller.description ||
+                "Discover products from this seller on Enock Shopping Center.";
+
+            const productsUrl =
+                seller.url ||
+                "{% url 'storefront:marketplace' %}";
+
+            return `
+                <article class="seller-card">
+                    <div class="seller-card-cover">
+                        <span class="seller-badge">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Seller
+                        </span>
+                    </div>
+
+                    <div class="seller-card-body">
+                        <div class="seller-avatar">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+
+                        <h3>${escapeSellerHtml(name)}</h3>
+
+                        <p class="seller-location">
+                            <i class="fa-solid fa-location-dot"></i>
+                            ${escapeSellerHtml(location)}
+                        </p>
+
+                        <p class="seller-description">
+                            ${escapeSellerHtml(description)}
+                        </p>
+
+                        <a href="${productsUrl}" class="seller-link">
+                            View products
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+            `;
+        }).join("");
+
+        if (emptyState) emptyState.style.display = "none";
+        filterSellers();
+    };
+
+    function escapeSellerHtml(value) {
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    if (window.initPage) {
+        initPage("sellers");
+    }
+})();
+</script>
+
+{% endblock %}
