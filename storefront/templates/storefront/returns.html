@@ -1,1 +1,822 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — returns{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>returns</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('returns');</script>{% endblock %}
+{% extends 'storefront/base.html' %}
+{% load static %}
+
+{% block title %}Returns & Refunds — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="returns-page">
+
+```
+<!-- Header -->
+<div class="returns-hero">
+
+    <div>
+        <span class="eyebrow">CUSTOMER SUPPORT</span>
+
+        <h1>Returns & Refunds</h1>
+
+        <p>
+            Need to return an item? Start your return request,
+            check an existing return, or learn how refunds work
+            at Enock Shopping Center.
+        </p>
+
+        <div class="returns-actions">
+            <a href="{% url 'storefront:orders' %}" class="returns-primary">
+                <i class="fa-solid fa-box"></i>
+                View My Orders
+            </a>
+
+            <a href="{% url 'storefront:marketplace' %}" class="returns-secondary">
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+
+    <div class="returns-hero-icon">
+        <i class="fa-solid fa-arrow-rotate-left"></i>
+    </div>
+
+</div>
+
+
+<!-- Quick Information -->
+<div class="return-info-grid">
+
+    <div class="return-info-card">
+        <div class="return-info-icon">
+            <i class="fa-solid fa-calendar-check"></i>
+        </div>
+
+        <div>
+            <strong>Return window</strong>
+            <p>
+                Return eligibility depends on the product,
+                seller and condition of the item.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="return-info-card">
+        <div class="return-info-icon">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+
+        <div>
+            <strong>Item condition</strong>
+            <p>
+                Keep the product, packaging and accessories
+                in good condition where applicable.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="return-info-card">
+        <div class="return-info-icon">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+        </div>
+
+        <div>
+            <strong>Refunds</strong>
+            <p>
+                Approved refunds are processed using the
+                applicable payment method.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Return Request -->
+<div class="returns-layout">
+
+    <div class="returns-panel">
+
+        <div class="panel-header">
+            <div>
+                <span class="panel-eyebrow">START A RETURN</span>
+                <h2>Request a return</h2>
+            </div>
+
+            <i class="fa-solid fa-file-circle-plus"></i>
+        </div>
+
+        <p class="panel-description">
+            Select an order from your account and provide the
+            reason for your return. Our team or the seller can
+            then review your request.
+        </p>
+
+
+        <div class="return-process">
+
+            <div class="return-step">
+                <span>1</span>
+
+                <div>
+                    <strong>Select your order</strong>
+                    <p>
+                        Open your order history and select
+                        the item you want to return.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="return-step">
+                <span>2</span>
+
+                <div>
+                    <strong>Tell us what happened</strong>
+                    <p>
+                        Choose a return reason and provide
+                        additional information if needed.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="return-step">
+                <span>3</span>
+
+                <div>
+                    <strong>Submit the request</strong>
+                    <p>
+                        Your request will be reviewed before
+                        a return or refund is approved.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="return-step">
+                <span>4</span>
+
+                <div>
+                    <strong>Complete the return</strong>
+                    <p>
+                        Follow the instructions provided for
+                        delivery or collection of the item.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+
+        <a href="{% url 'storefront:orders' %}" class="full-return-button">
+            <i class="fa-solid fa-arrow-right"></i>
+            Go to My Orders
+        </a>
+
+    </div>
+
+
+    <!-- Existing Returns -->
+    <div class="returns-panel">
+
+        <div class="panel-header">
+            <div>
+                <span class="panel-eyebrow">YOUR RETURNS</span>
+                <h2>Return requests</h2>
+            </div>
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+
+        <div id="returnsList" class="returns-list">
+
+            <div class="returns-empty">
+
+                <div class="empty-icon">
+                    <i class="fa-solid fa-box"></i>
+                </div>
+
+                <h3>No return requests yet</h3>
+
+                <p>
+                    When you request a return, its status
+                    will appear here.
+                </p>
+
+                <a href="{% url 'storefront:orders' %}">
+                    View orders →
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Return Reasons -->
+<section class="returns-panel">
+
+    <div class="panel-header">
+        <div>
+            <span class="panel-eyebrow">COMMON REASONS</span>
+            <h2>When can I request a return?</h2>
+        </div>
+
+        <i class="fa-solid fa-circle-question"></i>
+    </div>
+
+
+    <div class="reason-grid">
+
+        <div class="reason-card">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <strong>Damaged item</strong>
+            <p>
+                The product arrived damaged or was damaged
+                during delivery.
+            </p>
+        </div>
+
+
+        <div class="reason-card">
+            <i class="fa-solid fa-box"></i>
+            <strong>Wrong item</strong>
+            <p>
+                You received a different product from the
+                one you ordered.
+            </p>
+        </div>
+
+
+        <div class="reason-card">
+            <i class="fa-solid fa-ban"></i>
+            <strong>Product not as described</strong>
+            <p>
+                The product substantially differs from its
+                marketplace description.
+            </p>
+        </div>
+
+
+        <div class="reason-card">
+            <i class="fa-solid fa-gears"></i>
+            <strong>Product problem</strong>
+            <p>
+                The item does not work as expected or has
+                another eligible problem.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Important Information -->
+<section class="return-policy">
+
+    <div class="policy-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+    </div>
+
+    <div>
+        <h2>Before sending an item back</h2>
+
+        <ul>
+            <li>Keep the original packaging where possible.</li>
+            <li>Include accessories and components that came with the item.</li>
+            <li>Do not send an item before your return request is approved.</li>
+            <li>Some products may have different return conditions.</li>
+            <li>Refund timing can depend on the payment method used.</li>
+        </ul>
+    </div>
+
+</section>
+
+
+<!-- Seller Information -->
+<section class="seller-return-notice">
+
+    <div class="seller-return-icon">
+        <i class="fa-solid fa-store"></i>
+    </div>
+
+    <div>
+        <h2>Selling on Enock?</h2>
+
+        <p>
+            Sellers can use the Seller Center to review customer
+            return requests and manage eligible returns.
+        </p>
+
+        <a href="{% url 'storefront:seller_dashboard' %}">
+            Open Seller Center →
+        </a>
+    </div>
+
+</section>
+
+
+<!-- Final Help -->
+<section class="returns-help">
+
+    <div>
+        <span class="eyebrow">NEED HELP?</span>
+
+        <h2>We're here to help.</h2>
+
+        <p>
+            If you have a problem with an order or return,
+            check your order details first and keep your
+            order information available.
+        </p>
+    </div>
+
+    <a href="{% url 'storefront:account' %}" class="returns-primary">
+        <i class="fa-solid fa-user"></i>
+        Open My Account
+    </a>
+
+</section>
+```
+
+</section>
+
+<style>
+
+.returns-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px 70px;
+}
+
+.returns-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    padding: 45px;
+    border-radius: 28px;
+    color: white;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    margin-bottom: 25px;
+}
+
+.returns-hero h1 {
+    margin: 8px 0 12px;
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.returns-hero p {
+    max-width: 680px;
+    margin-bottom: 24px;
+    color: rgba(255,255,255,.88);
+}
+
+.returns-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.returns-primary,
+.returns-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 13px 19px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: .2s ease;
+}
+
+.returns-primary {
+    background: white;
+    color: #2563eb;
+}
+
+.returns-secondary {
+    color: white;
+    border: 1px solid rgba(255,255,255,.4);
+    background: rgba(255,255,255,.08);
+}
+
+.returns-primary:hover,
+.returns-secondary:hover {
+    transform: translateY(-2px);
+}
+
+.returns-hero-icon {
+    width: 145px;
+    height: 145px;
+    min-width: 145px;
+    display: grid;
+    place-items: center;
+    border-radius: 40px;
+    background: rgba(255,255,255,.14);
+    font-size: 62px;
+}
+
+.return-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.return-info-card {
+    display: flex;
+    gap: 15px;
+    padding: 22px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(15,23,42,.05);
+}
+
+.return-info-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.return-info-card strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.return-info-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: .9rem;
+    line-height: 1.5;
+}
+
+.returns-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+
+.returns-panel {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    padding: 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 25px rgba(15,23,42,.05);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.panel-header h2 {
+    margin: 5px 0 0;
+    font-size: 1.35rem;
+}
+
+.panel-header > i {
+    color: #2563eb;
+    font-size: 23px;
+}
+
+.panel-eyebrow {
+    color: #64748b;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.panel-description {
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.return-process {
+    display: grid;
+    gap: 17px;
+    margin: 25px 0;
+}
+
+.return-step {
+    display: flex;
+    gap: 13px;
+}
+
+.return-step > span {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 800;
+}
+
+.return-step strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.return-step p {
+    margin: 0;
+    color: #64748b;
+    font-size: .9rem;
+    line-height: 1.5;
+}
+
+.full-return-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.full-return-button:hover {
+    background: #1d4ed8;
+}
+
+.returns-empty {
+    text-align: center;
+    padding: 35px 15px;
+}
+
+.empty-icon {
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 14px;
+    border-radius: 18px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 25px;
+}
+
+.returns-empty h3 {
+    margin: 0 0 8px;
+}
+
+.returns-empty p {
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.returns-empty a {
+    color: #2563eb;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.reason-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.reason-card {
+    padding: 19px;
+    border-radius: 16px;
+    background: #f8fafc;
+}
+
+.reason-card > i {
+    color: #2563eb;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.reason-card strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.reason-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: .88rem;
+    line-height: 1.5;
+}
+
+.return-policy {
+    display: flex;
+    gap: 20px;
+    padding: 27px;
+    margin-bottom: 22px;
+    border-radius: 20px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+}
+
+.policy-icon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    display: grid;
+    place-items: center;
+    border-radius: 15px;
+    background: white;
+    color: #2563eb;
+    font-size: 22px;
+}
+
+.return-policy h2 {
+    margin: 0 0 12px;
+}
+
+.return-policy ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #475569;
+    line-height: 1.8;
+}
+
+.seller-return-notice {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 24px;
+    margin-bottom: 22px;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    background: white;
+}
+
+.seller-return-icon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 15px;
+    background: #f3e8ff;
+    color: #7c3aed;
+    font-size: 21px;
+}
+
+.seller-return-notice h2 {
+    margin: 0 0 6px;
+}
+
+.seller-return-notice p {
+    margin: 0 0 8px;
+    color: #64748b;
+}
+
+.seller-return-notice a {
+    color: #7c3aed;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.returns-help {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    padding: 32px;
+    border-radius: 22px;
+    background: #0f172a;
+    color: white;
+}
+
+.returns-help h2 {
+    margin: 7px 0;
+}
+
+.returns-help p {
+    margin: 0;
+    color: #cbd5e1;
+    max-width: 650px;
+}
+
+@media (max-width: 900px) {
+
+    .return-info-grid,
+    .reason-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .returns-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .returns-hero-icon {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .returns-page {
+        padding: 20px 14px 50px;
+    }
+
+    .returns-hero {
+        padding: 30px 22px;
+    }
+
+    .return-info-grid,
+    .reason-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .return-policy,
+    .seller-return-notice,
+    .returns-help {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .returns-help .returns-primary {
+        width: 100%;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    if (window.initPage) {
+        initPage("returns");
+    }
+
+    /*
+     * Optional backend integration.
+     *
+     * When app.js provides return data, it can use:
+     *
+     * window.renderReturns(returnRequests)
+     */
+
+    window.renderReturns = function (returns) {
+
+        const container = document.getElementById("returnsList");
+
+        if (!container || !Array.isArray(returns)) {
+            return;
+        }
+
+        if (!returns.length) {
+            return;
+        }
+
+        container.innerHTML = returns.map(function (item) {
+
+            const status = item.status || "Pending";
+            const orderId = item.order_id || item.order || "—";
+            const reason = item.reason || "Return request";
+
+            return `
+                <div class="return-request-card">
+
+                    <div>
+                        <strong>Order #${orderId}</strong>
+                        <p>${reason}</p>
+                    </div>
+
+                    <span class="return-status">
+                        ${status}
+                    </span>
+
+                </div>
+            `;
+
+        }).join("");
+    };
+
+});
+</script>
+
+{% endblock %}
