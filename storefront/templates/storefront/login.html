@@ -1,1 +1,641 @@
-{% extends 'storefront/base.html' %}{% block title %}Sign in — Enock{% endblock %}{% block content %}<section class="section page"><h1>Sign in</h1><form id="loginForm" class="form-card"><label>Email<input name="email" type="email" required></label><label>Password<input name="password" type="password" required></label><button class="primary" type="submit">Sign in</button></form></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>initPage('login');</script>{% endblock %}
+```django
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Sign In — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+
+    <div class="container">
+
+        <div class="auth-layout">
+
+            <!-- Left promotional section -->
+            <div class="auth-promo">
+
+                <div class="auth-promo-content">
+
+                    <a href="{% url 'storefront:home' %}" class="auth-brand">
+                        <div class="auth-brand-icon">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                        </div>
+
+                        <div>
+                            <strong>Enock</strong>
+                            <span>Shopping Center</span>
+                        </div>
+                    </a>
+
+
+                    <span class="eyebrow">
+                        WELCOME BACK
+                    </span>
+
+
+                    <h1>
+                        Your marketplace
+                        <span>is waiting for you.</span>
+                    </h1>
+
+
+                    <p>
+                        Sign in to manage your orders, wishlist, cart,
+                        seller account and shopping preferences.
+                    </p>
+
+
+                    <div class="auth-benefits">
+
+                        <div class="auth-benefit">
+
+                            <div class="auth-benefit-icon">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </div>
+
+                            <div>
+                                <strong>Your Cart</strong>
+                                <span>Continue where you left off.</span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="auth-benefit">
+
+                            <div class="auth-benefit-icon">
+                                <i class="fa-solid fa-box"></i>
+                            </div>
+
+                            <div>
+                                <strong>Track Orders</strong>
+                                <span>Keep up with your deliveries.</span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="auth-benefit">
+
+                            <div class="auth-benefit-icon">
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+
+                            <div>
+                                <strong>Your Wishlist</strong>
+                                <span>Save products you love.</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Login form -->
+            <div class="auth-card-wrapper">
+
+                <div class="auth-card">
+
+                    <div class="auth-card-header">
+
+                        <div class="mobile-auth-logo">
+                            <div class="auth-brand-icon">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                            </div>
+                        </div>
+
+                        <span class="eyebrow">
+                            ENOCK SHOPPING CENTER
+                        </span>
+
+                        <h2>
+                            Welcome back
+                        </h2>
+
+                        <p>
+                            Sign in to continue shopping.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Error / success message -->
+                    <div
+                        id="loginMessage"
+                        class="auth-message"
+                        role="alert"
+                        style="display:none;"
+                    ></div>
+
+
+                    <form
+                        id="loginForm"
+                        class="auth-form"
+                        method="post"
+                        novalidate
+                    >
+
+                        {% csrf_token %}
+
+
+                        <!-- Email -->
+                        <div class="form-group">
+
+                            <label for="loginEmail">
+                                Email address
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-envelope"></i>
+
+                                <input
+                                    id="loginEmail"
+                                    name="email"
+                                    type="email"
+                                    placeholder="you@example.com"
+                                    autocomplete="email"
+                                    required
+                                />
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Password -->
+                        <div class="form-group">
+
+                            <div class="password-label-row">
+
+                                <label for="loginPassword">
+                                    Password
+                                </label>
+
+                                <a
+                                    href="#"
+                                    id="forgotPasswordLink"
+                                    class="forgot-password"
+                                >
+                                    Forgot password?
+                                </a>
+
+                            </div>
+
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    id="loginPassword"
+                                    name="password"
+                                    type="password"
+                                    placeholder="Enter your password"
+                                    autocomplete="current-password"
+                                    required
+                                />
+
+                                <button
+                                    type="button"
+                                    id="togglePassword"
+                                    class="password-toggle"
+                                    aria-label="Show password"
+                                >
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Remember me -->
+                        <div class="remember-row">
+
+                            <label class="checkbox-label">
+
+                                <input
+                                    type="checkbox"
+                                    name="remember"
+                                    id="rememberMe"
+                                />
+
+                                <span>
+                                    Remember me
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <!-- Submit -->
+                        <button
+                            type="submit"
+                            class="auth-submit"
+                            id="loginButton"
+                        >
+
+                            <span class="login-button-text">
+                                Sign In
+                            </span>
+
+                            <span
+                                class="login-button-loading"
+                                style="display:none;"
+                            >
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                Signing in...
+                            </span>
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- Divider -->
+                    <div class="auth-divider">
+                        <span>or</span>
+                    </div>
+
+
+                    <!-- Register -->
+                    <div class="register-prompt">
+
+                        <span>
+                            Don't have an account?
+                        </span>
+
+                        <a href="{% url 'storefront:register' %}">
+                            Create an account
+                        </a>
+
+                    </div>
+
+
+                    <!-- Security -->
+                    <div class="auth-security">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <span>
+                            Your account information is protected.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Back to shopping -->
+                <a
+                    href="{% url 'storefront:marketplace' %}"
+                    class="back-shopping"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Continue shopping
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("loginForm");
+    const email = document.getElementById("loginEmail");
+    const password = document.getElementById("loginPassword");
+
+    const message = document.getElementById("loginMessage");
+    const button = document.getElementById("loginButton");
+
+    const buttonText =
+        document.querySelector(".login-button-text");
+
+    const buttonLoading =
+        document.querySelector(".login-button-loading");
+
+
+    /*
+     * Password visibility
+     */
+    const togglePassword =
+        document.getElementById("togglePassword");
+
+
+    if (togglePassword && password) {
+
+        togglePassword.addEventListener("click", function () {
+
+            const isPassword =
+                password.type === "password";
+
+            password.type =
+                isPassword ? "text" : "password";
+
+            this.innerHTML = isPassword
+                ? '<i class="fa-solid fa-eye-slash"></i>'
+                : '<i class="fa-solid fa-eye"></i>';
+
+            this.setAttribute(
+                "aria-label",
+                isPassword
+                    ? "Hide password"
+                    : "Show password"
+            );
+
+        });
+
+    }
+
+
+    /*
+     * Display login messages
+     */
+    function showMessage(text, type) {
+
+        if (!message) {
+            return;
+        }
+
+        message.textContent = text;
+
+        message.className =
+            "auth-message " + (type || "error");
+
+        message.style.display = "block";
+
+    }
+
+
+    /*
+     * Loading state
+     */
+    function setLoading(loading) {
+
+        if (!button) {
+            return;
+        }
+
+        button.disabled = loading;
+
+        if (buttonText) {
+            buttonText.style.display =
+                loading ? "none" : "inline";
+        }
+
+        if (buttonLoading) {
+            buttonLoading.style.display =
+                loading ? "inline-flex" : "none";
+        }
+
+    }
+
+
+    /*
+     * Login form
+     *
+     * If app.js already provides the authentication
+     * implementation, use it.
+     */
+    if (form) {
+
+        form.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+
+            if (!email.value.trim()) {
+
+                showMessage(
+                    "Please enter your email address.",
+                    "error"
+                );
+
+                email.focus();
+
+                return;
+            }
+
+
+            if (!password.value) {
+
+                showMessage(
+                    "Please enter your password.",
+                    "error"
+                );
+
+                password.focus();
+
+                return;
+            }
+
+
+            showMessage("", "");
+
+            if (message) {
+                message.style.display = "none";
+            }
+
+            setLoading(true);
+
+
+            /*
+             * Let the main storefront application handle
+             * authentication when available.
+             */
+            if (typeof window.loginUser === "function") {
+
+                try {
+
+                    await window.loginUser(
+                        email.value.trim(),
+                        password.value
+                    );
+
+                } catch (error) {
+
+                    showMessage(
+                        error.message ||
+                        "Unable to sign in. Please check your details.",
+                        "error"
+                    );
+
+                    setLoading(false);
+
+                }
+
+                return;
+            }
+
+
+            /*
+             * Fallback API request.
+             *
+             * This matches the project's API structure and
+             * can be adjusted to the exact users API endpoint
+             * if the backend uses another authentication route.
+             */
+            try {
+
+                const response = await fetch(
+                    "/api/users/login/",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCSRFToken()
+                        },
+
+                        credentials: "same-origin",
+
+                        body: JSON.stringify({
+                            email: email.value.trim(),
+                            password: password.value
+                        })
+                    }
+                );
+
+
+                let data = {};
+
+                try {
+                    data = await response.json();
+                } catch (jsonError) {
+                    data = {};
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.detail ||
+                        data.message ||
+                        "Invalid email or password."
+                    );
+
+                }
+
+
+                showMessage(
+                    "Signed in successfully. Redirecting...",
+                    "success"
+                );
+
+
+                /*
+                 * Send the customer back to the account page.
+                 */
+                window.location.href =
+                    "{% url 'storefront:account' %}";
+
+
+            } catch (error) {
+
+                showMessage(
+                    error.message ||
+                    "Unable to sign in. Please try again.",
+                    "error"
+                );
+
+                setLoading(false);
+
+            }
+
+        });
+
+    }
+
+
+    /*
+     * CSRF helper
+     */
+    function getCSRFToken() {
+
+        const name = "csrftoken=";
+
+        const cookies =
+            document.cookie.split(";");
+
+        for (let cookie of cookies) {
+
+            cookie = cookie.trim();
+
+            if (cookie.indexOf(name) === 0) {
+
+                return decodeURIComponent(
+                    cookie.substring(name.length)
+                );
+
+            }
+
+        }
+
+        return "";
+
+    }
+
+
+    /*
+     * Forgot password
+     *
+     * The current storefront routes do not yet expose a
+     * dedicated password-reset page, so do not create a
+     * broken Django URL here.
+     */
+    const forgotPasswordLink =
+        document.getElementById("forgotPasswordLink");
+
+
+    if (forgotPasswordLink) {
+
+        forgotPasswordLink.addEventListener("click", function (event) {
+
+            event.preventDefault();
+
+            showMessage(
+                "Password recovery will be connected to the users authentication system.",
+                "info"
+            );
+
+        });
+
+    }
+
+
+    /*
+     * Keep compatibility with the existing application
+     * initializer.
+     */
+    if (typeof window.initPage === "function") {
+        window.initPage("login");
+    }
+
+});
+
+</script>
+
+{% endblock %}
+```
