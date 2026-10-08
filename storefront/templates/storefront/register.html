@@ -1,1 +1,1058 @@
-{% extends 'storefront/base.html' %}{% block title %}Create account — Enock{% endblock %}{% block content %}<section class="section page"><h1>Create your Enock account</h1><form id="registerForm" class="form-card"><label>Username<input name="username" required></label><label>Email<input name="email" type="email" required></label><label>Password<input name="password" type="password" required></label><button class="primary" type="submit">Create account</button></form></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>initPage('register');</script>{% endblock %}
+```django
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Create Account — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="auth-page register-page">
+
+    <div class="container">
+
+        <div class="auth-layout">
+
+            <!-- Promotional Side -->
+            <div class="auth-promo">
+
+                <div class="auth-promo-content">
+
+                    <a
+                        href="{% url 'storefront:home' %}"
+                        class="auth-brand"
+                    >
+
+                        <div class="auth-brand-icon">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                        </div>
+
+                        <div>
+                            <strong>Enock</strong>
+                            <span>Shopping Center</span>
+                        </div>
+
+                    </a>
+
+
+                    <span class="eyebrow">
+                        JOIN ENOCK
+                    </span>
+
+
+                    <h1>
+                        One account.
+                        <span>A world of shopping.</span>
+                    </h1>
+
+
+                    <p>
+                        Create your Enock account and enjoy a
+                        smarter way to shop, sell and manage your orders.
+                    </p>
+
+
+                    <div class="auth-benefits">
+
+                        <div class="auth-benefit">
+
+                            <div class="auth-benefit-icon">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </div>
+
+                            <div>
+                                <strong>Easy Shopping</strong>
+                                <span>
+                                    Save your cart and shopping preferences.
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="auth-benefit">
+
+                            <div class="auth-benefit-icon">
+                                <i class="fa-solid fa-box"></i>
+                            </div>
+
+                            <div>
+                                <strong>Track Orders</strong>
+                                <span>
+                                    Manage your orders in one place.
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="auth-benefit">
+
+                            <div class="auth-benefit-icon">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+
+                            <div>
+                                <strong>Become a Seller</strong>
+                                <span>
+                                    Grow your business on the marketplace.
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="register-promo-note">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        <span>
+                            Free to create an account
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Registration Card -->
+            <div class="auth-card-wrapper">
+
+                <div class="auth-card register-card">
+
+                    <div class="auth-card-header">
+
+                        <div class="mobile-auth-logo">
+
+                            <div class="auth-brand-icon">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                            </div>
+
+                        </div>
+
+
+                        <span class="eyebrow">
+                            CREATE ACCOUNT
+                        </span>
+
+
+                        <h2>
+                            Get started
+                        </h2>
+
+
+                        <p>
+                            Create your Enock Shopping Center account.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Registration Message -->
+                    <div
+                        id="registerMessage"
+                        class="auth-message"
+                        role="alert"
+                        style="display:none;"
+                    ></div>
+
+
+                    <!-- Registration Form -->
+                    <form
+                        id="registerForm"
+                        class="auth-form"
+                        method="post"
+                        novalidate
+                    >
+
+                        {% csrf_token %}
+
+
+                        <!-- Username -->
+                        <div class="form-group">
+
+                            <label for="registerUsername">
+                                Username
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-user"></i>
+
+                                <input
+                                    id="registerUsername"
+                                    name="username"
+                                    type="text"
+                                    placeholder="Choose a username"
+                                    autocomplete="username"
+                                    minlength="3"
+                                    maxlength="150"
+                                    required
+                                />
+
+                            </div>
+
+                            <small>
+                                Use at least 3 characters.
+                            </small>
+
+                        </div>
+
+
+                        <!-- Email -->
+                        <div class="form-group">
+
+                            <label for="registerEmail">
+                                Email address
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-envelope"></i>
+
+                                <input
+                                    id="registerEmail"
+                                    name="email"
+                                    type="email"
+                                    placeholder="you@example.com"
+                                    autocomplete="email"
+                                    required
+                                />
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Password -->
+                        <div class="form-group">
+
+                            <label for="registerPassword">
+                                Password
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    id="registerPassword"
+                                    name="password"
+                                    type="password"
+                                    placeholder="Create a strong password"
+                                    autocomplete="new-password"
+                                    minlength="8"
+                                    required
+                                />
+
+                                <button
+                                    type="button"
+                                    id="toggleRegisterPassword"
+                                    class="password-toggle"
+                                    aria-label="Show password"
+                                >
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+
+                            </div>
+
+
+                            <!-- Password strength -->
+                            <div class="password-strength">
+
+                                <div class="strength-bar">
+
+                                    <span
+                                        id="strengthBar"
+                                        class="strength-fill"
+                                    ></span>
+
+                                </div>
+
+                                <span id="passwordStrengthText">
+                                    Enter a password
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Confirm password -->
+                        <div class="form-group">
+
+                            <label for="registerPasswordConfirm">
+                                Confirm password
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input
+                                    id="registerPasswordConfirm"
+                                    name="password_confirm"
+                                    type="password"
+                                    placeholder="Enter your password again"
+                                    autocomplete="new-password"
+                                    minlength="8"
+                                    required
+                                />
+
+                                <button
+                                    type="button"
+                                    id="toggleConfirmPassword"
+                                    class="password-toggle"
+                                    aria-label="Show password"
+                                >
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+
+                            </div>
+
+                            <small
+                                id="passwordMatchMessage"
+                            ></small>
+
+                        </div>
+
+
+                        <!-- Terms -->
+                        <div class="terms-row">
+
+                            <label class="checkbox-label">
+
+                                <input
+                                    type="checkbox"
+                                    id="acceptTerms"
+                                    name="accept_terms"
+                                    required
+                                />
+
+                                <span>
+                                    I agree to the Enock Shopping Center
+                                    terms and conditions and privacy policy.
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <!-- Submit -->
+                        <button
+                            type="submit"
+                            class="auth-submit"
+                            id="registerButton"
+                        >
+
+                            <span id="registerButtonText">
+                                Create Account
+                            </span>
+
+                            <span
+                                id="registerButtonLoading"
+                                style="display:none;"
+                            >
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                Creating account...
+                            </span>
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- Login -->
+                    <div class="auth-divider">
+                        <span>Already have an account?</span>
+                    </div>
+
+
+                    <div class="register-prompt">
+
+                        <a href="{% url 'storefront:login' %}">
+                            Sign in to your account
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+
+                    <!-- Security -->
+                    <div class="auth-security">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <span>
+                            Your account information is protected.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Back to Marketplace -->
+                <a
+                    href="{% url 'storefront:marketplace' %}"
+                    class="back-shopping"
+                >
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Continue shopping
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form =
+        document.getElementById("registerForm");
+
+    const username =
+        document.getElementById("registerUsername");
+
+    const email =
+        document.getElementById("registerEmail");
+
+    const password =
+        document.getElementById("registerPassword");
+
+    const passwordConfirm =
+        document.getElementById(
+            "registerPasswordConfirm"
+        );
+
+    const terms =
+        document.getElementById("acceptTerms");
+
+    const message =
+        document.getElementById("registerMessage");
+
+    const button =
+        document.getElementById("registerButton");
+
+    const buttonText =
+        document.getElementById(
+            "registerButtonText"
+        );
+
+    const buttonLoading =
+        document.getElementById(
+            "registerButtonLoading"
+        );
+
+
+    /*
+     * Show password.
+     */
+    function setupPasswordToggle(
+        buttonId,
+        input
+    ) {
+
+        const toggle =
+            document.getElementById(buttonId);
+
+
+        if (!toggle || !input) {
+            return;
+        }
+
+
+        toggle.addEventListener(
+            "click",
+            function () {
+
+                const visible =
+                    input.type === "text";
+
+
+                input.type =
+                    visible
+                        ? "password"
+                        : "text";
+
+
+                this.innerHTML =
+                    visible
+                        ? '<i class="fa-solid fa-eye"></i>'
+                        : '<i class="fa-solid fa-eye-slash"></i>';
+
+
+                this.setAttribute(
+                    "aria-label",
+                    visible
+                        ? "Show password"
+                        : "Hide password"
+                );
+
+            }
+        );
+
+    }
+
+
+    setupPasswordToggle(
+        "toggleRegisterPassword",
+        password
+    );
+
+
+    setupPasswordToggle(
+        "toggleConfirmPassword",
+        passwordConfirm
+    );
+
+
+    /*
+     * Password strength.
+     */
+    if (password) {
+
+        password.addEventListener(
+            "input",
+            function () {
+
+                const value =
+                    this.value;
+
+
+                const strengthBar =
+                    document.getElementById(
+                        "strengthBar"
+                    );
+
+                const strengthText =
+                    document.getElementById(
+                        "passwordStrengthText"
+                    );
+
+
+                let score = 0;
+
+
+                if (value.length >= 8) {
+                    score++;
+                }
+
+                if (/[a-z]/.test(value)) {
+                    score++;
+                }
+
+                if (/[A-Z]/.test(value)) {
+                    score++;
+                }
+
+                if (/[0-9]/.test(value)) {
+                    score++;
+                }
+
+                if (/[^A-Za-z0-9]/.test(value)) {
+                    score++;
+                }
+
+
+                const levels = [
+                    "Enter a password",
+                    "Very weak",
+                    "Weak",
+                    "Fair",
+                    "Strong",
+                    "Very strong"
+                ];
+
+
+                if (strengthText) {
+                    strengthText.textContent =
+                        levels[score];
+                }
+
+
+                if (strengthBar) {
+
+                    strengthBar.style.width =
+                        (score * 20) + "%";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+     * Password confirmation.
+     */
+    function checkPasswordMatch() {
+
+        const matchMessage =
+            document.getElementById(
+                "passwordMatchMessage"
+            );
+
+
+        if (
+            !passwordConfirm ||
+            !passwordConfirm.value
+        ) {
+
+            if (matchMessage) {
+                matchMessage.textContent = "";
+            }
+
+            return false;
+
+        }
+
+
+        const matches =
+            password.value ===
+            passwordConfirm.value;
+
+
+        if (matchMessage) {
+
+            matchMessage.textContent =
+                matches
+                    ? "Passwords match."
+                    : "Passwords do not match.";
+
+        }
+
+
+        return matches;
+
+    }
+
+
+    if (passwordConfirm) {
+
+        passwordConfirm.addEventListener(
+            "input",
+            checkPasswordMatch
+        );
+
+    }
+
+
+    /*
+     * Display messages.
+     */
+    function showMessage(
+        text,
+        type
+    ) {
+
+        if (!message) {
+            return;
+        }
+
+
+        message.textContent =
+            text;
+
+
+        message.className =
+            "auth-message " +
+            (type || "error");
+
+
+        message.style.display =
+            "block";
+
+    }
+
+
+    /*
+     * Loading state.
+     */
+    function setLoading(
+        loading
+    ) {
+
+        if (button) {
+            button.disabled =
+                loading;
+        }
+
+
+        if (buttonText) {
+
+            buttonText.style.display =
+                loading
+                    ? "none"
+                    : "inline";
+
+        }
+
+
+        if (buttonLoading) {
+
+            buttonLoading.style.display =
+                loading
+                    ? "inline-flex"
+                    : "none";
+
+        }
+
+    }
+
+
+    /*
+     * Submit registration.
+     */
+    if (form) {
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                if (!username.value.trim()) {
+
+                    showMessage(
+                        "Please choose a username.",
+                        "error"
+                    );
+
+                    username.focus();
+
+                    return;
+
+                }
+
+
+                if (
+                    username.value.trim().length < 3
+                ) {
+
+                    showMessage(
+                        "Username must contain at least 3 characters.",
+                        "error"
+                    );
+
+                    username.focus();
+
+                    return;
+
+                }
+
+
+                if (!email.value.trim()) {
+
+                    showMessage(
+                        "Please enter your email address.",
+                        "error"
+                    );
+
+                    email.focus();
+
+                    return;
+
+                }
+
+
+                if (password.value.length < 8) {
+
+                    showMessage(
+                        "Your password must contain at least 8 characters.",
+                        "error"
+                    );
+
+                    password.focus();
+
+                    return;
+
+                }
+
+
+                if (!checkPasswordMatch()) {
+
+                    showMessage(
+                        "Your passwords do not match.",
+                        "error"
+                    );
+
+                    passwordConfirm.focus();
+
+                    return;
+
+                }
+
+
+                if (!terms.checked) {
+
+                    showMessage(
+                        "Please accept the terms and conditions.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                setLoading(true);
+
+
+                /*
+                 * If app.js provides the registration
+                 * implementation, use it.
+                 */
+                if (
+                    typeof window.registerUser ===
+                    "function"
+                ) {
+
+                    try {
+
+                        const result =
+                            await window.registerUser({
+
+                                username:
+                                    username.value.trim(),
+
+                                email:
+                                    email.value.trim(),
+
+                                password:
+                                    password.value,
+
+                                password_confirm:
+                                    passwordConfirm.value
+
+                            });
+
+
+                        showMessage(
+                            "Account created successfully. Redirecting...",
+                            "success"
+                        );
+
+
+                        setTimeout(
+                            function () {
+
+                                window.location.href =
+                                    "{% url 'storefront:account' %}";
+
+                            },
+                            700
+                        );
+
+
+                    } catch (error) {
+
+                        showMessage(
+                            error.message ||
+                            "Unable to create your account.",
+                            "error"
+                        );
+
+                        setLoading(false);
+
+                    }
+
+                    return;
+
+                }
+
+
+                /*
+                 * Fallback users API.
+                 *
+                 * This is ready for the project's users
+                 * registration endpoint.
+                 */
+                try {
+
+                    const response =
+                        await fetch(
+                            "/api/users/register/",
+                            {
+
+                                method: "POST",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "X-CSRFToken":
+                                        getCSRFToken()
+
+                                },
+
+                                credentials:
+                                    "same-origin",
+
+                                body:
+                                    JSON.stringify({
+
+                                        username:
+                                            username.value.trim(),
+
+                                        email:
+                                            email.value.trim(),
+
+                                        password:
+                                            password.value,
+
+                                        password_confirm:
+                                            passwordConfirm.value
+
+                                    })
+
+                            }
+                        );
+
+
+                    let data = {};
+
+
+                    try {
+
+                        data =
+                            await response.json();
+
+                    } catch (jsonError) {
+
+                        data = {};
+
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.detail ||
+                            data.message ||
+                            data.error ||
+                            "Unable to create your account."
+                        );
+
+                    }
+
+
+                    showMessage(
+                        "Account created successfully. Redirecting...",
+                        "success"
+                    );
+
+
+                    setTimeout(
+                        function () {
+
+                            window.location.href =
+                                "{% url 'storefront:account' %}";
+
+                        },
+                        700
+                    );
+
+
+                } catch (error) {
+
+                    showMessage(
+                        error.message ||
+                        "Registration failed. Please try again.",
+                        "error"
+                    );
+
+                    setLoading(false);
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+     * CSRF token helper.
+     */
+    function getCSRFToken() {
+
+        const name =
+            "csrftoken=";
+
+
+        const cookies =
+            document.cookie.split(";");
+
+
+        for (
+            let cookie of cookies
+        ) {
+
+            cookie =
+                cookie.trim();
+
+
+            if (
+                cookie.indexOf(name) === 0
+            ) {
+
+                return decodeURIComponent(
+                    cookie.substring(
+                        name.length
+                    )
+                );
+
+            }
+
+        }
+
+
+        return "";
+
+    }
+
+
+    /*
+     * Compatibility with the existing storefront
+     * JavaScript application.
+     */
+    if (
+        typeof window.initPage ===
+        "function"
+    ) {
+
+        window.initPage("register");
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
+```
