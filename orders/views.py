@@ -95,12 +95,8 @@ class OrderViewSet(viewsets.ModelViewSet):
             carrier=request.data.get("carrier", "Local Courier"),
             status=Shipment.Status.PENDING,
             destination_address=address,
-            destination_latitude=request.data.get("destination_latitude"),
-            destination_longitude=request.data.get("destination_longitude"),
-            origin_address=request.data.get("origin_address", "Warehouse"),
             estimated_delivery=request.data.get("estimated_delivery"),
         )
-
         ShipmentEvent.objects.create(
             shipment=shipment,
             event_type=ShipmentEvent.EventType.CREATED,

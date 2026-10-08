@@ -1,6 +1,6 @@
 from django.db import models
-import uuid
 from django.utils import timezone
+import uuid
 
 
 class ShippingZone(models.Model):
@@ -63,7 +63,7 @@ class ShipmentLocation(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["-timestamp"]
+        ordering = ['-timestamp']
 
     def __str__(self):
         return f"{self.shipment.tracking_number} - {self.timestamp}"
@@ -92,7 +92,7 @@ class ShipmentEvent(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ["-timestamp"]
+        ordering = ['-timestamp']
 
     def __str__(self):
         return f"{self.shipment.tracking_number} - {self.title}"
