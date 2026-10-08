@@ -1,36 +1,90 @@
 from pathlib import Path
 import os
+
 import dj_database_url
+
+
+# ============================================================
+# BASE
+# ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-change-me")
-DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-ALLOWED_HOSTS = [h.strip() for h in os.getenv(
-    "ALLOWED_HOSTS", "127.0.0.1,localhost"
-).split(",") if h.strip()]
+# ============================================================
+# SECURITY
+# ============================================================
+
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-development-key-change-this-on-render"
+)
+
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
+
+# ============================================================
+# ALLOWED HOSTS
+# ============================================================
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        "127.0.0.1,localhost"
+    ).split(",")
+    if host.strip()
+]
+
+# Render automatically provides this variable
 render_host = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+
 if render_host and render_host not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(render_host)
 
+# Allow Render subdomains as an additional fallback
+if ".onrender.com" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(".onrender.com")
+
+
+# ============================================================
+# CSRF
+# ============================================================
+
 CSRF_TRUSTED_ORIGINS = [
-    x.strip() for x in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if x.strip()
+    origin.strip()
+    for origin in os.getenv(
+        "CSRF_TRUSTED_ORIGINS",
+        ""
+    ).split(",")
+    if origin.strip()
 ]
+
 if render_host:
-    origin = f"https://{render_host}"
-    if origin not in CSRF_TRUSTED_ORIGINS:
-        CSRF_TRUSTED_ORIGINS.append(origin)
+    render_origin = f"https://{render_host}"
+
+    if render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(render_origin)
+
+
+# ============================================================
+# APPLICATIONS
+# ============================================================
 
 INSTALLED_APPS = [
+    # Django
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    # Third-party
     "corsheaders",
     "rest_framework",
+
+    # Enock Shopping Center
     "users",
     "sellers",
     "catalog",
@@ -45,38 +99,91 @@ INSTALLED_APPS = [
     "storefront",
 ]
 
+
+# ============================================================
+# MIDDLEWARE
+# ============================================================
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+
+    # Static files in production
     "whitenoise.middleware.WhiteNoiseMiddleware",
+
+    # CORS
     "corsheaders.middleware.CorsMiddleware",
+
     "django.contrib.sessions.middleware.SessionMiddleware",
+
     "django.middleware.common.CommonMiddleware",
+
     "django.middleware.csrf.CsrfViewMiddleware",
+
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+
     "django.contrib.messages.middleware.MessageMiddleware",
+
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "config.urls"
 
-TEMPLATES = [{
-    "BACKEND": "django.template.backends.django.DjangoTemplates",
-    "DIRS": [],
-    "APP_DIRS": True,
-    "OPTIONS": {
-        "context_processors": [
-            "django.template.context_processors.request",
-            "django.contrib.auth.context_processors.auth",
-            "django.contrib.messages.context_processors.messages",
-        ],
-    },
-}]
+# ============================================================
+# URLS / WSGI
+# ============================================================
+
+ROOT_URLCONF = "config.urls"
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+
+# ============================================================
+# TEMPLATES
+# ============================================================
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+
+        "DIRS": [
+            BASE_DIR / "storefront" / "templates",
+        ],
+
+        "APP_DIRS": True,
+
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+
+                "django.contrib.auth.context_processors.auth",
+
+                "django.contrib.messages.context_processors.messages",
+
+                "django.template.context_processors.debug",
+
+                "django.template.context_processors.media",
+
+                "django.template.context_processors.static",
+            ],
+        },
+    },
+]
+
+
+# ============================================================
+# DATABASE
+# ============================================================
+
 DATABASE_URL = os.getenv("DATABASE_URL")
+
 if DATABASE_URL:
-    DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=not DEBUG)}
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=not DEBUG,
+        )
+    }
+
 else:
     DATABASES = {
         "default": {
@@ -89,47 +196,163 @@ else:
         }
     }
 
+
+# ============================================================
+# CUSTOM USER
+# ============================================================
+
 AUTH_USER_MODEL = "users.User"
+
+
+# ============================================================
+# DJANGO REST FRAMEWORK
+# ============================================================
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
     ],
+
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
     ],
+
     "DEFAULT_FILTER_BACKENDS": [
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
     ],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+
+    "DEFAULT_PAGINATION_CLASS": (
+        "rest_framework.pagination.PageNumberPagination"
+    ),
+
     "PAGE_SIZE": 24,
 }
 
+
+# ============================================================
+# CORS
+# ============================================================
+
 CORS_ALLOWED_ORIGINS = [
-    x.strip() for x in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if x.strip()
+    origin.strip()
+    for origin in os.getenv(
+        "CORS_ALLOWED_ORIGINS",
+        ""
+    ).split(",")
+    if origin.strip()
 ]
 
-LANGUAGE_CODE = os.getenv("LANGUAGE_CODE", "en")
-TIME_ZONE = os.getenv("TIME_ZONE", "Africa/Kampala")
+# Optional development support
+CORS_ALLOW_CREDENTIALS = True
+
+
+# ============================================================
+# LANGUAGE / TIME
+# ============================================================
+
+LANGUAGE_CODE = os.getenv(
+    "LANGUAGE_CODE",
+    "en"
+)
+
+TIME_ZONE = os.getenv(
+    "TIME_ZONE",
+    "Africa/Kampala"
+)
+
 USE_I18N = True
 USE_TZ = True
 
+
+# ============================================================
+# STATIC FILES
+# ============================================================
+
 STATIC_URL = "/static/"
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
 STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+
+    "staticfiles": {
+        "BACKEND": (
+            "whitenoise.storage."
+            "CompressedManifestStaticFilesStorage"
+        ),
+    },
 }
+
+
+# ============================================================
+# MEDIA FILES
+# ============================================================
+
 MEDIA_URL = "/media/"
+
 MEDIA_ROOT = BASE_DIR / "media"
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ============================================================
+# DEFAULT PRIMARY KEY
+# ============================================================
+
+DEFAULT_AUTO_FIELD = (
+    "django.db.models.BigAutoField"
+)
+
+
+# ============================================================
+# SESSION / CSRF SECURITY
+# ============================================================
 
 SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-LOGIN_URL = "/"
+CSRF_COOKIE_SECURE = not DEBUG
+
+SESSION_COOKIE_HTTPONLY = True
+
+CSRF_COOKIE_HTTPONLY = False
+
+
+# ============================================================
+# RENDER / HTTPS
+# ============================================================
+
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+)
+
+
+# ============================================================
+# PRODUCTION SECURITY
+# ============================================================
+
+if not DEBUG:
+
+    SECURE_SSL_REDIRECT = True
+
+    SECURE_HSTS_SECONDS = 31536000
+
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+    SECURE_HSTS_PRELOAD = True
+
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    X_FRAME_OPTIONS = "DENY"
+
+
+# ============================================================
+# LOGIN / LOGOUT
+# ============================================================
+
+LOGIN_URL = "/login/"
+
 LOGIN_REDIRECT_URL = "/"
+
 LOGOUT_REDIRECT_URL = "/"
