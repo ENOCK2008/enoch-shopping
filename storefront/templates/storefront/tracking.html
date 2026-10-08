@@ -1,1 +1,776 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — tracking{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>tracking</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('tracking');</script>{% endblock %}
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Track Your Order — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<!-- Tracking Hero -->
+
+<section class="tracking-hero">
+    <div class="container">
+        <div class="tracking-hero-content">
+
+```
+        <span class="eyebrow">
+            <i class="fa-solid fa-location-crosshairs"></i>
+            Enock Shopping Center
+        </span>
+
+        <h1>Track your order</h1>
+
+        <p>
+            Follow your order from confirmation to delivery and stay
+            informed about its progress.
+        </p>
+
+    </div>
+</div>
+```
+
+</section>
+
+<!-- Tracking Search -->
+
+<section class="section tracking-search-section">
+    <div class="container">
+
+```
+    <div class="tracking-search-card">
+
+        <div class="tracking-search-heading">
+            <div class="tracking-icon">
+                <i class="fa-solid fa-truck-fast"></i>
+            </div>
+
+            <div>
+                <h2>Find your order</h2>
+                <p>
+                    Enter your order number to view its latest tracking
+                    information.
+                </p>
+            </div>
+        </div>
+
+        <form id="trackingForm" class="tracking-form">
+
+            <div class="tracking-input-group">
+                <label for="orderNumber">Order number</label>
+
+                <div class="input-with-icon">
+                    <i class="fa-solid fa-hashtag"></i>
+
+                    <input
+                        type="text"
+                        id="orderNumber"
+                        name="order_number"
+                        placeholder="e.g. ESC-10001"
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Track Order
+            </button>
+
+        </form>
+
+        <div id="trackingError" class="tracking-message error-message" style="display:none;">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span id="trackingErrorText">
+                We could not find tracking information for this order.
+            </span>
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Tracking Content -->
+
+<section class="section tracking-results-section">
+    <div class="container">
+
+```
+    <div id="pageContent">
+
+        <!-- Default state -->
+        <div class="tracking-empty">
+
+            <div class="tracking-empty-icon">
+                <i class="fa-solid fa-box-open"></i>
+            </div>
+
+            <h2>Enter an order number</h2>
+
+            <p>
+                Your tracking information will appear here after you
+                search for an order.
+            </p>
+
+            <a href="{% url 'storefront:orders' %}" class="btn btn-outline">
+                <i class="fa-solid fa-receipt"></i>
+                View My Orders
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Tracking Timeline Template -->
+
+<template id="trackingTemplate">
+
+```
+<div class="tracking-result-card">
+
+    <div class="tracking-result-header">
+
+        <div>
+            <span class="eyebrow">Order tracking</span>
+
+            <h2 id="trackingOrderNumber">Order #</h2>
+
+            <p id="trackingOrderDate">
+                Order date
+            </p>
+        </div>
+
+        <span id="trackingStatus" class="tracking-status">
+            Processing
+        </span>
+
+    </div>
+
+
+    <!-- Delivery Summary -->
+    <div class="delivery-summary">
+
+        <div class="delivery-summary-item">
+            <span class="summary-icon">
+                <i class="fa-solid fa-box"></i>
+            </span>
+
+            <div>
+                <small>Order status</small>
+                <strong id="summaryStatus">Processing</strong>
+            </div>
+        </div>
+
+        <div class="delivery-summary-item">
+            <span class="summary-icon">
+                <i class="fa-solid fa-truck"></i>
+            </span>
+
+            <div>
+                <small>Delivery method</small>
+                <strong id="summaryDelivery">Standard delivery</strong>
+            </div>
+        </div>
+
+        <div class="delivery-summary-item">
+            <span class="summary-icon">
+                <i class="fa-solid fa-location-dot"></i>
+            </span>
+
+            <div>
+                <small>Destination</small>
+                <strong id="summaryDestination">Uganda</strong>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Timeline -->
+    <div class="tracking-timeline">
+
+        <div class="timeline-item completed" data-status="confirmed">
+
+            <div class="timeline-marker">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div class="timeline-content">
+                <h3>Order confirmed</h3>
+                <p>
+                    Your order has been received successfully.
+                </p>
+
+                <time id="confirmedTime">
+                    Awaiting update
+                </time>
+            </div>
+
+        </div>
+
+
+        <div class="timeline-item" data-status="processing">
+
+            <div class="timeline-marker">
+                <i class="fa-solid fa-box"></i>
+            </div>
+
+            <div class="timeline-content">
+                <h3>Preparing your order</h3>
+                <p>
+                    The seller is preparing your items for delivery.
+                </p>
+
+                <time id="processingTime">
+                    Awaiting update
+                </time>
+            </div>
+
+        </div>
+
+
+        <div class="timeline-item" data-status="shipped">
+
+            <div class="timeline-marker">
+                <i class="fa-solid fa-truck-fast"></i>
+            </div>
+
+            <div class="timeline-content">
+                <h3>On the way</h3>
+                <p>
+                    Your order has been handed over for delivery.
+                </p>
+
+                <time id="shippedTime">
+                    Awaiting update
+                </time>
+            </div>
+
+        </div>
+
+
+        <div class="timeline-item" data-status="out_for_delivery">
+
+            <div class="timeline-marker">
+                <i class="fa-solid fa-location-arrow"></i>
+            </div>
+
+            <div class="timeline-content">
+                <h3>Out for delivery</h3>
+                <p>
+                    Your order is on its way to your delivery location.
+                </p>
+
+                <time id="deliveryTime">
+                    Awaiting update
+                </time>
+            </div>
+
+        </div>
+
+
+        <div class="timeline-item" data-status="delivered">
+
+            <div class="timeline-marker">
+                <i class="fa-solid fa-house-circle-check"></i>
+            </div>
+
+            <div class="timeline-content">
+                <h3>Delivered</h3>
+                <p>
+                    Your order has been delivered.
+                </p>
+
+                <time id="deliveredTime">
+                    Awaiting update
+                </time>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Delivery Information -->
+    <div class="tracking-info-grid">
+
+        <div class="tracking-info-card">
+
+            <div class="info-card-icon">
+                <i class="fa-solid fa-location-dot"></i>
+            </div>
+
+            <div>
+                <span>Delivery address</span>
+                <strong id="trackingAddress">
+                    Address will appear when available.
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="tracking-info-card">
+
+            <div class="info-card-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+
+            <div>
+                <span>Estimated delivery</span>
+                <strong id="estimatedDelivery">
+                    Will be updated when available.
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Actions -->
+    <div class="tracking-actions">
+
+        <a href="{% url 'storefront:orders' %}" class="btn btn-outline">
+            <i class="fa-solid fa-receipt"></i>
+            My Orders
+        </a>
+
+        <a href="{% url 'storefront:marketplace' %}" class="btn btn-primary">
+            <i class="fa-solid fa-bag-shopping"></i>
+            Continue Shopping
+        </a>
+
+    </div>
+
+</div>
+```
+
+</template>
+
+<!-- How Tracking Works -->
+
+<section class="section tracking-how-section">
+    <div class="container">
+
+```
+    <div class="section-heading centered">
+        <span class="eyebrow">Simple & transparent</span>
+        <h2>How order tracking works</h2>
+
+        <p>
+            Keep track of your purchase through each important stage.
+        </p>
+    </div>
+
+
+    <div class="tracking-steps">
+
+        <div class="tracking-step">
+
+            <div class="step-number">01</div>
+
+            <div class="step-icon">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+
+            <h3>Place your order</h3>
+
+            <p>
+                Complete checkout and receive your order number.
+            </p>
+
+        </div>
+
+
+        <div class="tracking-step">
+
+            <div class="step-number">02</div>
+
+            <div class="step-icon">
+                <i class="fa-solid fa-box"></i>
+            </div>
+
+            <h3>Seller prepares it</h3>
+
+            <p>
+                The seller prepares your items for delivery.
+            </p>
+
+        </div>
+
+
+        <div class="tracking-step">
+
+            <div class="step-number">03</div>
+
+            <div class="step-icon">
+                <i class="fa-solid fa-truck-fast"></i>
+            </div>
+
+            <h3>Order is dispatched</h3>
+
+            <p>
+                Your order moves through the delivery process.
+            </p>
+
+        </div>
+
+
+        <div class="tracking-step">
+
+            <div class="step-number">04</div>
+
+            <div class="step-icon">
+                <i class="fa-solid fa-house-circle-check"></i>
+            </div>
+
+            <h3>Delivered</h3>
+
+            <p>
+                Your order reaches the provided delivery location.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Help CTA -->
+
+<section class="section tracking-help-section">
+    <div class="container">
+
+```
+    <div class="tracking-help-card">
+
+        <div class="help-icon">
+            <i class="fa-solid fa-headset"></i>
+        </div>
+
+        <div class="help-content">
+            <span class="eyebrow">Need assistance?</span>
+
+            <h2>Can't find your tracking information?</h2>
+
+            <p>
+                Check your order number or return to your orders page.
+                Tracking information depends on the order and delivery
+                data available from the platform.
+            </p>
+        </div>
+
+        <a href="{% url 'storefront:orders' %}" class="btn btn-primary">
+            View Orders
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+(function () {
+
+    const form = document.getElementById("trackingForm");
+    const orderInput = document.getElementById("orderNumber");
+    const pageContent = document.getElementById("pageContent");
+    const errorBox = document.getElementById("trackingError");
+    const errorText = document.getElementById("trackingErrorText");
+
+    function showError(message) {
+        if (!errorBox) return;
+
+        if (errorText) {
+            errorText.textContent = message;
+        }
+
+        errorBox.style.display = "flex";
+    }
+
+    function hideError() {
+        if (errorBox) {
+            errorBox.style.display = "none";
+        }
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(value) {
+        if (!value) return "Awaiting update";
+
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return String(value);
+        }
+
+        return date.toLocaleString();
+    }
+
+    function normaliseStatus(status) {
+        return String(status || "processing")
+            .toLowerCase()
+            .replace(/[\s-]+/g, "_");
+    }
+
+    function updateTimeline(status) {
+
+        const order = [
+            "confirmed",
+            "processing",
+            "shipped",
+            "out_for_delivery",
+            "delivered"
+        ];
+
+        const currentIndex = order.indexOf(normaliseStatus(status));
+
+        document.querySelectorAll(".timeline-item").forEach(function (item) {
+
+            const itemStatus = item.dataset.status;
+            const itemIndex = order.indexOf(itemStatus);
+
+            item.classList.remove("completed", "current");
+
+            if (currentIndex >= 0 && itemIndex <= currentIndex) {
+                item.classList.add("completed");
+            }
+
+            if (itemStatus === normaliseStatus(status)) {
+                item.classList.add("current");
+            }
+        });
+    }
+
+    function renderTracking(order) {
+
+        if (!pageContent || !order) return;
+
+        const template = document.getElementById("trackingTemplate");
+
+        if (!template) return;
+
+        pageContent.innerHTML = "";
+
+        const content = template.content.cloneNode(true);
+
+        const number =
+            order.order_number ||
+            order.number ||
+            order.reference ||
+            order.id ||
+            "Order";
+
+        const status =
+            order.status ||
+            order.order_status ||
+            "processing";
+
+        const delivery =
+            order.delivery_method ||
+            order.shipping_method ||
+            "Standard delivery";
+
+        const destination =
+            order.destination ||
+            order.city ||
+            order.country ||
+            "Uganda";
+
+        const address =
+            order.delivery_address ||
+            order.address ||
+            "Address will appear when available.";
+
+        const estimated =
+            order.estimated_delivery ||
+            order.expected_delivery ||
+            "Will be updated when available.";
+
+        content.querySelector("#trackingOrderNumber").textContent =
+            "Order #" + number;
+
+        content.querySelector("#trackingOrderDate").textContent =
+            order.created_at
+                ? "Placed " + formatDate(order.created_at)
+                : "Order date unavailable";
+
+        content.querySelector("#trackingStatus").textContent =
+            String(status).replace(/_/g, " ");
+
+        content.querySelector("#summaryStatus").textContent =
+            String(status).replace(/_/g, " ");
+
+        content.querySelector("#summaryDelivery").textContent =
+            delivery;
+
+        content.querySelector("#summaryDestination").textContent =
+            destination;
+
+        content.querySelector("#trackingAddress").textContent =
+            address;
+
+        content.querySelector("#estimatedDelivery").textContent =
+            estimated;
+
+        if (order.confirmed_at) {
+            content.querySelector("#confirmedTime").textContent =
+                formatDate(order.confirmed_at);
+        }
+
+        if (order.processing_at) {
+            content.querySelector("#processingTime").textContent =
+                formatDate(order.processing_at);
+        }
+
+        if (order.shipped_at) {
+            content.querySelector("#shippedTime").textContent =
+                formatDate(order.shipped_at);
+        }
+
+        if (order.out_for_delivery_at) {
+            content.querySelector("#deliveryTime").textContent =
+                formatDate(order.out_for_delivery_at);
+        }
+
+        if (order.delivered_at) {
+            content.querySelector("#deliveredTime").textContent =
+                formatDate(order.delivered_at);
+        }
+
+        pageContent.appendChild(content);
+
+        updateTimeline(status);
+    }
+
+    /*
+     * Public integration hook.
+     *
+     * Your orders/shipping backend can later call:
+     *
+     * window.renderTracking(order)
+     *
+     * without requiring this template to be redesigned.
+     */
+    window.renderTracking = renderTracking;
+
+
+    /*
+     * Optional loader hook.
+     *
+     * If app.js later provides loadTracking(orderNumber),
+     * this page will use it.
+     */
+    async function loadTracking(orderNumber) {
+
+        hideError();
+
+        if (!orderNumber) {
+            showError("Please enter your order number.");
+            return;
+        }
+
+        if (typeof window.loadTracking === "function") {
+
+            try {
+
+                const result = await window.loadTracking(orderNumber);
+
+                if (!result) {
+                    showError(
+                        "No tracking information was returned for this order."
+                    );
+                    return;
+                }
+
+                renderTracking(result);
+
+            } catch (error) {
+
+                console.error("Tracking error:", error);
+
+                showError(
+                    "We could not load tracking information. Please try again."
+                );
+            }
+
+            return;
+        }
+
+        /*
+         * No tracking API is connected yet.
+         *
+         * We intentionally do not create fake tracking data.
+         */
+        showError(
+            "Tracking service is not connected yet. Please check your orders page for available order information."
+        );
+    }
+
+
+    if (form) {
+
+        form.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            const orderNumber = orderInput
+                ? orderInput.value.trim()
+                : "";
+
+            loadTracking(orderNumber);
+
+        });
+
+    }
+
+
+    /*
+     * Allow an order number to be supplied through:
+     * /tracking/?order=123
+     */
+    const params = new URLSearchParams(window.location.search);
+    const queryOrder = params.get("order");
+
+    if (queryOrder && orderInput) {
+        orderInput.value = queryOrder;
+        loadTracking(queryOrder);
+    }
+
+
+    if (window.initPage) {
+        initPage("tracking");
+    }
+
+})();
+</script>
+
+{% endblock %}
