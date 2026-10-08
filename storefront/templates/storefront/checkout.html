@@ -1,1 +1,702 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — checkout{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>checkout</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('checkout');</script>{% endblock %}
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Checkout — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="section page checkout-page">
+
+```
+<!-- PAGE HEADER -->
+<div class="page-header">
+
+    <div>
+        <span class="eyebrow">
+            Enock Shopping Center
+        </span>
+
+        <h1>
+            Checkout
+        </h1>
+
+        <p class="page-subtitle">
+            Review your order and continue to secure payment.
+        </p>
+    </div>
+
+    <div class="checkout-icon">
+        <i class="fa-solid fa-lock"></i>
+    </div>
+
+</div>
+
+
+<!-- CHECKOUT STEPS -->
+<div class="checkout-steps">
+
+    <div class="checkout-step active">
+        <span>1</span>
+        <strong>Checkout</strong>
+    </div>
+
+    <div class="checkout-line"></div>
+
+    <div class="checkout-step">
+        <span>2</span>
+        <strong>Payment</strong>
+    </div>
+
+    <div class="checkout-line"></div>
+
+    <div class="checkout-step">
+        <span>3</span>
+        <strong>Confirmation</strong>
+    </div>
+
+</div>
+
+
+<!-- MAIN CHECKOUT -->
+<div class="checkout-grid">
+
+    <!-- CUSTOMER / DELIVERY -->
+    <div class="checkout-main">
+
+        <div class="checkout-card">
+
+            <div class="checkout-card-header">
+
+                <div>
+                    <span class="eyebrow">
+                        Delivery
+                    </span>
+
+                    <h2>
+                        Delivery information
+                    </h2>
+                </div>
+
+                <i class="fa-solid fa-location-dot"></i>
+
+            </div>
+
+
+            <div class="checkout-form">
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="firstName">
+                            First name
+                        </label>
+
+                        <input
+                            id="firstName"
+                            name="first_name"
+                            type="text"
+                            placeholder="Enter your first name"
+                            autocomplete="given-name"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="lastName">
+                            Last name
+                        </label>
+
+                        <input
+                            id="lastName"
+                            name="last_name"
+                            type="text"
+                            placeholder="Enter your last name"
+                            autocomplete="family-name"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="phone">
+                            Phone number
+                        </label>
+
+                        <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            placeholder="07XX XXX XXX"
+                            autocomplete="tel"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            Email address
+                        </label>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="address">
+                        Delivery address
+                    </label>
+
+                    <input
+                        id="address"
+                        name="address"
+                        type="text"
+                        placeholder="Enter your delivery address"
+                        autocomplete="street-address"
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="city">
+                            City / Town
+                        </label>
+
+                        <input
+                            id="city"
+                            name="city"
+                            type="text"
+                            placeholder="e.g. Kampala"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="district">
+                            District
+                        </label>
+
+                        <input
+                            id="district"
+                            name="district"
+                            type="text"
+                            placeholder="e.g. Wakiso"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- DELIVERY METHOD -->
+                <div class="checkout-option-section">
+
+                    <h3>
+                        Delivery method
+                    </h3>
+
+
+                    <label class="checkout-option">
+
+                        <input
+                            type="radio"
+                            name="delivery_method"
+                            value="standard"
+                            checked
+                        >
+
+                        <span class="option-icon">
+                            <i class="fa-solid fa-truck"></i>
+                        </span>
+
+                        <span class="option-content">
+
+                            <strong>
+                                Standard delivery
+                            </strong>
+
+                            <small>
+                                Reliable delivery to your location
+                            </small>
+
+                        </span>
+
+                    </label>
+
+
+                    <label class="checkout-option">
+
+                        <input
+                            type="radio"
+                            name="delivery_method"
+                            value="pickup"
+                        >
+
+                        <span class="option-icon">
+                            <i class="fa-solid fa-store"></i>
+                        </span>
+
+                        <span class="option-content">
+
+                            <strong>
+                                Pickup
+                            </strong>
+
+                            <small>
+                                Collect your order from the seller
+                            </small>
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- DELIVERY NOTES -->
+                <div class="form-group">
+
+                    <label for="notes">
+                        Delivery notes
+                    </label>
+
+                    <textarea
+                        id="notes"
+                        name="notes"
+                        rows="4"
+                        placeholder="Add directions or special delivery instructions..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PAYMENT INFORMATION -->
+        <div class="checkout-card">
+
+            <div class="checkout-card-header">
+
+                <div>
+                    <span class="eyebrow">
+                        Payment
+                    </span>
+
+                    <h2>
+                        Choose payment method
+                    </h2>
+                </div>
+
+                <i class="fa-solid fa-credit-card"></i>
+
+            </div>
+
+
+            <div class="payment-methods">
+
+                <label class="payment-method active">
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="mobile_money"
+                        checked
+                    >
+
+                    <div class="payment-method-icon">
+                        📱
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Mobile Money
+                        </strong>
+
+                        <small>
+                            MTN Mobile Money / Airtel Money
+                        </small>
+
+                    </div>
+
+                </label>
+
+
+                <label class="payment-method">
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="card"
+                    >
+
+                    <div class="payment-method-icon">
+                        💳
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Debit / Credit Card
+                        </strong>
+
+                        <small>
+                            Pay securely with your card
+                        </small>
+
+                    </div>
+
+                </label>
+
+
+                <label class="payment-method">
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="cash"
+                    >
+
+                    <div class="payment-method-icon">
+                        💵
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Cash on Delivery
+                        </strong>
+
+                        <small>
+                            Pay when your order arrives
+                        </small>
+
+                    </div>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ORDER SUMMARY -->
+    <aside class="checkout-sidebar">
+
+        <div class="checkout-summary">
+
+            <div class="summary-header">
+
+                <h2>
+                    Order Summary
+                </h2>
+
+                <span class="summary-count">
+                    Cart
+                </span>
+
+            </div>
+
+
+            <!-- JS CAN POPULATE THIS -->
+            <div
+                id="checkoutItems"
+                class="checkout-items"
+            >
+
+                <div class="loading">
+
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+
+                    Loading your cart...
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-divider"></div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <strong id="checkoutSubtotal">
+                    UGX 0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Delivery
+                </span>
+
+                <strong id="checkoutDelivery">
+                    UGX 0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Discount
+                </span>
+
+                <strong
+                    id="checkoutDiscount"
+                    class="discount"
+                >
+                    - UGX 0
+                </strong>
+
+            </div>
+
+
+            <div class="summary-divider"></div>
+
+
+            <div class="summary-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="checkoutTotal">
+                    UGX 0
+                </strong>
+
+            </div>
+
+
+            <!-- PLACE ORDER -->
+            <button
+                type="button"
+                id="placeOrderButton"
+                class="primary checkout-button"
+            >
+
+                <i class="fa-solid fa-lock"></i>
+
+                Continue to Payment
+
+            </button>
+
+
+            <div class="secure-checkout">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                <span>
+                    Secure checkout
+                </span>
+
+            </div>
+
+
+            <!-- BACK TO CART -->
+            <a
+                href="{% url 'storefront:cart' %}"
+                class="back-cart"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to cart
+
+            </a>
+
+        </div>
+
+
+        <!-- TRUST BOX -->
+        <div class="checkout-trust">
+
+            <div>
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                <span>
+                    Secure payments
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>
+                    Delivery tracking
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <i class="fa-solid fa-headset"></i>
+
+                <span>
+                    Customer support
+                </span>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+</div>
+```
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * Initialize the existing application logic when available.
+     *
+     * The page itself remains usable even if JavaScript
+     * enhancements are unavailable.
+     */
+
+    if (typeof window.initPage === "function") {
+
+        try {
+
+            window.initPage("checkout");
+
+        } catch (error) {
+
+            console.warn(
+                "Checkout enhancement unavailable:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Continue to payment.
+     *
+     * This currently connects to the existing storefront
+     * payment page. Backend order creation can be connected
+     * here later without changing the design.
+     */
+
+    const paymentButton =
+        document.getElementById("placeOrderButton");
+
+    if (paymentButton) {
+
+        paymentButton.addEventListener(
+            "click",
+            function () {
+
+                window.location.href =
+                    "{% url 'storefront:payment' %}";
+
+            }
+        );
+
+    }
+
+
+    /*
+     * Highlight selected payment method.
+     */
+
+    const paymentMethods =
+        document.querySelectorAll(
+            ".payment-method"
+        );
+
+    paymentMethods.forEach(function (method) {
+
+        const radio =
+            method.querySelector(
+                'input[type="radio"]'
+            );
+
+        if (!radio) {
+            return;
+        }
+
+        radio.addEventListener(
+            "change",
+            function () {
+
+                paymentMethods.forEach(
+                    function (item) {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+                if (radio.checked) {
+
+                    method.classList.add(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+});
+</script>
+
+{% endblock %}
