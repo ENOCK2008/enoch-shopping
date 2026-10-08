@@ -1,1 +1,863 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — wishlist{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>wishlist</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('wishlist');</script>{% endblock %}
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}My Wishlist — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<!-- Wishlist Hero -->
+
+<section class="wishlist-hero">
+    <div class="container">
+
+```
+    <div class="wishlist-hero-grid">
+
+        <div>
+            <span class="eyebrow">
+                <i class="fa-solid fa-heart"></i>
+                My Wishlist
+            </span>
+
+            <h1>Save products you love.</h1>
+
+            <p>
+                Keep your favourite products in one place and come back
+                whenever you're ready to shop.
+            </p>
+
+            <div class="wishlist-hero-actions">
+
+                <a href="{% url 'storefront:marketplace' %}" class="btn btn-primary">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    Explore Marketplace
+                </a>
+
+                <a href="{% url 'storefront:cart' %}" class="btn btn-outline">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    View Cart
+                </a>
+
+            </div>
+        </div>
+
+
+        <div class="wishlist-visual">
+
+            <div class="wishlist-heart">
+                <i class="fa-solid fa-heart"></i>
+            </div>
+
+            <div class="wishlist-floating-card">
+                <i class="fa-solid fa-bookmark"></i>
+
+                <div>
+                    <strong>Your favourites</strong>
+                    <span>Saved for later</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Wishlist Content -->
+
+<section class="section wishlist-section">
+    <div class="container">
+
+```
+    <div class="section-heading-row">
+
+        <div>
+            <span class="eyebrow">Saved products</span>
+            <h2>My Wishlist</h2>
+            <p id="wishlistCountText">
+                Your saved products will appear here.
+            </p>
+        </div>
+
+        <div class="wishlist-actions">
+
+            <button
+                type="button"
+                id="clearWishlistButton"
+                class="btn btn-outline danger-action"
+                style="display:none;"
+            >
+                <i class="fa-solid fa-trash"></i>
+                Clear Wishlist
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Loading -->
+    <div id="wishlistLoading" class="wishlist-loading">
+
+        <div class="loading-spinner"></div>
+
+        <h3>Loading your wishlist...</h3>
+
+        <p>
+            Please wait while we check your saved products.
+        </p>
+
+    </div>
+
+
+    <!-- Products -->
+    <div
+        id="pageContent"
+        class="wishlist-grid"
+        style="display:none;"
+    ></div>
+
+
+    <!-- Empty State -->
+    <div
+        id="wishlistEmpty"
+        class="wishlist-empty"
+        style="display:none;"
+    >
+
+        <div class="wishlist-empty-icon">
+            <i class="fa-regular fa-heart"></i>
+        </div>
+
+        <span class="eyebrow">Nothing saved yet</span>
+
+        <h2>Your wishlist is waiting for you.</h2>
+
+        <p>
+            Browse the marketplace and tap the heart icon on products
+            you want to save for later.
+        </p>
+
+        <a
+            href="{% url 'storefront:marketplace' %}"
+            class="btn btn-primary"
+        >
+            <i class="fa-solid fa-bag-shopping"></i>
+            Start Shopping
+        </a>
+
+    </div>
+
+
+    <!-- Login Prompt -->
+    <div
+        id="wishlistLoginPrompt"
+        class="wishlist-login-prompt"
+        style="display:none;"
+    >
+
+        <div class="prompt-icon">
+            <i class="fa-solid fa-user-lock"></i>
+        </div>
+
+        <div>
+            <h3>Sign in to keep your wishlist</h3>
+
+            <p>
+                Create an account or sign in so your saved products
+                can stay available across your devices.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'storefront:login' %}"
+            class="btn btn-primary"
+        >
+            Sign In
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Wishlist Product Template -->
+
+<template id="wishlistProductTemplate">
+
+```
+<article class="wishlist-card">
+
+    <div class="wishlist-card-image">
+
+        <span class="wishlist-save-badge">
+            <i class="fa-solid fa-heart"></i>
+            Saved
+        </span>
+
+        <img
+            class="wishlist-product-image"
+            src=""
+            alt=""
+            loading="lazy"
+        >
+
+        <button
+            type="button"
+            class="wishlist-remove"
+            aria-label="Remove from wishlist"
+            title="Remove from wishlist"
+        >
+            <i class="fa-solid fa-heart"></i>
+        </button>
+
+    </div>
+
+
+    <div class="wishlist-card-body">
+
+        <span class="wishlist-product-category">
+            Product
+        </span>
+
+        <h3 class="wishlist-product-name">
+            Product name
+        </h3>
+
+        <p class="wishlist-product-description">
+            Product description
+        </p>
+
+
+        <div class="wishlist-price-row">
+
+            <strong class="wishlist-product-price">
+                UGX 0
+            </strong>
+
+            <span class="wishlist-product-old-price"></span>
+
+        </div>
+
+
+        <div class="wishlist-stock">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Available</span>
+        </div>
+
+
+        <div class="wishlist-card-actions">
+
+            <button
+                type="button"
+                class="btn btn-primary wishlist-cart-button"
+            >
+                <i class="fa-solid fa-cart-plus"></i>
+                Add to Cart
+            </button>
+
+            <a
+                href="{% url 'storefront:marketplace' %}"
+                class="btn btn-outline wishlist-view-button"
+            >
+                View
+            </a>
+
+        </div>
+
+    </div>
+
+</article>
+```
+
+</template>
+
+<!-- Benefits -->
+
+<section class="section wishlist-benefits">
+    <div class="container">
+
+```
+    <div class="section-heading centered">
+
+        <span class="eyebrow">Shop smarter</span>
+
+        <h2>Make your wishlist work for you</h2>
+
+        <p>
+            Save now and decide later without losing track of products
+            you're interested in.
+        </p>
+
+    </div>
+
+
+    <div class="benefit-grid">
+
+        <div class="benefit-card">
+
+            <div class="benefit-icon">
+                <i class="fa-solid fa-heart"></i>
+            </div>
+
+            <h3>Save favourites</h3>
+
+            <p>
+                Keep products you like in one convenient place.
+            </p>
+
+        </div>
+
+
+        <div class="benefit-card">
+
+            <div class="benefit-icon">
+                <i class="fa-solid fa-cart-plus"></i>
+            </div>
+
+            <h3>Buy when ready</h3>
+
+            <p>
+                Move products from your wishlist to your cart when
+                you're ready to purchase.
+            </p>
+
+        </div>
+
+
+        <div class="benefit-card">
+
+            <div class="benefit-icon">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+
+            <h3>Save time</h3>
+
+            <p>
+                Avoid searching for the same products again and again.
+            </p>
+
+        </div>
+
+
+        <div class="benefit-card">
+
+            <div class="benefit-icon">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+
+            <h3>Shop anywhere</h3>
+
+            <p>
+                Access your shopping experience from your phone or
+                computer.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- CTA -->
+
+<section class="section wishlist-cta-section">
+    <div class="container">
+
+```
+    <div class="wishlist-cta">
+
+        <div class="wishlist-cta-icon">
+            <i class="fa-solid fa-sparkles"></i>
+        </div>
+
+        <div>
+
+            <span class="eyebrow">
+                Discover more
+            </span>
+
+            <h2>Find something worth saving.</h2>
+
+            <p>
+                Explore phones, solar products, bikes, vehicles,
+                local goods and more as the marketplace grows.
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'storefront:marketplace' %}"
+            class="btn btn-light"
+        >
+            Explore Marketplace
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+(function () {
+
+    const pageContent = document.getElementById("pageContent");
+    const loading = document.getElementById("wishlistLoading");
+    const emptyState = document.getElementById("wishlistEmpty");
+    const loginPrompt = document.getElementById("wishlistLoginPrompt");
+    const countText = document.getElementById("wishlistCountText");
+    const clearButton = document.getElementById("clearWishlistButton");
+    const template = document.getElementById("wishlistProductTemplate");
+
+    function formatUGX(value) {
+
+        const amount = Number(value || 0);
+
+        return "UGX " + amount.toLocaleString("en-UG");
+    }
+
+
+    function escapeHtml(value) {
+
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    function getProductName(product) {
+
+        return (
+            product.name ||
+            product.title ||
+            product.product_name ||
+            "Product"
+        );
+
+    }
+
+
+    function getProductImage(product) {
+
+        return (
+            product.image ||
+            product.image_url ||
+            product.thumbnail ||
+            "{% static 'storefront/images/product-placeholder.png' %}"
+        );
+
+    }
+
+
+    function renderWishlist(products) {
+
+        if (!pageContent) return;
+
+        products = Array.isArray(products) ? products : [];
+
+        if (loading) {
+            loading.style.display = "none";
+        }
+
+
+        if (products.length === 0) {
+
+            pageContent.innerHTML = "";
+
+            pageContent.style.display = "none";
+
+            if (emptyState) {
+                emptyState.style.display = "block";
+            }
+
+            if (clearButton) {
+                clearButton.style.display = "none";
+            }
+
+            if (countText) {
+                countText.textContent =
+                    "You haven't saved any products yet.";
+            }
+
+            return;
+        }
+
+
+        if (emptyState) {
+            emptyState.style.display = "none";
+        }
+
+        if (loginPrompt) {
+            loginPrompt.style.display = "none";
+        }
+
+        pageContent.style.display = "grid";
+
+
+        if (clearButton) {
+            clearButton.style.display = "inline-flex";
+        }
+
+
+        if (countText) {
+
+            countText.textContent =
+                products.length === 1
+                    ? "1 saved product"
+                    : products.length + " saved products";
+
+        }
+
+
+        pageContent.innerHTML = "";
+
+
+        products.forEach(function (product) {
+
+            if (!template) return;
+
+            const fragment = template.content.cloneNode(true);
+
+            const name = getProductName(product);
+
+            const image = getProductImage(product);
+
+            const price =
+                product.price ||
+                product.sale_price ||
+                0;
+
+            const oldPrice =
+                product.old_price ||
+                product.original_price ||
+                product.compare_at_price ||
+                "";
+
+            const category =
+                product.category_name ||
+                product.category ||
+                "Product";
+
+            const description =
+                product.description ||
+                "View this product on Enock Shopping Center.";
+
+            const stock =
+                product.stock ??
+                product.quantity ??
+                null;
+
+
+            const imageElement =
+                fragment.querySelector(".wishlist-product-image");
+
+            if (imageElement) {
+
+                imageElement.src = image;
+                imageElement.alt = name;
+
+                imageElement.onerror = function () {
+                    this.style.display = "none";
+                };
+
+            }
+
+
+            const categoryElement =
+                fragment.querySelector(".wishlist-product-category");
+
+            if (categoryElement) {
+                categoryElement.textContent = category;
+            }
+
+
+            const nameElement =
+                fragment.querySelector(".wishlist-product-name");
+
+            if (nameElement) {
+                nameElement.textContent = name;
+            }
+
+
+            const descriptionElement =
+                fragment.querySelector(".wishlist-product-description");
+
+            if (descriptionElement) {
+                descriptionElement.textContent =
+                    description.length > 100
+                        ? description.substring(0, 100) + "..."
+                        : description;
+            }
+
+
+            const priceElement =
+                fragment.querySelector(".wishlist-product-price");
+
+            if (priceElement) {
+                priceElement.textContent = formatUGX(price);
+            }
+
+
+            const oldPriceElement =
+                fragment.querySelector(".wishlist-product-old-price");
+
+            if (oldPriceElement && oldPrice) {
+                oldPriceElement.textContent = formatUGX(oldPrice);
+            }
+
+
+            const stockElement =
+                fragment.querySelector(".wishlist-stock");
+
+            if (stockElement) {
+
+                const stockText =
+                    stockElement.querySelector("span");
+
+                const stockIcon =
+                    stockElement.querySelector("i");
+
+                if (stock !== null && Number(stock) <= 0) {
+
+                    if (stockText) {
+                        stockText.textContent = "Out of stock";
+                    }
+
+                    if (stockIcon) {
+                        stockIcon.className =
+                            "fa-solid fa-circle-xmark";
+                    }
+
+                    stockElement.classList.add("out-of-stock");
+
+                }
+
+            }
+
+
+            const removeButton =
+                fragment.querySelector(".wishlist-remove");
+
+            if (removeButton) {
+
+                removeButton.addEventListener(
+                    "click",
+                    function () {
+
+                        const id =
+                            product.id ||
+                            product.product_id;
+
+                        if (typeof window.removeFromWishlist === "function") {
+
+                            window.removeFromWishlist(id);
+
+                        } else {
+
+                            removeButton.closest(
+                                ".wishlist-card"
+                            ).remove();
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            const cartButton =
+                fragment.querySelector(".wishlist-cart-button");
+
+            if (cartButton) {
+
+                if (stock !== null && Number(stock) <= 0) {
+
+                    cartButton.disabled = true;
+                    cartButton.innerHTML =
+                        '<i class="fa-solid fa-ban"></i> Out of Stock';
+
+                } else {
+
+                    cartButton.addEventListener(
+                        "click",
+                        function () {
+
+                            const id =
+                                product.id ||
+                                product.product_id;
+
+                            if (typeof window.addToCart === "function") {
+
+                                window.addToCart(product);
+
+                            } else if (
+                                typeof window.addProductToCart === "function"
+                            ) {
+
+                                window.addProductToCart(product);
+
+                            }
+
+                        }
+                    );
+
+                }
+
+            }
+
+
+            const viewButton =
+                fragment.querySelector(".wishlist-view-button");
+
+            if (viewButton && product.url) {
+                viewButton.href = product.url;
+            }
+
+
+            pageContent.appendChild(fragment);
+
+        });
+
+    }
+
+
+    /*
+     * Public integration hook.
+     *
+     * Your wishlist API can later provide:
+     *
+     * window.renderWishlist([...])
+     */
+    window.renderWishlist = renderWishlist;
+
+
+    /*
+     * Optional loader.
+     *
+     * If app.js provides loadWishlist(), this page will
+     * automatically use it.
+     */
+    async function loadWishlist() {
+
+        if (loading) {
+            loading.style.display = "block";
+        }
+
+        if (emptyState) {
+            emptyState.style.display = "none";
+        }
+
+        try {
+
+            if (typeof window.loadWishlist === "function") {
+
+                const result = await window.loadWishlist();
+
+                if (Array.isArray(result)) {
+
+                    renderWishlist(result);
+
+                } else if (result && Array.isArray(result.results)) {
+
+                    renderWishlist(result.results);
+
+                } else {
+
+                    renderWishlist([]);
+
+                }
+
+                return;
+            }
+
+
+            /*
+             * No wishlist API is connected yet.
+             * Do not display fake products.
+             */
+            renderWishlist([]);
+
+        } catch (error) {
+
+            console.error(
+                "Wishlist loading error:",
+                error
+            );
+
+            if (loading) {
+                loading.style.display = "none";
+            }
+
+            if (emptyState) {
+                emptyState.style.display = "block";
+            }
+
+            if (countText) {
+                countText.textContent =
+                    "Your wishlist could not be loaded.";
+            }
+
+        }
+
+    }
+
+
+    if (clearButton) {
+
+        clearButton.addEventListener(
+            "click",
+            async function () {
+
+                if (
+                    typeof window.clearWishlist === "function"
+                ) {
+
+                    await window.clearWishlist();
+
+                    renderWishlist([]);
+
+                } else {
+
+                    renderWishlist([]);
+
+                }
+
+            }
+        );
+
+    }
+
+
+    if (window.initPage) {
+        initPage("wishlist");
+    }
+
+
+    loadWishlist();
+
+})();
+</script>
+
+{% endblock %}
