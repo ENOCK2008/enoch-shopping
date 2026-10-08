@@ -12,3 +12,4 @@ django-filter>=25,<26
 django-otp>=1.5,<2
 stripe>=12,<13
 django-extensions>=3.2,<4
+paypalrestsdk>=1.13,<2
