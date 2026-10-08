@@ -1,1 +1,1066 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — seller orders{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>seller orders</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('seller_orders');</script>{% endblock %}
+{% extends 'storefront/base.html' %}
+{% load static %}
+
+{% block title %}Seller Orders — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="seller-orders-page">
+
+```
+<!-- Header -->
+<div class="seller-orders-hero">
+
+    <div>
+        <span class="eyebrow">SELLER CENTER</span>
+
+        <h1>Manage your orders</h1>
+
+        <p>
+            Track customer orders, review payment status,
+            prepare deliveries and manage your sales from one place.
+        </p>
+
+        <div class="seller-order-actions">
+
+            <a href="{% url 'storefront:seller_dashboard' %}" class="seller-btn secondary">
+                <i class="fa-solid fa-arrow-left"></i>
+                Dashboard
+            </a>
+
+            <a href="{% url 'storefront:seller_products' %}" class="seller-btn primary">
+                <i class="fa-solid fa-box"></i>
+                Manage Products
+            </a>
+
+        </div>
+    </div>
+
+    <div class="seller-orders-hero-icon">
+        <i class="fa-solid fa-receipt"></i>
+    </div>
+
+</div>
+
+
+<!-- Statistics -->
+<div class="seller-order-stats">
+
+    <div class="order-stat">
+        <div class="order-stat-icon blue">
+            <i class="fa-solid fa-layer-group"></i>
+        </div>
+
+        <div>
+            <span>Total Orders</span>
+            <strong id="totalSellerOrders">—</strong>
+        </div>
+    </div>
+
+
+    <div class="order-stat">
+        <div class="order-stat-icon orange">
+            <i class="fa-solid fa-clock"></i>
+        </div>
+
+        <div>
+            <span>Pending</span>
+            <strong id="pendingSellerOrders">—</strong>
+        </div>
+    </div>
+
+
+    <div class="order-stat">
+        <div class="order-stat-icon purple">
+            <i class="fa-solid fa-box"></i>
+        </div>
+
+        <div>
+            <span>Processing</span>
+            <strong id="processingSellerOrders">—</strong>
+        </div>
+    </div>
+
+
+    <div class="order-stat">
+        <div class="order-stat-icon green">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <div>
+            <span>Completed</span>
+            <strong id="completedSellerOrders">—</strong>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Orders Panel -->
+<section class="seller-orders-panel">
+
+    <div class="orders-panel-header">
+
+        <div>
+            <span class="panel-eyebrow">ORDERS</span>
+            <h2>Customer orders</h2>
+        </div>
+
+        <div class="order-count">
+            <span id="visibleOrderCount">0</span>
+            orders
+        </div>
+
+    </div>
+
+
+    <!-- Filters -->
+    <div class="order-filters">
+
+        <div class="order-search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="search"
+                id="sellerOrderSearch"
+                placeholder="Search order number, customer or product..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <select id="sellerOrderStatus">
+
+            <option value="">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="returned">Returned</option>
+
+        </select>
+
+
+        <select id="sellerOrderSort">
+
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="highest">Highest value</option>
+            <option value="lowest">Lowest value</option>
+
+        </select>
+
+    </div>
+
+
+    <!-- Orders -->
+    <div id="pageContent" class="seller-orders-list">
+
+        <div class="seller-orders-loading">
+
+            <div class="loading-spinner">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
+
+            <p>Loading seller orders...</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Empty State -->
+    <div id="sellerOrdersEmpty" class="seller-orders-empty" hidden>
+
+        <div class="empty-order-icon">
+            <i class="fa-solid fa-receipt"></i>
+        </div>
+
+        <h3>No orders found</h3>
+
+        <p>
+            Customer orders will appear here when customers
+            purchase your products.
+        </p>
+
+        <a href="{% url 'storefront:seller_products' %}" class="seller-btn primary">
+            <i class="fa-solid fa-plus"></i>
+            Add Products
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- Seller Workflow -->
+<section class="seller-workflow">
+
+    <div class="workflow-heading">
+
+        <div>
+            <span class="panel-eyebrow">ORDER WORKFLOW</span>
+            <h2>From purchase to delivery</h2>
+        </div>
+
+    </div>
+
+
+    <div class="workflow-grid">
+
+        <div class="workflow-step">
+            <span>1</span>
+            <i class="fa-solid fa-bell"></i>
+
+            <strong>New order</strong>
+
+            <p>
+                Review the customer order and confirm availability.
+            </p>
+        </div>
+
+
+        <div class="workflow-step">
+            <span>2</span>
+            <i class="fa-solid fa-box-open"></i>
+
+            <strong>Prepare</strong>
+
+            <p>
+                Package the customer's products securely.
+            </p>
+        </div>
+
+
+        <div class="workflow-step">
+            <span>3</span>
+            <i class="fa-solid fa-truck"></i>
+
+            <strong>Ship</strong>
+
+            <p>
+                Hand the package to the delivery service.
+            </p>
+        </div>
+
+
+        <div class="workflow-step">
+            <span>4</span>
+            <i class="fa-solid fa-circle-check"></i>
+
+            <strong>Delivered</strong>
+
+            <p>
+                Complete the order after successful delivery.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Seller Help -->
+<section class="seller-order-help">
+
+    <div class="help-icon">
+        <i class="fa-solid fa-headset"></i>
+    </div>
+
+    <div>
+        <h2>Need help with an order?</h2>
+
+        <p>
+            Keep the order number available when contacting
+            support about payment, delivery, cancellation or returns.
+        </p>
+    </div>
+
+    <a href="{% url 'storefront:returns' %}">
+        Returns & refunds
+        <i class="fa-solid fa-arrow-right"></i>
+    </a>
+
+</section>
+```
+
+</section>
+
+<style>
+
+.seller-orders-page {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 30px 20px 70px;
+}
+
+.seller-orders-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 42px;
+    margin-bottom: 24px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+}
+
+.seller-orders-hero h1 {
+    margin: 8px 0 12px;
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.seller-orders-hero p {
+    max-width: 680px;
+    margin: 0 0 23px;
+    color: rgba(255,255,255,.88);
+}
+
+.seller-order-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.seller-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 17px;
+    border-radius: 11px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: .2s ease;
+}
+
+.seller-btn.primary {
+    background: white;
+    color: #2563eb;
+}
+
+.seller-btn.secondary {
+    border: 1px solid rgba(255,255,255,.4);
+    background: rgba(255,255,255,.08);
+    color: white;
+}
+
+.seller-btn:hover {
+    transform: translateY(-2px);
+}
+
+.seller-orders-hero-icon {
+    width: 145px;
+    height: 145px;
+    min-width: 145px;
+    display: grid;
+    place-items: center;
+    border-radius: 40px;
+    background: rgba(255,255,255,.14);
+    font-size: 60px;
+}
+
+.seller-order-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 17px;
+    margin-bottom: 24px;
+}
+
+.order-stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 21px;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    background: white;
+    box-shadow: 0 7px 24px rgba(15,23,42,.05);
+}
+
+.order-stat-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    font-size: 19px;
+}
+
+.order-stat-icon.blue {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.order-stat-icon.orange {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.order-stat-icon.purple {
+    background: #f3e8ff;
+    color: #7c3aed;
+}
+
+.order-stat-icon.green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.order-stat span {
+    display: block;
+    color: #64748b;
+    font-size: .85rem;
+}
+
+.order-stat strong {
+    display: block;
+    margin-top: 3px;
+    font-size: 1.45rem;
+    color: #0f172a;
+}
+
+.seller-orders-panel {
+    padding: 26px;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    background: white;
+    box-shadow: 0 8px 25px rgba(15,23,42,.05);
+    margin-bottom: 24px;
+}
+
+.orders-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.orders-panel-header h2 {
+    margin: 5px 0 0;
+}
+
+.panel-eyebrow {
+    color: #64748b;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.order-count {
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: .85rem;
+    font-weight: 700;
+}
+
+.order-filters {
+    display: grid;
+    grid-template-columns: 1fr 180px 180px;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.order-search {
+    position: relative;
+}
+
+.order-search i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.order-search input,
+.order-filters select {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 13px;
+    border: 1px solid #dbe2ea;
+    border-radius: 11px;
+    background: white;
+    color: #0f172a;
+    outline: none;
+}
+
+.order-search input {
+    padding-left: 40px;
+}
+
+.order-search input:focus,
+.order-filters select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+
+.seller-orders-list {
+    min-height: 150px;
+}
+
+.seller-orders-loading {
+    display: grid;
+    place-items: center;
+    min-height: 180px;
+    text-align: center;
+    color: #64748b;
+}
+
+.loading-spinner {
+    color: #2563eb;
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.seller-order-card {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr auto;
+    align-items: center;
+    gap: 18px;
+    padding: 18px;
+    margin-bottom: 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #fff;
+    transition: .2s ease;
+}
+
+.seller-order-card:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 7px 20px rgba(15,23,42,.05);
+}
+
+.seller-order-number {
+    color: #2563eb;
+    font-weight: 800;
+}
+
+.seller-order-customer {
+    font-weight: 700;
+}
+
+.seller-order-meta {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+    font-size: .85rem;
+}
+
+.seller-order-total {
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.seller-order-status {
+    display: inline-flex;
+    width: fit-content;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 800;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-processing {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-shipped {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.status-delivered {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-cancelled,
+.status-returned {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.view-order-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: .85rem;
+}
+
+.view-order-button:hover {
+    background: #dbeafe;
+}
+
+.seller-orders-empty {
+    text-align: center;
+    padding: 45px 20px;
+}
+
+.empty-order-icon {
+    width: 70px;
+    height: 70px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 15px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 28px;
+}
+
+.seller-orders-empty h3 {
+    margin: 0 0 7px;
+}
+
+.seller-orders-empty p {
+    max-width: 500px;
+    margin: 0 auto 20px;
+    color: #64748b;
+}
+
+.seller-workflow {
+    padding: 27px;
+    margin-bottom: 24px;
+    border-radius: 22px;
+    background: white;
+    border: 1px solid #e5e7eb;
+}
+
+.workflow-heading h2 {
+    margin: 5px 0 23px;
+}
+
+.workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.workflow-step {
+    position: relative;
+    padding: 20px;
+    border-radius: 16px;
+    background: #f8fafc;
+}
+
+.workflow-step > span {
+    position: absolute;
+    right: 13px;
+    top: 13px;
+    width: 27px;
+    height: 27px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #dbeafe;
+    color: #2563eb;
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.workflow-step > i {
+    color: #2563eb;
+    font-size: 22px;
+    margin-bottom: 14px;
+}
+
+.workflow-step strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.workflow-step p {
+    margin: 0;
+    color: #64748b;
+    font-size: .88rem;
+    line-height: 1.5;
+}
+
+.seller-order-help {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 25px;
+    border-radius: 20px;
+    background: #0f172a;
+    color: white;
+}
+
+.help-icon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    display: grid;
+    place-items: center;
+    border-radius: 15px;
+    background: rgba(255,255,255,.1);
+    color: #93c5fd;
+    font-size: 21px;
+}
+
+.seller-order-help h2 {
+    margin: 0 0 5px;
+}
+
+.seller-order-help p {
+    margin: 0;
+    color: #cbd5e1;
+}
+
+.seller-order-help > a {
+    margin-left: auto;
+    white-space: nowrap;
+    color: #93c5fd;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+@media (max-width: 1000px) {
+
+    .seller-order-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .order-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .order-search {
+        grid-column: 1 / -1;
+    }
+
+    .workflow-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .seller-order-card {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .seller-orders-page {
+        padding: 20px 14px 50px;
+    }
+
+    .seller-orders-hero {
+        padding: 30px 22px;
+    }
+
+    .seller-orders-hero-icon {
+        display: none;
+    }
+
+    .seller-order-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .order-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .order-search {
+        grid-column: auto;
+    }
+
+    .seller-order-card {
+        grid-template-columns: 1fr;
+    }
+
+    .workflow-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seller-order-help {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .seller-order-help > a {
+        margin-left: 0;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    if (window.initPage) {
+        initPage("seller_orders");
+    }
+
+    const searchInput = document.getElementById("sellerOrderSearch");
+    const statusSelect = document.getElementById("sellerOrderStatus");
+    const sortSelect = document.getElementById("sellerOrderSort");
+
+    let sellerOrders = [];
+
+    /*
+     * Backend integration hook.
+     *
+     * app.js can provide:
+     *
+     * window.sellerOrdersData = [...]
+     */
+
+    if (Array.isArray(window.sellerOrdersData)) {
+        sellerOrders = window.sellerOrdersData;
+        renderSellerOrders(sellerOrders);
+        updateSellerStatistics(sellerOrders);
+    }
+
+
+    function renderSellerOrders(orders) {
+
+        const container = document.getElementById("pageContent");
+        const empty = document.getElementById("sellerOrdersEmpty");
+        const count = document.getElementById("visibleOrderCount");
+
+        if (!container) return;
+
+        count.textContent = orders.length;
+
+        if (!orders.length) {
+
+            container.innerHTML = "";
+
+            if (empty) {
+                empty.hidden = false;
+            }
+
+            return;
+        }
+
+        if (empty) {
+            empty.hidden = true;
+        }
+
+        container.innerHTML = orders.map(function (order) {
+
+            const id = order.id || order.order_id || "—";
+            const customer = order.customer_name || order.customer || "Customer";
+            const product = order.product_name || order.product || "Order";
+            const total = Number(order.total || order.amount || 0);
+            const status = String(order.status || "pending").toLowerCase();
+
+            const date = order.created_at
+                ? new Date(order.created_at).toLocaleDateString()
+                : "";
+
+            const statusClass = "status-" + status;
+
+            return `
+                <article class="seller-order-card">
+
+                    <div>
+                        <span class="seller-order-number">
+                            Order #${id}
+                        </span>
+
+                        <span class="seller-order-meta">
+                            ${date}
+                        </span>
+                    </div>
+
+                    <div>
+                        <strong class="seller-order-customer">
+                            ${customer}
+                        </strong>
+
+                        <span class="seller-order-meta">
+                            ${product}
+                        </span>
+                    </div>
+
+                    <div>
+                        <strong class="seller-order-total">
+                            UGX ${total.toLocaleString()}
+                        </strong>
+
+                        <span class="seller-order-meta">
+                            ${order.payment_status || "Payment status unavailable"}
+                        </span>
+                    </div>
+
+                    <div>
+                        <span class="seller-order-status ${statusClass}">
+                            ${status.charAt(0).toUpperCase() + status.slice(1)}
+                        </span>
+
+                        ${
+                            /^\d+$/.test(String(id))
+                            ? `
+                                <a
+                                    class="view-order-button"
+                                    href="/orders/${id}/"
+                                >
+                                    View
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                              `
+                            : ""
+                        }
+
+                    </div>
+
+                </article>
+            `;
+
+        }).join("");
+
+    }
+
+
+    function updateSellerStatistics(orders) {
+
+        const total = orders.length;
+
+        const pending = orders.filter(function (order) {
+            return String(order.status || "").toLowerCase() === "pending";
+        }).length;
+
+        const processing = orders.filter(function (order) {
+            return String(order.status || "").toLowerCase() === "processing";
+        }).length;
+
+        const completed = orders.filter(function (order) {
+            return ["delivered", "completed"].includes(
+                String(order.status || "").toLowerCase()
+            );
+        }).length;
+
+        document.getElementById("totalSellerOrders").textContent = total;
+        document.getElementById("pendingSellerOrders").textContent = pending;
+        document.getElementById("processingSellerOrders").textContent = processing;
+        document.getElementById("completedSellerOrders").textContent = completed;
+
+    }
+
+
+    function filterOrders() {
+
+        const search = (searchInput.value || "").toLowerCase().trim();
+        const status = (statusSelect.value || "").toLowerCase();
+        const sort = sortSelect.value;
+
+        let filtered = sellerOrders.filter(function (order) {
+
+            const searchable = [
+                order.id,
+                order.order_id,
+                order.customer_name,
+                order.customer,
+                order.product_name,
+                order.product
+            ]
+            .join(" ")
+            .toLowerCase();
+
+            const matchesSearch =
+                !search || searchable.includes(search);
+
+            const matchesStatus =
+                !status ||
+                String(order.status || "").toLowerCase() === status;
+
+            return matchesSearch && matchesStatus;
+
+        });
+
+
+        filtered.sort(function (a, b) {
+
+            if (sort === "highest") {
+                return Number(b.total || 0) - Number(a.total || 0);
+            }
+
+            if (sort === "lowest") {
+                return Number(a.total || 0) - Number(b.total || 0);
+            }
+
+            const dateA = new Date(a.created_at || 0);
+            const dateB = new Date(b.created_at || 0);
+
+            return sort === "oldest"
+                ? dateA - dateB
+                : dateB - dateA;
+
+        });
+
+
+        renderSellerOrders(filtered);
+
+    }
+
+
+    if (searchInput) {
+        searchInput.addEventListener("input", filterOrders);
+    }
+
+    if (statusSelect) {
+        statusSelect.addEventListener("change", filterOrders);
+    }
+
+    if (sortSelect) {
+        sortSelect.addEventListener("change", filterOrders);
+    }
+
+
+    /*
+     * Public integration function.
+     *
+     * Your app.js/backend can call:
+     *
+     * window.renderSellerOrders([...]);
+     */
+
+    window.renderSellerOrders = function (orders) {
+
+        if (!Array.isArray(orders)) {
+            return;
+        }
+
+        sellerOrders = orders;
+
+        updateSellerStatistics(sellerOrders);
+        filterOrders();
+
+    };
+
+});
+
+</script>
+
+{% endblock %}
