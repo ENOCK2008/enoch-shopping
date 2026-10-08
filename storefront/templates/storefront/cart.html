@@ -1,1 +1,585 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — cart{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>cart</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('cart');</script>{% endblock %}
+```django
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Shopping Cart — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="cart-page">
+
+    <!-- Page Header -->
+    <section class="cart-hero">
+        <div class="container">
+
+            <div class="cart-breadcrumb">
+                <a href="{% url 'storefront:home' %}">
+                    <i class="fa-solid fa-house"></i>
+                    Home
+                </a>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+                <span>Cart</span>
+            </div>
+
+            <div class="cart-heading">
+                <div>
+                    <span class="eyebrow">ENOCK SHOPPING CENTER</span>
+
+                    <h1>
+                        Your Shopping Cart
+                    </h1>
+
+                    <p>
+                        Review your selected products before proceeding to checkout.
+                    </p>
+                </div>
+
+                <a href="{% url 'storefront:marketplace' %}" class="btn btn-outline">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Continue Shopping
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Checkout Progress -->
+    <section class="cart-progress-section">
+        <div class="container">
+
+            <div class="checkout-progress">
+
+                <div class="progress-step active">
+                    <span class="progress-number">1</span>
+                    <div>
+                        <strong>Cart</strong>
+                        <small>Review items</small>
+                    </div>
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+                    <span class="progress-number">2</span>
+                    <div>
+                        <strong>Checkout</strong>
+                        <small>Delivery details</small>
+                    </div>
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+                    <span class="progress-number">3</span>
+                    <div>
+                        <strong>Payment</strong>
+                        <small>Complete payment</small>
+                    </div>
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+                    <span class="progress-number">4</span>
+                    <div>
+                        <strong>Confirmation</strong>
+                        <small>Track order</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Cart Content -->
+    <section class="cart-section">
+
+        <div class="container">
+
+            <div class="cart-layout">
+
+                <!-- Cart Items -->
+                <div class="cart-main">
+
+                    <div class="cart-card">
+
+                        <div class="cart-card-header">
+
+                            <div>
+                                <span class="eyebrow">YOUR ITEMS</span>
+
+                                <h2>
+                                    Shopping Cart
+                                    <span id="cartItemCount">(0)</span>
+                                </h2>
+                            </div>
+
+                            <button
+                                type="button"
+                                id="clearCartButton"
+                                class="clear-cart-btn"
+                            >
+                                <i class="fa-solid fa-trash"></i>
+                                Clear Cart
+                            </button>
+
+                        </div>
+
+
+                        <!-- Dynamic cart items -->
+                        <div id="pageContent">
+
+                            <div class="cart-loading">
+
+                                <div class="loading-spinner">
+                                    <i class="fa-solid fa-spinner fa-spin"></i>
+                                </div>
+
+                                <h3>Loading your cart...</h3>
+
+                                <p>
+                                    Please wait while we retrieve your shopping cart.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Cart Security -->
+                    <div class="cart-security">
+
+                        <div class="security-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+
+                        <div>
+                            <strong>Safe & secure shopping</strong>
+
+                            <p>
+                                Your cart and checkout information are protected.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Cart Summary -->
+                <aside class="cart-sidebar">
+
+                    <div class="summary-card">
+
+                        <div class="summary-header">
+                            <span class="eyebrow">ORDER SUMMARY</span>
+                            <h2>Cart Summary</h2>
+                        </div>
+
+
+                        <div class="summary-row">
+                            <span>Items</span>
+                            <strong id="summaryItemCount">0</strong>
+                        </div>
+
+
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <strong id="cartSubtotal">UGX 0</strong>
+                        </div>
+
+
+                        <div class="summary-row">
+                            <span>Delivery</span>
+                            <strong id="cartDelivery">Calculated at checkout</strong>
+                        </div>
+
+
+                        <div class="summary-row discount-row">
+                            <span>Discount</span>
+                            <strong id="cartDiscount">UGX 0</strong>
+                        </div>
+
+
+                        <div class="coupon-box">
+
+                            <label for="couponCode">
+                                Have a discount code?
+                            </label>
+
+                            <div class="coupon-input">
+
+                                <input
+                                    type="text"
+                                    id="couponCode"
+                                    placeholder="Enter coupon"
+                                    autocomplete="off"
+                                />
+
+                                <button
+                                    type="button"
+                                    id="applyCoupon"
+                                >
+                                    Apply
+                                </button>
+
+                            </div>
+
+                            <small id="couponMessage"></small>
+
+                        </div>
+
+
+                        <div class="summary-total">
+
+                            <span>Total</span>
+
+                            <strong id="cartTotal">
+                                UGX 0
+                            </strong>
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'storefront:checkout' %}"
+                            id="checkoutButton"
+                            class="checkout-button"
+                        >
+                            <span>
+                                Proceed to Checkout
+                            </span>
+
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+
+                        <a
+                            href="{% url 'storefront:marketplace' %}"
+                            class="continue-shopping"
+                        >
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Continue Shopping
+                        </a>
+
+                    </div>
+
+
+                    <!-- Payment Methods -->
+                    <div class="payment-trust-card">
+
+                        <h3>
+                            <i class="fa-solid fa-lock"></i>
+                            Secure Checkout
+                        </h3>
+
+                        <p>
+                            Choose from available payment options during checkout.
+                        </p>
+
+                        <div class="payment-icons">
+
+                            <span title="Mobile Money">
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+                            </span>
+
+                            <span title="Card">
+                                <i class="fa-solid fa-credit-card"></i>
+                            </span>
+
+                            <span title="Cash">
+                                <i class="fa-solid fa-money-bill-wave"></i>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Empty Cart -->
+    <section
+        id="emptyCartState"
+        class="empty-cart-section"
+        style="display:none;"
+    >
+
+        <div class="container">
+
+            <div class="empty-cart-card">
+
+                <div class="empty-cart-icon">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+
+                <span class="eyebrow">YOUR CART IS EMPTY</span>
+
+                <h2>
+                    Nothing here yet
+                </h2>
+
+                <p>
+                    Explore the marketplace and add products to your cart.
+                </p>
+
+                <a
+                    href="{% url 'storefront:marketplace' %}"
+                    class="btn btn-primary"
+                >
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    Start Shopping
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Shopping Benefits -->
+    <section class="cart-benefits">
+
+        <div class="container">
+
+            <div class="cart-benefits-grid">
+
+                <div class="cart-benefit">
+
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <div>
+                        <h3>Secure Shopping</h3>
+                        <p>Your shopping experience is protected.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="cart-benefit">
+
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+
+                    <div>
+                        <h3>Flexible Delivery</h3>
+                        <p>Delivery options available at checkout.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="cart-benefit">
+
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+
+                    <div>
+                        <h3>Customer Support</h3>
+                        <p>We are here to help with your order.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * Initialise the cart page through the main storefront
+     * JavaScript when available.
+     */
+    if (typeof window.initPage === "function") {
+        window.initPage("cart");
+    }
+
+
+    /*
+     * Coupon handling.
+     *
+     * This is prepared for the discounts/coupon API.
+     * It does not pretend to process a real discount until
+     * the backend endpoint is connected.
+     */
+    const applyCoupon = document.getElementById("applyCoupon");
+    const couponCode = document.getElementById("couponCode");
+    const couponMessage = document.getElementById("couponMessage");
+
+
+    if (applyCoupon) {
+
+        applyCoupon.addEventListener("click", function () {
+
+            const code = couponCode
+                ? couponCode.value.trim()
+                : "";
+
+            if (!code) {
+
+                if (couponMessage) {
+                    couponMessage.textContent =
+                        "Please enter a coupon code.";
+                }
+
+                return;
+            }
+
+
+            if (couponMessage) {
+                couponMessage.textContent =
+                    "Checking coupon...";
+            }
+
+
+            /*
+             * Connect this to the discounts API when the
+             * backend coupon endpoint is enabled.
+             */
+            if (typeof window.applyDiscount === "function") {
+
+                window.applyDiscount(code);
+
+            } else {
+
+                if (couponMessage) {
+                    couponMessage.textContent =
+                        "Coupon service will be available at checkout.";
+                }
+
+            }
+
+        });
+
+    }
+
+
+    /*
+     * Clear cart.
+     *
+     * Uses the application's existing clearCart function
+     * when available.
+     */
+    const clearCartButton =
+        document.getElementById("clearCartButton");
+
+
+    if (clearCartButton) {
+
+        clearCartButton.addEventListener("click", function () {
+
+            const confirmed = window.confirm(
+                "Are you sure you want to remove all items from your cart?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            if (typeof window.clearCart === "function") {
+
+                window.clearCart();
+
+            } else {
+
+                /*
+                 * Do not destroy backend cart data here.
+                 * The backend cart API should handle actual deletion.
+                 */
+                console.log(
+                    "Cart clearing is ready for API integration."
+                );
+
+            }
+
+        });
+
+    }
+
+
+    /*
+     * Protect checkout when there are no products.
+     *
+     * The actual cart count should eventually come from
+     * the Cart API.
+     */
+    const checkoutButton =
+        document.getElementById("checkoutButton");
+
+
+    if (checkoutButton) {
+
+        checkoutButton.addEventListener("click", function (event) {
+
+            const itemCountElement =
+                document.getElementById("summaryItemCount");
+
+            const count = itemCountElement
+                ? parseInt(itemCountElement.textContent || "0", 10)
+                : 0;
+
+
+            /*
+             * Only block if the page has explicitly loaded
+             * and confirmed that the cart is empty.
+             */
+            const emptyState =
+                document.getElementById("emptyCartState");
+
+            if (
+                emptyState &&
+                emptyState.style.display !== "none" &&
+                count === 0
+            ) {
+
+                event.preventDefault();
+
+                window.alert(
+                    "Your cart is empty. Please add a product before checkout."
+                );
+
+            }
+
+        });
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
+```
