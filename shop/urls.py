@@ -6,7 +6,7 @@ from two_factor.views import setup_view, verify_view
 from django.views.static import serve
 from django.conf import settings
 from .views import UpdateAccountSettingsView 
-
+from .views import BlogView
 from . import views, consumers
 from .views import (
     wishlist_view,
