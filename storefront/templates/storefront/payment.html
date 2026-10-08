@@ -1,1 +1,1388 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — payment{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>payment</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('payment');</script>{% endblock %}
+```django
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Payment — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="payment-page">
+
+    <!-- Header -->
+    <section class="payment-hero">
+        <div class="container">
+
+            <div class="payment-breadcrumb">
+
+                <a href="{% url 'storefront:home' %}">
+                    <i class="fa-solid fa-house"></i>
+                    Home
+                </a>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+                <a href="{% url 'storefront:cart' %}">
+                    Cart
+                </a>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+                <a href="{% url 'storefront:checkout' %}">
+                    Checkout
+                </a>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+                <span>Payment</span>
+
+            </div>
+
+
+            <div class="payment-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ENOCK SHOPPING CENTER
+                    </span>
+
+                    <h1>
+                        Complete your payment
+                    </h1>
+
+                    <p>
+                        Choose your preferred payment method and
+                        securely complete your order.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Checkout Progress -->
+    <section class="payment-progress-section">
+
+        <div class="container">
+
+            <div class="checkout-progress">
+
+                <div class="progress-step completed">
+
+                    <span class="progress-number">
+                        <i class="fa-solid fa-check"></i>
+                    </span>
+
+                    <div>
+                        <strong>Cart</strong>
+                        <small>Items selected</small>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-line completed"></div>
+
+
+                <div class="progress-step completed">
+
+                    <span class="progress-number">
+                        <i class="fa-solid fa-check"></i>
+                    </span>
+
+                    <div>
+                        <strong>Checkout</strong>
+                        <small>Delivery details</small>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-line completed"></div>
+
+
+                <div class="progress-step active">
+
+                    <span class="progress-number">
+                        3
+                    </span>
+
+                    <div>
+                        <strong>Payment</strong>
+                        <small>Complete payment</small>
+                    </div>
+
+                </div>
+
+
+                <div class="progress-line"></div>
+
+
+                <div class="progress-step">
+
+                    <span class="progress-number">
+                        4
+                    </span>
+
+                    <div>
+                        <strong>Confirmation</strong>
+                        <small>Track your order</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Payment Content -->
+    <section class="payment-section">
+
+        <div class="container">
+
+            <div class="payment-layout">
+
+                <!-- Main Payment Area -->
+                <div class="payment-main">
+
+                    <!-- Payment Message -->
+                    <div
+                        id="paymentMessage"
+                        class="payment-message"
+                        role="alert"
+                        style="display:none;"
+                    ></div>
+
+
+                    <!-- Payment Methods -->
+                    <div class="payment-card">
+
+                        <div class="payment-card-header">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    PAYMENT METHOD
+                                </span>
+
+                                <h2>
+                                    How would you like to pay?
+                                </h2>
+
+                                <p>
+                                    Select one of the available payment methods.
+                                </p>
+
+                            </div>
+
+                            <div class="secure-badge">
+                                <i class="fa-solid fa-lock"></i>
+                                Secure
+                            </div>
+
+                        </div>
+
+
+                        <div class="payment-methods">
+
+
+                            <!-- Mobile Money -->
+                            <label
+                                class="payment-method active"
+                                data-method="mobile_money"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="payment_method"
+                                    value="mobile_money"
+                                    checked
+                                />
+
+                                <div class="payment-method-icon mobile-money-icon">
+                                    <i class="fa-solid fa-mobile-screen-button"></i>
+                                </div>
+
+                                <div class="payment-method-content">
+
+                                    <strong>
+                                        Mobile Money
+                                    </strong>
+
+                                    <span>
+                                        Pay using supported mobile money services.
+                                    </span>
+
+                                </div>
+
+                                <div class="payment-method-check">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+
+                            </label>
+
+
+                            <!-- Card -->
+                            <label
+                                class="payment-method"
+                                data-method="card"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="payment_method"
+                                    value="card"
+                                />
+
+                                <div class="payment-method-icon">
+                                    <i class="fa-solid fa-credit-card"></i>
+                                </div>
+
+                                <div class="payment-method-content">
+
+                                    <strong>
+                                        Debit / Credit Card
+                                    </strong>
+
+                                    <span>
+                                        Pay securely using your bank card.
+                                    </span>
+
+                                </div>
+
+                                <div class="payment-method-check">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+
+                            </label>
+
+
+                            <!-- Cash -->
+                            <label
+                                class="payment-method"
+                                data-method="cash"
+                            >
+
+                                <input
+                                    type="radio"
+                                    name="payment_method"
+                                    value="cash"
+                                />
+
+                                <div class="payment-method-icon">
+                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                </div>
+
+                                <div class="payment-method-content">
+
+                                    <strong>
+                                        Cash on Delivery
+                                    </strong>
+
+                                    <span>
+                                        Pay when your order is delivered,
+                                        where available.
+                                    </span>
+
+                                </div>
+
+                                <div class="payment-method-check">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Mobile Money -->
+                    <div
+                        id="mobileMoneyPanel"
+                        class="payment-details-card"
+                    >
+
+                        <div class="payment-details-header">
+
+                            <div class="details-icon">
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Mobile Money
+                                </h3>
+
+                                <p>
+                                    Enter the mobile money number
+                                    that will be used for payment.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="mobileMoneyNumber">
+                                Mobile Money Number
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-phone"></i>
+
+                                <input
+                                    type="tel"
+                                    id="mobileMoneyNumber"
+                                    name="mobile_money_number"
+                                    placeholder="07XXXXXXXX"
+                                    autocomplete="tel"
+                                />
+
+                            </div>
+
+                            <small>
+                                Enter the number registered for your
+                                mobile money service.
+                            </small>
+
+                        </div>
+
+
+                        <div class="mobile-money-info">
+
+                            <i class="fa-solid fa-circle-info"></i>
+
+                            <span>
+                                After you confirm the order, you may
+                                receive a payment prompt on your phone.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Card Payment -->
+                    <div
+                        id="cardPaymentPanel"
+                        class="payment-details-card"
+                        style="display:none;"
+                    >
+
+                        <div class="payment-details-header">
+
+                            <div class="details-icon">
+                                <i class="fa-solid fa-credit-card"></i>
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Card Payment
+                                </h3>
+
+                                <p>
+                                    Card details will be securely handled
+                                    by the configured payment provider.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-provider-notice">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            <div>
+
+                                <strong>
+                                    Secure card processing
+                                </strong>
+
+                                <p>
+                                    Your full card details should be entered
+                                    only in the secure payment-provider form.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Payment provider mount point -->
+                        <div
+                            id="cardPaymentElement"
+                            class="payment-provider-element"
+                        >
+
+                            <div class="provider-placeholder">
+
+                                <i class="fa-solid fa-credit-card"></i>
+
+                                <span>
+                                    Secure card payment form
+                                    will appear here.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Cash Payment -->
+                    <div
+                        id="cashPaymentPanel"
+                        class="payment-details-card"
+                        style="display:none;"
+                    >
+
+                        <div class="payment-details-header">
+
+                            <div class="details-icon">
+                                <i class="fa-solid fa-money-bill-wave"></i>
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Cash on Delivery
+                                </h3>
+
+                                <p>
+                                    Pay when your order arrives,
+                                    if this option is available.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="cash-notice">
+
+                            <i class="fa-solid fa-truck"></i>
+
+                            <div>
+
+                                <strong>
+                                    Payment at delivery
+                                </strong>
+
+                                <p>
+                                    Please keep the required amount
+                                    available when your order arrives.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Terms -->
+                    <div class="payment-terms">
+
+                        <label class="checkbox-label">
+
+                            <input
+                                type="checkbox"
+                                id="paymentAgreement"
+                            />
+
+                            <span>
+                                I confirm that my order details are correct
+                                and agree to the applicable payment and
+                                delivery terms.
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- Buttons -->
+                    <div class="payment-actions">
+
+                        <a
+                            href="{% url 'storefront:checkout' %}"
+                            class="btn btn-outline"
+                        >
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Back to Checkout
+                        </a>
+
+
+                        <button
+                            type="button"
+                            id="payNowButton"
+                            class="pay-now-button"
+                        >
+
+                            <span id="payButtonText">
+                                Confirm & Pay
+                            </span>
+
+                            <span
+                                id="payButtonLoading"
+                                style="display:none;"
+                            >
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                Processing...
+                            </span>
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- Security -->
+                    <div class="payment-security">
+
+                        <div class="security-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Secure payment
+                            </strong>
+
+                            <p>
+                                Payment information is handled through
+                                secure payment processing.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Order Summary -->
+                <aside class="payment-sidebar">
+
+                    <div class="payment-summary-card">
+
+                        <div class="summary-header">
+
+                            <span class="eyebrow">
+                                YOUR ORDER
+                            </span>
+
+                            <h2>
+                                Order Summary
+                            </h2>
+
+                        </div>
+
+
+                        <!-- Dynamic items -->
+                        <div
+                            id="paymentOrderItems"
+                            class="payment-order-items"
+                        >
+
+                            <div class="payment-item-loading">
+
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+
+                                <span>
+                                    Loading order...
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-divider"></div>
+
+
+                        <div class="summary-row">
+
+                            <span>
+                                Subtotal
+                            </span>
+
+                            <strong id="paymentSubtotal">
+                                UGX 0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="summary-row">
+
+                            <span>
+                                Delivery
+                            </span>
+
+                            <strong id="paymentDelivery">
+                                UGX 0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="summary-row">
+
+                            <span>
+                                Discount
+                            </span>
+
+                            <strong id="paymentDiscount">
+                                UGX 0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="summary-divider"></div>
+
+
+                        <div class="summary-total">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong id="paymentTotal">
+                                UGX 0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delivery -->
+                    <div class="payment-delivery-card">
+
+                        <div class="delivery-card-header">
+
+                            <i class="fa-solid fa-location-dot"></i>
+
+                            <h3>
+                                Delivery
+                            </h3>
+
+                        </div>
+
+
+                        <p id="paymentDeliveryAddress">
+                            Delivery address from checkout will
+                            appear here.
+                        </p>
+
+
+                        <a href="{% url 'storefront:checkout' %}">
+                            Edit delivery details
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+
+                    <!-- Trust -->
+                    <div class="payment-trust-card">
+
+                        <div>
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <strong>
+                                Protected checkout
+                            </strong>
+
+                        </div>
+
+                        <p>
+                            Your checkout session is protected
+                            using secure web technologies.
+                        </p>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Confirmation -->
+    <section
+        id="paymentSuccess"
+        class="payment-success-section"
+        style="display:none;"
+    >
+
+        <div class="container">
+
+            <div class="payment-success-card">
+
+                <div class="success-icon">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <span class="eyebrow">
+                    ORDER CONFIRMED
+                </span>
+
+                <h2>
+                    Your order has been received
+                </h2>
+
+                <p>
+                    Thank you for shopping with Enock Shopping Center.
+                    Your order information is being prepared.
+                </p>
+
+                <div class="success-order-number">
+                    Order:
+                    <strong id="successOrderNumber">
+                        —
+                    </strong>
+                </div>
+
+                <div class="success-actions">
+
+                    <a
+                        href="{% url 'storefront:orders' %}"
+                        class="btn btn-primary"
+                    >
+                        <i class="fa-solid fa-box"></i>
+                        View My Orders
+                    </a>
+
+                    <a
+                        href="{% url 'storefront:tracking' %}"
+                        class="btn btn-outline"
+                    >
+                        <i class="fa-solid fa-location-dot"></i>
+                        Track Order
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * Existing application initializer.
+     */
+    if (typeof window.initPage === "function") {
+        window.initPage("payment");
+    }
+
+
+    const methods =
+        document.querySelectorAll(".payment-method");
+
+
+    const mobilePanel =
+        document.getElementById("mobileMoneyPanel");
+
+    const cardPanel =
+        document.getElementById("cardPaymentPanel");
+
+    const cashPanel =
+        document.getElementById("cashPaymentPanel");
+
+
+    /*
+     * Switch payment method.
+     */
+    methods.forEach(function (method) {
+
+        method.addEventListener("click", function () {
+
+            methods.forEach(function (item) {
+                item.classList.remove("active");
+            });
+
+            this.classList.add("active");
+
+
+            const radio =
+                this.querySelector(
+                    'input[type="radio"]'
+                );
+
+
+            if (radio) {
+                radio.checked = true;
+            }
+
+
+            const selected =
+                radio ? radio.value : "";
+
+
+            if (mobilePanel) {
+                mobilePanel.style.display =
+                    selected === "mobile_money"
+                        ? "block"
+                        : "none";
+            }
+
+
+            if (cardPanel) {
+                cardPanel.style.display =
+                    selected === "card"
+                        ? "block"
+                        : "none";
+            }
+
+
+            if (cashPanel) {
+                cashPanel.style.display =
+                    selected === "cash"
+                        ? "block"
+                        : "none";
+            }
+
+
+            updatePayButton(selected);
+
+        });
+
+    });
+
+
+    function updatePayButton(method) {
+
+        const text =
+            document.getElementById("payButtonText");
+
+
+        if (!text) {
+            return;
+        }
+
+
+        if (method === "cash") {
+
+            text.textContent =
+                "Confirm Order";
+
+        } else {
+
+            text.textContent =
+                "Confirm & Pay";
+
+        }
+
+    }
+
+
+    /*
+     * Payment message.
+     */
+    function showPaymentMessage(text, type) {
+
+        const message =
+            document.getElementById("paymentMessage");
+
+
+        if (!message) {
+            return;
+        }
+
+
+        message.textContent =
+            text;
+
+
+        message.className =
+            "payment-message " +
+            (type || "info");
+
+
+        message.style.display =
+            "block";
+
+    }
+
+
+    /*
+     * Button loading state.
+     */
+    function setPaymentLoading(loading) {
+
+        const button =
+            document.getElementById("payNowButton");
+
+        const text =
+            document.getElementById("payButtonText");
+
+        const loadingText =
+            document.getElementById("payButtonLoading");
+
+
+        if (button) {
+            button.disabled =
+                loading;
+        }
+
+
+        if (text) {
+            text.style.display =
+                loading ? "none" : "inline";
+        }
+
+
+        if (loadingText) {
+            loadingText.style.display =
+                loading ? "inline-flex" : "none";
+        }
+
+    }
+
+
+    /*
+     * Submit payment/order.
+     */
+    const payButton =
+        document.getElementById("payNowButton");
+
+
+    if (payButton) {
+
+        payButton.addEventListener("click", async function () {
+
+            const agreement =
+                document.getElementById("paymentAgreement");
+
+
+            if (!agreement || !agreement.checked) {
+
+                showPaymentMessage(
+                    "Please confirm that your order details are correct.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const selectedMethod =
+                document.querySelector(
+                    'input[name="payment_method"]:checked'
+                );
+
+
+            const method =
+                selectedMethod
+                    ? selectedMethod.value
+                    : "";
+
+
+            if (!method) {
+
+                showPaymentMessage(
+                    "Please select a payment method.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (method === "mobile_money") {
+
+                const phone =
+                    document
+                        .getElementById(
+                            "mobileMoneyNumber"
+                        );
+
+
+                if (!phone || !phone.value.trim()) {
+
+                    showPaymentMessage(
+                        "Please enter your Mobile Money number.",
+                        "error"
+                    );
+
+                    if (phone) {
+                        phone.focus();
+                    }
+
+                    return;
+                }
+
+            }
+
+
+            setPaymentLoading(true);
+
+            showPaymentMessage(
+                "Preparing your order...",
+                "info"
+            );
+
+
+            /*
+             * Use the application's payment/order
+             * implementation if it exists.
+             */
+            if (
+                typeof window.processPayment ===
+                "function"
+            ) {
+
+                try {
+
+                    const result =
+                        await window.processPayment({
+                            method: method,
+                            mobile_money_number:
+                                document.getElementById(
+                                    "mobileMoneyNumber"
+                                )?.value || ""
+                        });
+
+
+                    handlePaymentSuccess(
+                        result
+                    );
+
+
+                } catch (error) {
+
+                    showPaymentMessage(
+                        error.message ||
+                        "Payment could not be completed.",
+                        "error"
+                    );
+
+                    setPaymentLoading(false);
+
+                }
+
+                return;
+            }
+
+
+            /*
+             * Fallback:
+             *
+             * The actual payment provider should be
+             * connected here. We deliberately do not
+             * pretend that payment has succeeded.
+             */
+            showPaymentMessage(
+                "Payment processing is not yet connected to the payment provider.",
+                "info"
+            );
+
+            setPaymentLoading(false);
+
+        });
+
+    }
+
+
+    /*
+     * Handle successful payment.
+     */
+    function handlePaymentSuccess(result) {
+
+        const paymentSection =
+            document.querySelector(
+                ".payment-section"
+            );
+
+
+        const progressSection =
+            document.querySelector(
+                ".payment-progress-section"
+            );
+
+
+        const successSection =
+            document.getElementById(
+                "paymentSuccess"
+            );
+
+
+        const orderNumber =
+            document.getElementById(
+                "successOrderNumber"
+            );
+
+
+        if (result && orderNumber) {
+
+            orderNumber.textContent =
+                result.order_number ||
+                result.order_id ||
+                "Confirmed";
+
+        }
+
+
+        if (paymentSection) {
+            paymentSection.style.display =
+                "none";
+        }
+
+
+        if (progressSection) {
+            progressSection.style.display =
+                "none";
+        }
+
+
+        if (successSection) {
+            successSection.style.display =
+                "block";
+
+            successSection.scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+
+
+        setPaymentLoading(false);
+
+    }
+
+
+    /*
+     * CSRF helper for future payment API calls.
+     */
+    window.getPaymentCSRFToken =
+        function () {
+
+            const name =
+                "csrftoken=";
+
+            const cookies =
+                document.cookie.split(";");
+
+
+            for (let cookie of cookies) {
+
+                cookie =
+                    cookie.trim();
+
+
+                if (
+                    cookie.indexOf(name) === 0
+                ) {
+
+                    return decodeURIComponent(
+                        cookie.substring(
+                            name.length
+                        )
+                    );
+
+                }
+
+            }
+
+
+            return "";
+
+        };
+
+
+    /*
+     * Allow app.js to populate the order summary.
+     */
+    window.renderPaymentSummary =
+        function (order) {
+
+            if (!order) {
+                return;
+            }
+
+
+            setMoney(
+                "paymentSubtotal",
+                order.subtotal
+            );
+
+
+            setMoney(
+                "paymentDelivery",
+                order.delivery_fee
+            );
+
+
+            setMoney(
+                "paymentDiscount",
+                order.discount
+            );
+
+
+            setMoney(
+                "paymentTotal",
+                order.total
+            );
+
+
+            const address =
+                document.getElementById(
+                    "paymentDeliveryAddress"
+                );
+
+
+            if (address) {
+
+                address.textContent =
+                    order.delivery_address ||
+                    "Delivery address not provided.";
+
+            }
+
+
+            const items =
+                document.getElementById(
+                    "paymentOrderItems"
+                );
+
+
+            if (
+                items &&
+                Array.isArray(order.items)
+            ) {
+
+                if (!order.items.length) {
+
+                    items.innerHTML =
+                        "<p>No items found.</p>";
+
+                    return;
+
+                }
+
+
+                items.innerHTML =
+                    order.items.map(function (item) {
+
+                        return `
+                            <div class="payment-order-item">
+
+                                <div class="payment-item-info">
+
+                                    <strong>
+                                        ${escapeHtml(
+                                            item.product_name ||
+                                            item.name ||
+                                            "Product"
+                                        )}
+                                    </strong>
+
+                                    <span>
+                                        Qty:
+                                        ${item.quantity || 1}
+                                    </span>
+
+                                </div>
+
+                                <strong>
+                                    ${formatMoney(
+                                        item.price || 0
+                                    )}
+                                </strong>
+
+                            </div>
+                        `;
+
+                    }).join("");
+
+            }
+
+        };
+
+
+    function setMoney(id, value) {
+
+        const element =
+            document.getElementById(id);
+
+
+        if (!element) {
+            return;
+        }
+
+
+        element.textContent =
+            formatMoney(value);
+
+    }
+
+
+    function formatMoney(value) {
+
+        return "UGX " +
+            (
+                Number(value) || 0
+            ).toLocaleString(
+                "en-UG",
+                {
+                    maximumFractionDigits: 0
+                }
+            );
+
+    }
+
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
+```
