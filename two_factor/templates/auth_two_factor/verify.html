@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Two-Factor Authentication</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Include your CSS -->
+</head>
+<body>
+    <div class="container">
+        <h1>Verify Two-Factor Authentication</h1>
+
+        <form method="post" action="{% url 'auth_two_factor:verify' %}">
+            {% csrf_token %}
+            <label for="verification_code">Enter Verification Code:</label>
+            <input type="text" id="verification_code" name="verification_code" required>
+            <button type="submit">Verify</button>
+        </form>
+    </div>
+</body>
+</html>

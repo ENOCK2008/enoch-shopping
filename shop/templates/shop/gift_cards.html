@@ -1,0 +1,68 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+<div class="container gift-cards">
+    <h1>Gift Cards</h1>
+    <p>Choose from our selection of gift cards to give the perfect gift!</p>
+    
+    <!-- Gift Card Listings -->
+    <div class="gift-card-list">
+        <div class="gift-card">
+            <h2>Gift Card Amount: $25</h2>
+            <p>This gift card is perfect for a quick treat!</p>
+            <button class="btn btn-primary">Buy Now</button>
+        </div>
+        <div class="gift-card">
+            <h2>Gift Card Amount: $50</h2>
+            <p>A great option for birthdays and special occasions!</p>
+            <button class="btn btn-primary">Buy Now</button>
+        </div>
+        <div class="gift-card">
+            <h2>Gift Card Amount: $100</h2>
+            <p>Give the gift of choice with this versatile gift card!</p>
+            <button class="btn btn-primary">Buy Now</button>
+        </div>
+        <!-- Add more gift cards as needed -->
+    </div>
+
+    <!-- Additional Notes Section -->
+    <div class="additional-notes">
+        <h3>Additional Notes</h3>
+        <textarea rows="4" class="form-control" placeholder="Enter any special instructions or messages here..."></textarea>
+        <button class="btn btn-secondary mt-2">Submit Notes</button>
+    </div>
+</div>
+
+<style>
+    .gift-cards {
+        margin-top: 20px;
+    }
+    .gift-card-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .gift-card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 10px;
+        width: calc(33% - 20px); /* Adjust for spacing */
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+    .gift-card:hover {
+        transform: scale(1.02);
+    }
+    .additional-notes {
+        margin-top: 30px;
+        padding: 15px;
+        border: 1px dashed #ccc;
+        border-radius: 5px;
+    }
+    .additional-notes h3 {
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}

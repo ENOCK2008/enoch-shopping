@@ -1,0 +1,37 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<div class="container my-5">
+    <h1 class="text-center">Order Confirmation</h1>
+    
+    <h2>Thank you for your order!</h2>
+    <p>Your order ID is: <strong>{{ order.id }}</strong></p>
+    <p>Status: <strong>{{ order.status }}</strong></p>
+    
+    <h3>Order Summary</h3>
+    <ul class="list-group">
+        {% for item in order.orderitem_set.all %}
+            <li class="list-group-item">
+                {{ item.product.name }} - Quantity: {{ item.quantity }} - Price: ${{ item.product.price }} <!-- Assuming you have a price field in your Product model -->
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <p>Total Amount: <strong>${{ order.total_price }}</strong></p> <!-- Ensure this corresponds to the total price in the order -->
+    <p>Estimated Delivery Date: <strong>{{ order.estimated_delivery_date }}</strong></p> <!-- You may need to add this field to your Order model -->
+
+    <!-- Additional Details -->
+    <h4>Shipping Address:</h4>
+    <p>{{ order.shipping_address }}</p> <!-- Display shipping address -->
+
+    <h4>Contact Information:</h4>
+    <p>Phone: <strong>{{ order.phone_number }}</strong></p> <!-- Ensure phone_number is part of your Order model -->
+
+    <p class="text-muted">You will receive an email confirmation shortly.</p> <!-- Confirmation note -->
+
+    <a href="{% url 'shop:my_orders' %}" class="btn btn-primary">View My Orders</a>
+</div>
+{% endblock %}

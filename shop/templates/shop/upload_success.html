@@ -1,0 +1,12 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<div class="container">
+    <h1>Upload Successful!</h1>
+    <p>Your music has been uploaded successfully!</p>
+    <p>File URL: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+    <a href="{% url 'upload_music' %}" class="btn btn-secondary">Upload Another File</a>
+</div>
+{% endblock %}
