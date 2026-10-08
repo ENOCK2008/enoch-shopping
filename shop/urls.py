@@ -1,4 +1,4 @@
-frrom django.urls import path, re_path, include
+from django.urls import path, re_path, include
 from django.contrib import admin
 from .views import BlogView  
 from django.contrib.auth import views as auth_views
