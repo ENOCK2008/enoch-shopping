@@ -1,1 +1,1090 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — order detail{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>order detail</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('order_detail');</script>{% endblock %}
+```django
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Order Details — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="order-detail-page">
+
+    <!-- Header -->
+    <section class="order-detail-hero">
+        <div class="container">
+
+            <div class="order-breadcrumb">
+
+                <a href="{% url 'storefront:home' %}">
+                    <i class="fa-solid fa-house"></i>
+                    Home
+                </a>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+                <a href="{% url 'storefront:orders' %}">
+                    Orders
+                </a>
+
+                <i class="fa-solid fa-chevron-right"></i>
+
+                <span>Order Details</span>
+
+            </div>
+
+
+            <div class="order-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ENOCK SHOPPING CENTER
+                    </span>
+
+                    <h1>
+                        Order Details
+                    </h1>
+
+                    <p>
+                        Review your order, payment and delivery information.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{% url 'storefront:orders' %}"
+                    class="btn btn-outline"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Orders
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Order Loading / Dynamic Content -->
+    <section class="order-detail-section">
+
+        <div class="container">
+
+            <div id="pageContent">
+
+                <!--
+                    The order information will be populated by
+                    the storefront JavaScript / Orders API.
+                -->
+
+                <div class="order-loading">
+
+                    <div class="loading-spinner">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                    </div>
+
+                    <h3>
+                        Loading order details...
+                    </h3>
+
+                    <p>
+                        Please wait while we retrieve your order.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Default Order Layout -->
+
+            <div
+                id="orderDetailLayout"
+                class="order-detail-layout"
+                style="display:none;"
+            >
+
+                <!-- Main Column -->
+                <div class="order-detail-main">
+
+
+                    <!-- Order Summary -->
+                    <div class="order-card">
+
+                        <div class="order-card-header">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    ORDER
+                                </span>
+
+                                <h2 id="orderNumber">
+                                    Order #—
+                                </h2>
+
+                            </div>
+
+
+                            <span
+                                id="orderStatus"
+                                class="order-status"
+                            >
+                                Processing
+                            </span>
+
+                        </div>
+
+
+                        <div class="order-meta">
+
+                            <div>
+
+                                <span>
+                                    <i class="fa-regular fa-calendar"></i>
+                                    Order date
+                                </span>
+
+                                <strong id="orderDate">
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    <i class="fa-solid fa-box"></i>
+                                    Items
+                                </span>
+
+                                <strong id="orderItemsCount">
+                                    —
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    <i class="fa-solid fa-money-bill"></i>
+                                    Total
+                                </span>
+
+                                <strong id="orderTotal">
+                                    UGX 0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delivery Progress -->
+                    <div class="order-card">
+
+                        <div class="order-card-title">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    DELIVERY
+                                </span>
+
+                                <h2>
+                                    Order progress
+                                </h2>
+
+                            </div>
+
+                            <a
+                                href="{% url 'storefront:tracking' %}"
+                                class="text-link"
+                            >
+                                Track order
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+
+                        </div>
+
+
+                        <div class="order-timeline">
+
+                            <div class="timeline-step completed">
+
+                                <div class="timeline-icon">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Order placed
+                                    </strong>
+
+                                    <span id="placedDate">
+                                        Your order has been received.
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="timeline-line"></div>
+
+
+                            <div class="timeline-step active">
+
+                                <div class="timeline-icon">
+                                    <i class="fa-solid fa-box"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Processing
+                                    </strong>
+
+                                    <span>
+                                        The seller is preparing your order.
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="timeline-line"></div>
+
+
+                            <div class="timeline-step">
+
+                                <div class="timeline-icon">
+                                    <i class="fa-solid fa-truck"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Out for delivery
+                                    </strong>
+
+                                    <span>
+                                        Your order will be delivered to you.
+                                    </span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="timeline-line"></div>
+
+
+                            <div class="timeline-step">
+
+                                <div class="timeline-icon">
+                                    <i class="fa-solid fa-house"></i>
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Delivered
+                                    </strong>
+
+                                    <span>
+                                        Order delivered successfully.
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Products -->
+                    <div class="order-card">
+
+                        <div class="order-card-title">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    PRODUCTS
+                                </span>
+
+                                <h2>
+                                    Items in this order
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <div id="orderItems" class="order-items">
+
+                            <div class="order-item-placeholder">
+
+                                <i class="fa-solid fa-box-open"></i>
+
+                                <span>
+                                    Loading order items...
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delivery Address -->
+                    <div class="order-card">
+
+                        <div class="order-card-title">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    DELIVERY
+                                </span>
+
+                                <h2>
+                                    Delivery information
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="delivery-information">
+
+                            <div class="delivery-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+
+
+                            <div>
+
+                                <strong id="deliveryName">
+                                    Customer
+                                </strong>
+
+                                <p id="deliveryAddress">
+                                    Delivery address will appear here.
+                                </p>
+
+                                <p id="deliveryPhone">
+                                    —
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Payment -->
+                    <div class="order-card">
+
+                        <div class="order-card-title">
+
+                            <div>
+
+                                <span class="eyebrow">
+                                    PAYMENT
+                                </span>
+
+                                <h2>
+                                    Payment information
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="payment-information">
+
+                            <div class="payment-method-icon">
+                                <i class="fa-solid fa-credit-card"></i>
+                            </div>
+
+
+                            <div>
+
+                                <strong id="paymentMethod">
+                                    Payment method
+                                </strong>
+
+                                <p>
+                                    Payment status:
+                                    <span
+                                        id="paymentStatus"
+                                        class="payment-status"
+                                    >
+                                        Pending
+                                    </span>
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Actions -->
+                    <div class="order-actions">
+
+                        <a
+                            href="{% url 'storefront:tracking' %}"
+                            class="btn btn-primary"
+                        >
+                            <i class="fa-solid fa-location-dot"></i>
+                            Track Order
+                        </a>
+
+
+                        <a
+                            href="{% url 'storefront:marketplace' %}"
+                            class="btn btn-outline"
+                        >
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            Continue Shopping
+                        </a>
+
+
+                        <button
+                            type="button"
+                            id="printOrderButton"
+                            class="btn btn-outline"
+                        >
+                            <i class="fa-solid fa-print"></i>
+                            Print Order
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Sidebar -->
+                <aside class="order-detail-sidebar">
+
+
+                    <!-- Price Summary -->
+                    <div class="order-summary-card">
+
+                        <span class="eyebrow">
+                            ORDER SUMMARY
+                        </span>
+
+                        <h2>
+                            Payment summary
+                        </h2>
+
+
+                        <div class="summary-row">
+
+                            <span>
+                                Subtotal
+                            </span>
+
+                            <strong id="summarySubtotal">
+                                UGX 0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="summary-row">
+
+                            <span>
+                                Delivery
+                            </span>
+
+                            <strong id="summaryDelivery">
+                                UGX 0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="summary-row">
+
+                            <span>
+                                Discount
+                            </span>
+
+                            <strong id="summaryDiscount">
+                                UGX 0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="summary-divider"></div>
+
+
+                        <div class="summary-total">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong id="summaryTotal">
+                                UGX 0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Help -->
+                    <div class="order-help-card">
+
+                        <div class="help-icon">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+
+                        <h3>
+                            Need help?
+                        </h3>
+
+                        <p>
+                            If you have a problem with your order,
+                            contact Enock Shopping Center support.
+                        </p>
+
+                        <a href="{% url 'storefront:home' %}">
+                            Get Help
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+
+                    <!-- Security -->
+                    <div class="order-security-card">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <div>
+
+                            <strong>
+                                Secure order
+                            </strong>
+
+                            <p>
+                                Your order information is protected.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+
+            <!-- Error State -->
+            <div
+                id="orderErrorState"
+                class="order-error-card"
+                style="display:none;"
+            >
+
+                <div class="error-icon">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </div>
+
+                <span class="eyebrow">
+                    ORDER NOT FOUND
+                </span>
+
+                <h2>
+                    We couldn't load this order
+                </h2>
+
+                <p id="orderErrorMessage">
+                    The order may no longer exist or you may not
+                    have permission to view it.
+                </p>
+
+                <a
+                    href="{% url 'storefront:orders' %}"
+                    class="btn btn-primary"
+                >
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Orders
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * Initialise the existing storefront application.
+     */
+    if (typeof window.initPage === "function") {
+        window.initPage("order_detail");
+    }
+
+
+    /*
+     * Get the order ID from the current URL.
+     *
+     * Example:
+     * /orders/25/
+     */
+    function getOrderId() {
+
+        const parts =
+            window.location.pathname
+                .split("/")
+                .filter(Boolean);
+
+        const ordersIndex =
+            parts.indexOf("orders");
+
+
+        if (
+            ordersIndex !== -1 &&
+            parts[ordersIndex + 1]
+        ) {
+            return parts[ordersIndex + 1];
+        }
+
+        return null;
+
+    }
+
+
+    const orderId = getOrderId();
+
+
+    /*
+     * Print order.
+     */
+    const printButton =
+        document.getElementById("printOrderButton");
+
+
+    if (printButton) {
+
+        printButton.addEventListener("click", function () {
+            window.print();
+        });
+
+    }
+
+
+    /*
+     * Allow the main application JavaScript to load
+     * the actual order data.
+     *
+     * If app.js exposes loadOrderDetail(), use it.
+     */
+    if (
+        orderId &&
+        typeof window.loadOrderDetail === "function"
+    ) {
+
+        window.loadOrderDetail(orderId);
+
+    }
+
+
+    /*
+     * If app.js does not yet expose an order-detail
+     * function, keep the page ready for the Orders API.
+     */
+    if (!orderId) {
+
+        showOrderError(
+            "No order number was provided."
+        );
+
+    }
+
+
+    function showOrderError(message) {
+
+        const loading =
+            document.querySelector(".order-loading");
+
+        const layout =
+            document.getElementById("orderDetailLayout");
+
+        const error =
+            document.getElementById("orderErrorState");
+
+        const errorMessage =
+            document.getElementById("orderErrorMessage");
+
+
+        if (loading) {
+            loading.style.display = "none";
+        }
+
+        if (layout) {
+            layout.style.display = "none";
+        }
+
+        if (errorMessage) {
+            errorMessage.textContent =
+                message ||
+                "Unable to load this order.";
+        }
+
+        if (error) {
+            error.style.display = "block";
+        }
+
+    }
+
+
+    /*
+     * Global helper for app.js.
+     *
+     * This lets the API integration populate the page
+     * without having to replace the entire template.
+     */
+    window.renderOrderDetail = function (order) {
+
+        if (!order) {
+            showOrderError("Order information was not found.");
+            return;
+        }
+
+
+        const loading =
+            document.querySelector(".order-loading");
+
+        const layout =
+            document.getElementById("orderDetailLayout");
+
+
+        if (loading) {
+            loading.style.display = "none";
+        }
+
+        if (layout) {
+            layout.style.display = "grid";
+        }
+
+
+        /*
+         * Basic order information.
+         */
+        setText(
+            "orderNumber",
+            "Order #" + (
+                order.order_number ||
+                order.id ||
+                "—"
+            )
+        );
+
+
+        setText(
+            "orderStatus",
+            order.status || "Processing"
+        );
+
+
+        setText(
+            "orderDate",
+            formatDate(order.created_at || order.created)
+        );
+
+
+        setText(
+            "orderItemsCount",
+            order.item_count ||
+            (order.items ? order.items.length : 0)
+        );
+
+
+        setMoney(
+            "orderTotal",
+            order.total
+        );
+
+
+        /*
+         * Summary.
+         */
+        setMoney(
+            "summarySubtotal",
+            order.subtotal
+        );
+
+
+        setMoney(
+            "summaryDelivery",
+            order.delivery_fee
+        );
+
+
+        setMoney(
+            "summaryDiscount",
+            order.discount
+        );
+
+
+        setMoney(
+            "summaryTotal",
+            order.total
+        );
+
+
+        /*
+         * Delivery.
+         */
+        setText(
+            "deliveryName",
+            order.delivery_name ||
+            order.customer_name ||
+            "Customer"
+        );
+
+
+        setText(
+            "deliveryAddress",
+            order.delivery_address ||
+            "Delivery address not provided."
+        );
+
+
+        setText(
+            "deliveryPhone",
+            order.delivery_phone ||
+            "Phone number not provided."
+        );
+
+
+        /*
+         * Payment.
+         */
+        setText(
+            "paymentMethod",
+            order.payment_method ||
+            "Payment method"
+        );
+
+
+        setText(
+            "paymentStatus",
+            order.payment_status ||
+            "Pending"
+        );
+
+
+        /*
+         * Order items.
+         */
+        renderItems(
+            order.items || []
+        );
+
+    };
+
+
+    function renderItems(items) {
+
+        const container =
+            document.getElementById("orderItems");
+
+
+        if (!container) {
+            return;
+        }
+
+
+        if (!items.length) {
+
+            container.innerHTML = `
+                <div class="order-item-placeholder">
+                    <i class="fa-solid fa-box-open"></i>
+                    <span>No products found for this order.</span>
+                </div>
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML =
+            items.map(function (item) {
+
+                const name =
+                    escapeHtml(
+                        item.product_name ||
+                        item.name ||
+                        "Product"
+                    );
+
+
+                const quantity =
+                    item.quantity || 1;
+
+
+                const price =
+                    formatMoney(
+                        item.price || 0
+                    );
+
+
+                const image =
+                    item.image ||
+                    "{% static 'storefront/images/product-placeholder.png' %}";
+
+
+                return `
+                    <div class="order-item">
+
+                        <div class="order-item-image">
+
+                            <img
+                                src="${image}"
+                                alt="${name}"
+                                loading="lazy"
+                                onerror="this.style.display='none'"
+                            >
+
+                        </div>
+
+                        <div class="order-item-info">
+
+                            <h3>${name}</h3>
+
+                            <span>
+                                Quantity: ${quantity}
+                            </span>
+
+                        </div>
+
+                        <strong class="order-item-price">
+                            ${price}
+                        </strong>
+
+                    </div>
+                `;
+
+            }).join("");
+
+    }
+
+
+    function setText(id, value) {
+
+        const element =
+            document.getElementById(id);
+
+        if (element) {
+            element.textContent =
+                value ?? "—";
+        }
+
+    }
+
+
+    function setMoney(id, value) {
+
+        const element =
+            document.getElementById(id);
+
+        if (!element) {
+            return;
+        }
+
+        element.textContent =
+            formatMoney(value || 0);
+
+    }
+
+
+    function formatMoney(value) {
+
+        const number =
+            Number(value) || 0;
+
+        return "UGX " +
+            number.toLocaleString(
+                "en-UG",
+                {
+                    maximumFractionDigits: 0
+                }
+            );
+
+    }
+
+
+    function formatDate(value) {
+
+        if (!value) {
+            return "—";
+        }
+
+
+        const date =
+            new Date(value);
+
+
+        if (Number.isNaN(date.getTime())) {
+            return value;
+        }
+
+
+        return date.toLocaleDateString(
+            "en-UG",
+            {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            }
+        );
+
+    }
+
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
+```
