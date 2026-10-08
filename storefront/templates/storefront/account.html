@@ -1,1 +1,421 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — account{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>account</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('account');</script>{% endblock %}
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}My Account — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="section page account-page">
+
+```
+<!-- Page Header -->
+<div class="page-header">
+
+    <div>
+        <span class="eyebrow">
+            Enock Shopping Center
+        </span>
+
+        <h1>
+            My Account
+        </h1>
+
+        <p class="page-subtitle">
+            Manage your profile, orders, wishlist and shopping preferences.
+        </p>
+    </div>
+
+    <div class="account-header-icon">
+        <i class="fa-solid fa-user"></i>
+    </div>
+
+</div>
+
+
+<!-- Account Overview -->
+<div class="account-grid">
+
+    <!-- Profile Card -->
+    <article class="account-card profile-card">
+
+        <div class="account-card-icon">
+            <i class="fa-solid fa-user-circle"></i>
+        </div>
+
+        <div class="account-card-content">
+
+            <span class="account-label">
+                Profile
+            </span>
+
+            <h2>
+                Your Profile
+            </h2>
+
+            <p>
+                View and update your personal information,
+                contact details and account preferences.
+            </p>
+
+            <a
+                href="{% url 'storefront:account' %}"
+                class="account-link"
+            >
+                Manage profile
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </article>
+
+
+    <!-- Orders Card -->
+    <article class="account-card">
+
+        <div class="account-card-icon">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+
+        <div class="account-card-content">
+
+            <span class="account-label">
+                Shopping
+            </span>
+
+            <h2>
+                My Orders
+            </h2>
+
+            <p>
+                Track your purchases, view order details
+                and check your delivery status.
+            </p>
+
+            <a
+                href="{% url 'storefront:orders' %}"
+                class="account-link"
+            >
+                View orders
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </article>
+
+
+    <!-- Wishlist Card -->
+    <article class="account-card">
+
+        <div class="account-card-icon">
+            <i class="fa-solid fa-heart"></i>
+        </div>
+
+        <div class="account-card-content">
+
+            <span class="account-label">
+                Saved Items
+            </span>
+
+            <h2>
+                My Wishlist
+            </h2>
+
+            <p>
+                Keep products you love in one place
+                and come back to them whenever you want.
+            </p>
+
+            <a
+                href="{% url 'storefront:wishlist' %}"
+                class="account-link"
+            >
+                View wishlist
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </article>
+
+
+    <!-- Cart Card -->
+    <article class="account-card">
+
+        <div class="account-card-icon">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+
+        <div class="account-card-content">
+
+            <span class="account-label">
+                Shopping Cart
+            </span>
+
+            <h2>
+                My Cart
+            </h2>
+
+            <p>
+                Review your selected products before
+                proceeding to checkout.
+            </p>
+
+            <a
+                href="{% url 'storefront:cart' %}"
+                class="account-link"
+            >
+                Open cart
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </article>
+
+
+    <!-- Seller Card -->
+    <article class="account-card seller-card">
+
+        <div class="account-card-icon">
+            <i class="fa-solid fa-store"></i>
+        </div>
+
+        <div class="account-card-content">
+
+            <span class="account-label">
+                Business
+            </span>
+
+            <h2>
+                Seller Center
+            </h2>
+
+            <p>
+                Manage your products, orders and online
+                selling activities from one place.
+            </p>
+
+            <a
+                href="{% url 'storefront:seller_dashboard' %}"
+                class="account-link"
+            >
+                Open Seller Center
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </article>
+
+
+    <!-- Checkout Card -->
+    <article class="account-card">
+
+        <div class="account-card-icon">
+            <i class="fa-solid fa-credit-card"></i>
+        </div>
+
+        <div class="account-card-content">
+
+            <span class="account-label">
+                Payments
+            </span>
+
+            <h2>
+                Checkout
+            </h2>
+
+            <p>
+                Continue with your purchase and choose
+                your preferred payment method.
+            </p>
+
+            <a
+                href="{% url 'storefront:checkout' %}"
+                class="account-link"
+            >
+                Continue checkout
+                <span>→</span>
+            </a>
+
+        </div>
+
+    </article>
+
+</div>
+
+
+<!-- Account Quick Actions -->
+<div class="account-actions">
+
+    <div class="section-head">
+
+        <div>
+            <span class="eyebrow">
+                Quick Actions
+            </span>
+
+            <h2>
+                Manage your account
+            </h2>
+        </div>
+
+    </div>
+
+
+    <div class="quick-actions-grid">
+
+        <a
+            href="{% url 'storefront:orders' %}"
+            class="quick-action"
+        >
+            <i class="fa-solid fa-truck"></i>
+
+            <div>
+                <strong>
+                    Track Orders
+                </strong>
+
+                <span>
+                    Check your deliveries
+                </span>
+            </div>
+
+            <span class="arrow">→</span>
+        </a>
+
+
+        <a
+            href="{% url 'storefront:wishlist' %}"
+            class="quick-action"
+        >
+            <i class="fa-solid fa-heart"></i>
+
+            <div>
+                <strong>
+                    Saved Products
+                </strong>
+
+                <span>
+                    View your wishlist
+                </span>
+            </div>
+
+            <span class="arrow">→</span>
+        </a>
+
+
+        <a
+            href="{% url 'storefront:cart' %}"
+            class="quick-action"
+        >
+            <i class="fa-solid fa-bag-shopping"></i>
+
+            <div>
+                <strong>
+                    Shopping Cart
+                </strong>
+
+                <span>
+                    Review your items
+                </span>
+            </div>
+
+            <span class="arrow">→</span>
+        </a>
+
+
+        <a
+            href="{% url 'storefront:sellers' %}"
+            class="quick-action"
+        >
+            <i class="fa-solid fa-shop"></i>
+
+            <div>
+                <strong>
+                    Find Sellers
+                </strong>
+
+                <span>
+                    Explore marketplace sellers
+                </span>
+            </div>
+
+            <span class="arrow">→</span>
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- Help Section -->
+<div class="account-help">
+
+    <div class="help-icon">
+        <i class="fa-solid fa-circle-question"></i>
+    </div>
+
+    <div class="help-content">
+
+        <h2>
+            Need help?
+        </h2>
+
+        <p>
+            Explore the marketplace, check your orders or
+            contact Enock Shopping Center for assistance.
+        </p>
+
+    </div>
+
+    <a
+        href="{% url 'storefront:marketplace' %}"
+        class="primary"
+    >
+        Continue Shopping →
+    </a>
+
+</div>
+```
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * Optional JavaScript enhancement.
+     *
+     * The account page already contains its main content,
+     * so it remains usable even when JavaScript is disabled.
+     */
+
+    if (typeof window.initPage === "function") {
+
+        try {
+            window.initPage("account");
+
+        } catch (error) {
+
+            console.warn(
+                "Account page enhancement unavailable:",
+                error
+            );
+
+        }
+
+    }
+
+});
+</script>
+
+{% endblock %}
