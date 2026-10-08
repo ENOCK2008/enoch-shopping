@@ -1,1 +1,1828 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — seller products{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>seller products</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('seller_products');</script>{% endblock %}
+{% extends 'storefront/base.html' %}
+{% load static %}
+
+{% block title %}Seller Products — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="seller-products-page">
+
+```
+<!-- Header -->
+<div class="seller-products-hero">
+
+    <div>
+        <span class="eyebrow">SELLER CENTER</span>
+
+        <h1>Manage your products</h1>
+
+        <p>
+            Add products, update prices and stock, manage listings,
+            and keep your Enock Shopping Center store up to date.
+        </p>
+
+        <div class="seller-product-actions">
+
+            <a href="{% url 'storefront:seller_dashboard' %}"
+               class="seller-products-btn secondary">
+                <i class="fa-solid fa-arrow-left"></i>
+                Dashboard
+            </a>
+
+            <button type="button"
+                    class="seller-products-btn primary"
+                    id="addProductButton">
+                <i class="fa-solid fa-plus"></i>
+                Add Product
+            </button>
+
+        </div>
+    </div>
+
+    <div class="seller-products-hero-icon">
+        <i class="fa-solid fa-boxes-stacked"></i>
+    </div>
+
+</div>
+
+
+<!-- Statistics -->
+<div class="seller-product-stats">
+
+    <div class="product-stat">
+        <div class="product-stat-icon blue">
+            <i class="fa-solid fa-box"></i>
+        </div>
+
+        <div>
+            <span>Total Products</span>
+            <strong id="totalProducts">—</strong>
+        </div>
+    </div>
+
+
+    <div class="product-stat">
+        <div class="product-stat-icon green">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <div>
+            <span>Published</span>
+            <strong id="publishedProducts">—</strong>
+        </div>
+    </div>
+
+
+    <div class="product-stat">
+        <div class="product-stat-icon orange">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <div>
+            <span>Low Stock</span>
+            <strong id="lowStockProducts">—</strong>
+        </div>
+    </div>
+
+
+    <div class="product-stat">
+        <div class="product-stat-icon red">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+
+        <div>
+            <span>Out of Stock</span>
+            <strong id="outOfStockProducts">—</strong>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Product Management -->
+<section class="seller-products-panel">
+
+    <div class="products-panel-header">
+
+        <div>
+            <span class="panel-eyebrow">CATALOG</span>
+            <h2>Your products</h2>
+        </div>
+
+        <span class="products-count">
+            <strong id="visibleProductCount">0</strong>
+            products
+        </span>
+
+    </div>
+
+
+    <!-- Filters -->
+    <div class="product-filters">
+
+        <div class="product-search">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="search"
+                id="sellerProductSearch"
+                placeholder="Search your products..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <select id="sellerProductCategory">
+
+            <option value="">All categories</option>
+            <option value="phones">Phones</option>
+            <option value="electronics">Electronics</option>
+            <option value="solar">Solar</option>
+            <option value="vehicles">Vehicles</option>
+            <option value="fashion">Fashion</option>
+            <option value="home">Home & Living</option>
+            <option value="agriculture">Agriculture</option>
+            <option value="animals">Animals & Birds</option>
+            <option value="other">Other</option>
+
+        </select>
+
+
+        <select id="sellerProductStatus">
+
+            <option value="">All status</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+            <option value="inactive">Inactive</option>
+
+        </select>
+
+
+        <select id="sellerProductSort">
+
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="price_high">Highest price</option>
+            <option value="price_low">Lowest price</option>
+            <option value="stock_low">Lowest stock</option>
+
+        </select>
+
+    </div>
+
+
+    <!-- Product List -->
+    <div id="pageContent" class="seller-products-list">
+
+        <div class="seller-products-loading">
+
+            <div>
+                <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
+
+            <p>Loading your products...</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Empty State -->
+    <div id="sellerProductsEmpty"
+         class="seller-products-empty"
+         hidden>
+
+        <div class="empty-product-icon">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+
+        <h3>No products found</h3>
+
+        <p>
+            Start building your store by adding your first product.
+        </p>
+
+        <button type="button"
+                class="seller-products-btn primary"
+                onclick="openProductForm()">
+            <i class="fa-solid fa-plus"></i>
+            Add Your First Product
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- Product Form -->
+<section id="productFormPanel"
+         class="product-form-panel"
+         hidden>
+
+    <div class="product-form-header">
+
+        <div>
+            <span class="panel-eyebrow">PRODUCT LISTING</span>
+            <h2 id="productFormTitle">Add a product</h2>
+        </div>
+
+        <button type="button"
+                id="closeProductForm"
+                class="close-form-button"
+                aria-label="Close product form">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+    </div>
+
+
+    <form id="sellerProductForm">
+
+        {% csrf_token %}
+
+        <input type="hidden"
+               name="product_id"
+               id="productId">
+
+
+        <div class="product-form-grid">
+
+            <!-- Product Information -->
+            <div class="form-section">
+
+                <h3>Product information</h3>
+
+                <label>
+                    Product name
+                    <input
+                        type="text"
+                        name="name"
+                        id="productName"
+                        placeholder="e.g. Samsung Galaxy A15"
+                        required
+                    >
+                </label>
+
+
+                <label>
+                    Description
+                    <textarea
+                        name="description"
+                        id="productDescription"
+                        rows="5"
+                        placeholder="Describe your product..."
+                    ></textarea>
+                </label>
+
+
+                <div class="form-two-columns">
+
+                    <label>
+                        Category
+
+                        <select
+                            name="category"
+                            id="productCategory"
+                            required
+                        >
+                            <option value="">Select category</option>
+                            <option value="phones">Phones</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="solar">Solar</option>
+                            <option value="vehicles">Vehicles</option>
+                            <option value="fashion">Fashion</option>
+                            <option value="home">Home & Living</option>
+                            <option value="agriculture">Agriculture</option>
+                            <option value="animals">Animals & Birds</option>
+                            <option value="other">Other</option>
+                        </select>
+
+                    </label>
+
+
+                    <label>
+                        Condition
+
+                        <select name="condition"
+                                id="productCondition">
+
+                            <option value="new">New</option>
+                            <option value="used">Used</option>
+                            <option value="refurbished">
+                                Refurbished
+                            </option>
+
+                        </select>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <!-- Pricing and Stock -->
+            <div class="form-section">
+
+                <h3>Pricing & inventory</h3>
+
+                <div class="form-two-columns">
+
+                    <label>
+                        Price (UGX)
+
+                        <input
+                            type="number"
+                            name="price"
+                            id="productPrice"
+                            min="0"
+                            step="1"
+                            placeholder="0"
+                            required
+                        >
+
+                    </label>
+
+
+                    <label>
+                        Stock quantity
+
+                        <input
+                            type="number"
+                            name="stock"
+                            id="productStock"
+                            min="0"
+                            step="1"
+                            placeholder="0"
+                            required
+                        >
+
+                    </label>
+
+                </div>
+
+
+                <label>
+                    Seller SKU
+
+                    <input
+                        type="text"
+                        name="sku"
+                        id="productSku"
+                        placeholder="Optional product code"
+                    >
+
+                </label>
+
+
+                <label class="checkbox-label">
+
+                    <input
+                        type="checkbox"
+                        name="active"
+                        id="productActive"
+                        checked
+                    >
+
+                    <span>
+                        Publish this product to the marketplace
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <!-- Image -->
+            <div class="form-section image-section">
+
+                <h3>Product image</h3>
+
+                <div class="product-image-upload">
+
+                    <div id="productImagePreview"
+                         class="product-image-preview">
+
+                        <i class="fa-solid fa-image"></i>
+
+                        <span>
+                            Product image preview
+                        </span>
+
+                    </div>
+
+
+                    <label class="upload-button">
+
+                        <i class="fa-solid fa-camera"></i>
+                        Choose image
+
+                        <input
+                            type="file"
+                            name="image"
+                            id="productImage"
+                            accept="image/*"
+                            hidden
+                        >
+
+                    </label>
+
+                    <small>
+                        Use a clear image of the product.
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div id="productFormMessage"
+             class="product-form-message"
+             role="alert">
+        </div>
+
+
+        <div class="product-form-actions">
+
+            <button type="button"
+                    id="cancelProductForm"
+                    class="form-cancel-button">
+                Cancel
+            </button>
+
+            <button type="submit"
+                    class="form-save-button">
+                <i class="fa-solid fa-check"></i>
+                Save Product
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+
+<!-- Seller Tips -->
+<section class="seller-product-tips">
+
+    <div class="seller-tip">
+
+        <i class="fa-solid fa-camera"></i>
+
+        <div>
+            <strong>Use quality images</strong>
+
+            <p>
+                Clear product photos help customers understand
+                what they are buying.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="seller-tip">
+
+        <i class="fa-solid fa-tag"></i>
+
+        <div>
+            <strong>Price competitively</strong>
+
+            <p>
+                Compare similar products and keep your pricing
+                attractive to shoppers.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="seller-tip">
+
+        <i class="fa-solid fa-boxes-stacked"></i>
+
+        <div>
+            <strong>Keep stock updated</strong>
+
+            <p>
+                Update inventory regularly to avoid selling
+                products that are unavailable.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Final CTA -->
+<section class="seller-products-footer">
+
+    <div>
+
+        <span class="eyebrow">SELL MORE</span>
+
+        <h2>Keep your store fresh.</h2>
+
+        <p>
+            Add new products, update your listings and keep
+            your customers coming back.
+        </p>
+
+    </div>
+
+    <a href="{% url 'storefront:marketplace' %}"
+       class="seller-products-btn primary">
+
+        <i class="fa-solid fa-store"></i>
+        View Marketplace
+
+    </a>
+
+</section>
+```
+
+</section>
+
+<style>
+
+.seller-products-page {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 30px 20px 70px;
+}
+
+.seller-products-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    padding: 42px;
+    margin-bottom: 24px;
+    border-radius: 28px;
+    color: white;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+.seller-products-hero h1 {
+    margin: 8px 0 12px;
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.seller-products-hero p {
+    max-width: 680px;
+    margin: 0 0 23px;
+    color: rgba(255,255,255,.88);
+}
+
+.seller-product-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.seller-products-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 11px;
+    border: 0;
+    text-decoration: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.seller-products-btn.primary {
+    background: white;
+    color: #2563eb;
+}
+
+.seller-products-btn.secondary {
+    color: white;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.4);
+}
+
+.seller-products-btn:hover {
+    transform: translateY(-2px);
+}
+
+.seller-products-hero-icon {
+    width: 145px;
+    height: 145px;
+    min-width: 145px;
+    display: grid;
+    place-items: center;
+    border-radius: 40px;
+    background: rgba(255,255,255,.14);
+    font-size: 60px;
+}
+
+.seller-product-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 17px;
+    margin-bottom: 24px;
+}
+
+.product-stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 21px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    box-shadow: 0 7px 24px rgba(15,23,42,.05);
+}
+
+.product-stat-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+}
+
+.product-stat-icon.blue {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.product-stat-icon.green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.product-stat-icon.orange {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.product-stat-icon.red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.product-stat span {
+    display: block;
+    color: #64748b;
+    font-size: .85rem;
+}
+
+.product-stat strong {
+    display: block;
+    margin-top: 3px;
+    font-size: 1.45rem;
+}
+
+.seller-products-panel,
+.product-form-panel {
+    padding: 26px;
+    margin-bottom: 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    background: white;
+    box-shadow: 0 8px 25px rgba(15,23,42,.05);
+}
+
+.products-panel-header,
+.product-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.products-panel-header h2,
+.product-form-header h2 {
+    margin: 5px 0 0;
+}
+
+.panel-eyebrow {
+    color: #64748b;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.products-count {
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: .85rem;
+}
+
+.product-filters {
+    display: grid;
+    grid-template-columns: 1fr 180px 180px 180px;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.product-search {
+    position: relative;
+}
+
+.product-search i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.product-search input,
+.product-filters select {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 13px;
+    border: 1px solid #dbe2ea;
+    border-radius: 11px;
+    background: white;
+    color: #0f172a;
+    outline: none;
+}
+
+.product-search input {
+    padding-left: 40px;
+}
+
+.product-search input:focus,
+.product-filters select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+
+.seller-products-list {
+    min-height: 160px;
+}
+
+.seller-products-loading {
+    display: grid;
+    place-items: center;
+    min-height: 180px;
+    color: #64748b;
+    text-align: center;
+}
+
+.seller-products-loading i {
+    color: #2563eb;
+    font-size: 28px;
+}
+
+.seller-product-card {
+    display: grid;
+    grid-template-columns: 90px 1.5fr 130px 110px 120px auto;
+    align-items: center;
+    gap: 17px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: white;
+    transition: .2s ease;
+}
+
+.seller-product-card:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 7px 20px rgba(15,23,42,.05);
+}
+
+.seller-product-image {
+    width: 75px;
+    height: 75px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 13px;
+    background: #f1f5f9;
+    color: #94a3b8;
+    font-size: 24px;
+}
+
+.seller-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.seller-product-name {
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.seller-product-category,
+.seller-product-meta {
+    display: block;
+    margin-top: 4px;
+    color: #64748b;
+    font-size: .82rem;
+}
+
+.seller-product-price {
+    font-weight: 800;
+}
+
+.seller-stock {
+    display: inline-flex;
+    width: fit-content;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 800;
+}
+
+.stock-good {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.stock-low {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.stock-out {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.product-list-status {
+    display: inline-flex;
+    width: fit-content;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 800;
+}
+
+.product-status-published {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.product-status-draft {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.product-status-inactive {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.product-edit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.product-edit-button:hover {
+    background: #dbeafe;
+}
+
+.seller-products-empty {
+    text-align: center;
+    padding: 45px 20px;
+}
+
+.empty-product-icon {
+    width: 70px;
+    height: 70px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 15px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 28px;
+}
+
+.seller-products-empty h3 {
+    margin: 0 0 7px;
+}
+
+.seller-products-empty p {
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.product-form-panel[hidden],
+.seller-products-empty[hidden] {
+    display: none !important;
+}
+
+.close-form-button {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #475569;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.product-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.form-section {
+    padding: 20px;
+    border-radius: 17px;
+    background: #f8fafc;
+}
+
+.form-section h3 {
+    margin: 0 0 18px;
+}
+
+.form-section label {
+    display: block;
+    margin-bottom: 15px;
+    color: #334155;
+    font-size: .9rem;
+    font-weight: 700;
+}
+
+.form-section input[type="text"],
+.form-section input[type="number"],
+.form-section textarea,
+.form-section select {
+    display: block;
+    width: 100%;
+    margin-top: 7px;
+    padding: 11px 12px;
+    border: 1px solid #dbe2ea;
+    border-radius: 10px;
+    background: white;
+    color: #0f172a;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.form-section textarea {
+    resize: vertical;
+}
+
+.form-section input:focus,
+.form-section textarea:focus,
+.form-section select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.08);
+}
+
+.form-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.checkbox-label {
+    display: flex !important;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    width: 17px;
+    height: 17px;
+}
+
+.product-image-upload {
+    text-align: center;
+}
+
+.product-image-preview {
+    width: 100%;
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    border: 2px dashed #cbd5e1;
+    border-radius: 15px;
+    background: white;
+    color: #94a3b8;
+}
+
+.product-image-preview i {
+    font-size: 38px;
+}
+
+.product-image-preview img {
+    width: 100%;
+    height: 190px;
+    object-fit: contain;
+}
+
+.upload-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white !important;
+    cursor: pointer;
+}
+
+.product-image-upload small {
+    display: block;
+    margin-top: 9px;
+    color: #64748b;
+}
+
+.product-form-message {
+    min-height: 20px;
+    margin-top: 15px;
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.product-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-cancel-button,
+.form-save-button {
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 0;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.form-cancel-button {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.form-save-button {
+    background: #2563eb;
+    color: white;
+}
+
+.seller-product-tips {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 17px;
+    margin-bottom: 24px;
+}
+
+.seller-tip {
+    display: flex;
+    gap: 13px;
+    padding: 21px;
+    border: 1px solid #e5e7eb;
+    border-radius: 17px;
+    background: white;
+}
+
+.seller-tip > i {
+    color: #2563eb;
+    font-size: 21px;
+}
+
+.seller-tip strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.seller-tip p {
+    margin: 0;
+    color: #64748b;
+    font-size: .88rem;
+    line-height: 1.5;
+}
+
+.seller-products-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    padding: 30px;
+    border-radius: 22px;
+    background: #0f172a;
+    color: white;
+}
+
+.seller-products-footer h2 {
+    margin: 7px 0;
+}
+
+.seller-products-footer p {
+    margin: 0;
+    color: #cbd5e1;
+}
+
+@media (max-width: 1100px) {
+
+    .product-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .seller-product-card {
+        grid-template-columns: 80px 1fr 110px 100px;
+    }
+
+    .seller-product-card > :nth-child(5),
+    .seller-product-card > :nth-child(6) {
+        grid-column: span 1;
+    }
+
+}
+
+@media (max-width: 900px) {
+
+    .seller-product-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .product-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seller-product-tips {
+        grid-template-columns: 1fr;
+    }
+
+    .seller-products-hero-icon {
+        display: none;
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .seller-products-page {
+        padding: 20px 14px 50px;
+    }
+
+    .seller-products-hero {
+        padding: 30px 22px;
+    }
+
+    .seller-product-stats,
+    .product-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .seller-product-card {
+        grid-template-columns: 70px 1fr;
+    }
+
+    .seller-product-card > * {
+        grid-column: auto !important;
+    }
+
+    .seller-products-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-two-columns {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    if (window.initPage) {
+        initPage("seller_products");
+    }
+
+
+    const formPanel = document.getElementById("productFormPanel");
+    const form = document.getElementById("sellerProductForm");
+    const addButton = document.getElementById("addProductButton");
+    const closeButton = document.getElementById("closeProductForm");
+    const cancelButton = document.getElementById("cancelProductForm");
+    const imageInput = document.getElementById("productImage");
+    const imagePreview = document.getElementById("productImagePreview");
+
+
+    window.openProductForm = function (product = null) {
+
+        if (!formPanel) return;
+
+        formPanel.hidden = false;
+
+        document.getElementById("productFormTitle").textContent =
+            product ? "Edit product" : "Add a product";
+
+        if (product) {
+
+            document.getElementById("productId").value =
+                product.id || "";
+
+            document.getElementById("productName").value =
+                product.name || "";
+
+            document.getElementById("productDescription").value =
+                product.description || "";
+
+            document.getElementById("productCategory").value =
+                product.category || "";
+
+            document.getElementById("productCondition").value =
+                product.condition || "new";
+
+            document.getElementById("productPrice").value =
+                product.price || "";
+
+            document.getElementById("productStock").value =
+                product.stock ?? "";
+
+            document.getElementById("productSku").value =
+                product.sku || "";
+
+            document.getElementById("productActive").checked =
+                product.active !== false;
+
+            if (product.image) {
+                imagePreview.innerHTML = `
+                    <img src="${product.image}" alt="">
+                `;
+            }
+
+        } else {
+
+            form.reset();
+
+            document.getElementById("productActive").checked = true;
+
+            document.getElementById("productId").value = "";
+
+            imagePreview.innerHTML = `
+                <i class="fa-solid fa-image"></i>
+                <span>Product image preview</span>
+            `;
+
+        }
+
+        formPanel.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    };
+
+
+    window.closeProductForm = function () {
+
+        if (!formPanel) return;
+
+        formPanel.hidden = true;
+
+        if (form) {
+            form.reset();
+        }
+
+    };
+
+
+    if (addButton) {
+        addButton.addEventListener("click", function () {
+            openProductForm();
+        });
+    }
+
+
+    if (closeButton) {
+        closeButton.addEventListener("click", closeProductForm);
+    }
+
+
+    if (cancelButton) {
+        cancelButton.addEventListener("click", closeProductForm);
+    }
+
+
+    if (imageInput) {
+
+        imageInput.addEventListener("change", function () {
+
+            const file = this.files && this.files[0];
+
+            if (!file) return;
+
+            if (!file.type.startsWith("image/")) {
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+
+                imagePreview.innerHTML = `
+                    <img
+                        src="${event.target.result}"
+                        alt="Product preview"
+                    >
+                `;
+
+            };
+
+            reader.readAsDataURL(file);
+
+        });
+
+    }
+
+
+    let sellerProducts = [];
+
+
+    if (Array.isArray(window.sellerProductsData)) {
+
+        sellerProducts = window.sellerProductsData;
+
+        renderSellerProducts(sellerProducts);
+
+        updateProductStatistics(sellerProducts);
+
+    }
+
+
+    function renderSellerProducts(products) {
+
+        const container = document.getElementById("pageContent");
+        const empty = document.getElementById("sellerProductsEmpty");
+        const count = document.getElementById("visibleProductCount");
+
+        if (!container) return;
+
+        count.textContent = products.length;
+
+
+        if (!products.length) {
+
+            container.innerHTML = "";
+
+            if (empty) {
+                empty.hidden = false;
+            }
+
+            return;
+        }
+
+
+        if (empty) {
+            empty.hidden = true;
+        }
+
+
+        container.innerHTML = products.map(function (product) {
+
+            const id = product.id || "";
+
+            const name =
+                product.name ||
+                product.title ||
+                "Unnamed product";
+
+            const category =
+                product.category_name ||
+                product.category ||
+                "Other";
+
+            const price =
+                Number(product.price || 0);
+
+            const stock =
+                Number(product.stock ?? product.quantity ?? 0);
+
+            const status =
+                String(
+                    product.status ||
+                    (product.active === false ? "inactive" : "published")
+                ).toLowerCase();
+
+
+            let stockClass = "stock-good";
+
+            if (stock <= 0) {
+                stockClass = "stock-out";
+            } else if (stock <= 5) {
+                stockClass = "stock-low";
+            }
+
+
+            const image = product.image || product.image_url || "";
+
+
+            return `
+
+                <article class="seller-product-card">
+
+                    <div class="seller-product-image">
+
+                        ${
+                            image
+                            ? `<img src="${image}" alt="${name}">`
+                            : `<i class="fa-solid fa-image"></i>`
+                        }
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="seller-product-name">
+                            ${name}
+                        </div>
+
+                        <span class="seller-product-category">
+                            ${category}
+                        </span>
+
+                        ${
+                            product.sku
+                            ? `
+                                <span class="seller-product-meta">
+                                    SKU: ${product.sku}
+                                </span>
+                              `
+                            : ""
+                        }
+
+                    </div>
+
+
+                    <div class="seller-product-price">
+                        UGX ${price.toLocaleString()}
+                    </div>
+
+
+                    <div>
+
+                        <span class="seller-stock ${stockClass}">
+                            ${
+                                stock <= 0
+                                ? "Out of stock"
+                                : stock + " in stock"
+                            }
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <span class="product-list-status product-status-${status}">
+                            ${
+                                status.charAt(0).toUpperCase() +
+                                status.slice(1)
+                            }
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <button
+                            type="button"
+                            class="product-edit-button"
+                            data-product-id="${id}"
+                        >
+                            <i class="fa-solid fa-pen"></i>
+                            Edit
+                        </button>
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }).join("");
+
+
+        container
+            .querySelectorAll(".product-edit-button")
+            .forEach(function (button) {
+
+                button.addEventListener("click", function () {
+
+                    const id = this.dataset.productId;
+
+                    const product =
+                        sellerProducts.find(function (item) {
+                            return String(item.id) === String(id);
+                        });
+
+                    if (product) {
+                        openProductForm(product);
+                    }
+
+                });
+
+            });
+
+    }
+
+
+    function updateProductStatistics(products) {
+
+        const total = products.length;
+
+        const published = products.filter(function (product) {
+
+            return String(
+                product.status ||
+                (product.active === false ? "inactive" : "published")
+            ).toLowerCase() === "published";
+
+        }).length;
+
+
+        const lowStock = products.filter(function (product) {
+
+            const stock =
+                Number(product.stock ?? product.quantity ?? 0);
+
+            return stock > 0 && stock <= 5;
+
+        }).length;
+
+
+        const outOfStock = products.filter(function (product) {
+
+            const stock =
+                Number(product.stock ?? product.quantity ?? 0);
+
+            return stock <= 0;
+
+        }).length;
+
+
+        document.getElementById("totalProducts").textContent = total;
+        document.getElementById("publishedProducts").textContent = published;
+        document.getElementById("lowStockProducts").textContent = lowStock;
+        document.getElementById("outOfStockProducts").textContent = outOfStock;
+
+    }
+
+
+    const searchInput =
+        document.getElementById("sellerProductSearch");
+
+    const categorySelect =
+        document.getElementById("sellerProductCategory");
+
+    const statusSelect =
+        document.getElementById("sellerProductStatus");
+
+    const sortSelect =
+        document.getElementById("sellerProductSort");
+
+
+    function filterProducts() {
+
+        const search =
+            (searchInput.value || "").toLowerCase().trim();
+
+        const category =
+            (categorySelect.value || "").toLowerCase();
+
+        const status =
+            (statusSelect.value || "").toLowerCase();
+
+        const sort =
+            sortSelect.value;
+
+
+        let filtered =
+            sellerProducts.filter(function (product) {
+
+                const name =
+                    product.name ||
+                    product.title ||
+                    "";
+
+                const productCategory =
+                    String(
+                        product.category_slug ||
+                        product.category ||
+                        ""
+                    ).toLowerCase();
+
+                const productStatus =
+                    String(
+                        product.status ||
+                        (product.active === false
+                            ? "inactive"
+                            : "published")
+                    ).toLowerCase();
+
+
+                const searchable =
+                    [
+                        name,
+                        product.description,
+                        product.sku,
+                        product.category_name
+                    ]
+                    .join(" ")
+                    .toLowerCase();
+
+
+                return (
+                    (!search || searchable.includes(search)) &&
+                    (!category || productCategory === category) &&
+                    (!status || productStatus === status)
+                );
+
+            });
+
+
+        filtered.sort(function (a, b) {
+
+            if (sort === "price_high") {
+                return Number(b.price || 0) -
+                       Number(a.price || 0);
+            }
+
+            if (sort === "price_low") {
+                return Number(a.price || 0) -
+                       Number(b.price || 0);
+            }
+
+            if (sort === "stock_low") {
+                return Number(a.stock ?? a.quantity ?? 0) -
+                       Number(b.stock ?? b.quantity ?? 0);
+            }
+
+
+            const dateA =
+                new Date(a.created_at || 0);
+
+            const dateB =
+                new Date(b.created_at || 0);
+
+
+            return sort === "oldest"
+                ? dateA - dateB
+                : dateB - dateA;
+
+        });
+
+
+        renderSellerProducts(filtered);
+
+    }
+
+
+    if (searchInput) {
+        searchInput.addEventListener("input", filterProducts);
+    }
+
+    if (categorySelect) {
+        categorySelect.addEventListener("change", filterProducts);
+    }
+
+    if (statusSelect) {
+        statusSelect.addEventListener("change", filterProducts);
+    }
+
+    if (sortSelect) {
+        sortSelect.addEventListener("change", filterProducts);
+    }
+
+
+    /*
+     * Public API for app.js.
+     *
+     * app.js can call:
+     *
+     * window.renderSellerProducts([...]);
+     */
+
+    window.renderSellerProducts = function (products) {
+
+        if (!Array.isArray(products)) {
+            return;
+        }
+
+        sellerProducts = products;
+
+        updateProductStatistics(sellerProducts);
+
+        filterProducts();
+
+    };
+
+
+    /*
+     * Product form integration hook.
+     *
+     * If app.js implements:
+     *
+     * window.saveSellerProduct(formData)
+     *
+     * it will be used here.
+     */
+
+    if (form) {
+
+        form.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            const message =
+                document.getElementById("productFormMessage");
+
+            message.textContent = "";
+
+            const formData =
+                new FormData(form);
+
+
+            try {
+
+                if (typeof window.saveSellerProduct === "function") {
+
+                    const result =
+                        await window.saveSellerProduct(formData);
+
+                    if (result === false) {
+                        return;
+                    }
+
+                    message.style.color = "#15803d";
+                    message.textContent =
+                        "Product saved successfully.";
+
+                    return;
+
+                }
+
+
+                message.style.color = "#92400e";
+
+                message.textContent =
+                    "Product form is ready. Connect the seller catalog API to save this product.";
+
+            } catch (error) {
+
+                console.error(error);
+
+                message.style.color = "#b91c1c";
+
+                message.textContent =
+                    "Unable to save the product. Please try again.";
+
+            }
+
+        });
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
