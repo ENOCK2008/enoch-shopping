@@ -1,1 +1,547 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — marketplace{% endblock %}{% block content %}<section class="section page"><span class="eyebrow">Enock Shopping Center</span><h1>marketplace</h1><div id="pageContent" class="product-grid"><div class="loading">Loading...</div></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.initPage) initPage('marketplace');</script>{% endblock %}
+```django
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Marketplace — Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<section class="marketplace-page">
+
+    <!-- Marketplace Hero -->
+    <section class="marketplace-hero">
+        <div class="container">
+            <div class="marketplace-hero-content">
+                <div>
+                    <span class="eyebrow">ENOCK SHOPPING CENTER</span>
+
+                    <h1>
+                        Shop everything you need,
+                        <span>all in one place.</span>
+                    </h1>
+
+                    <p>
+                        Discover products from trusted sellers, compare prices,
+                        add to your cart and order for delivery.
+                    </p>
+
+                    <div class="marketplace-actions">
+                        <a href="{% url 'storefront:cart' %}" class="btn btn-primary">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            View Cart
+                        </a>
+
+                        <a href="{% url 'storefront:sellers' %}" class="btn btn-outline">
+                            <i class="fa-solid fa-store"></i>
+                            Explore Sellers
+                        </a>
+                    </div>
+                </div>
+
+                <div class="marketplace-hero-card">
+                    <div class="hero-icon">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                    </div>
+
+                    <h3>Smart Shopping</h3>
+
+                    <p>
+                        Find products faster with search, categories,
+                        filters and recommendations.
+                    </p>
+
+                    <div class="hero-stats">
+                        <div>
+                            <strong>24/7</strong>
+                            <small>Shopping</small>
+                        </div>
+
+                        <div>
+                            <strong>UGX</strong>
+                            <small>Local pricing</small>
+                        </div>
+
+                        <div>
+                            <strong>Fast</strong>
+                            <small>Delivery</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Search -->
+    <section class="marketplace-search-section">
+        <div class="container">
+
+            <div class="marketplace-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="search"
+                    id="marketplaceSearch"
+                    placeholder="Search phones, solar products, clothes, bikes, animals..."
+                    autocomplete="off"
+                />
+
+                <button type="button" id="searchButton" class="btn btn-primary">
+                    Search
+                </button>
+            </div>
+
+            <div class="popular-searches">
+                <span>Popular:</span>
+
+                <button type="button" class="search-tag" data-search="phones">
+                    Phones
+                </button>
+
+                <button type="button" class="search-tag" data-search="solar">
+                    Solar
+                </button>
+
+                <button type="button" class="search-tag" data-search="motorcycles">
+                    Motorcycles
+                </button>
+
+                <button type="button" class="search-tag" data-search="fashion">
+                    Fashion
+                </button>
+
+                <button type="button" class="search-tag" data-search="livestock">
+                    Livestock
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Categories -->
+    <section class="marketplace-section">
+        <div class="container">
+
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">EXPLORE</span>
+                    <h2>Shop by category</h2>
+                    <p>Find what you need quickly.</p>
+                </div>
+
+                <a href="#products" class="text-link">
+                    View products
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+
+            <div class="category-grid">
+
+                <a href="#products" class="category-card">
+                    <div class="category-icon">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <h3>Phones & Electronics</h3>
+                    <p>Smartphones, accessories and electronics</p>
+                </a>
+
+
+                <a href="#products" class="category-card">
+                    <div class="category-icon">
+                        <i class="fa-solid fa-solar-panel"></i>
+                    </div>
+                    <h3>Solar Products</h3>
+                    <p>Solar systems, panels and accessories</p>
+                </a>
+
+
+                <a href="#products" class="category-card">
+                    <div class="category-icon">
+                        <i class="fa-solid fa-motorcycle"></i>
+                    </div>
+                    <h3>Bikes & Vehicles</h3>
+                    <p>Motorcycles, bicycles and vehicles</p>
+                </a>
+
+
+                <a href="#products" class="category-card">
+                    <div class="category-icon">
+                        <i class="fa-solid fa-shirt"></i>
+                    </div>
+                    <h3>Fashion</h3>
+                    <p>Clothes, shoes and accessories</p>
+                </a>
+
+
+                <a href="#products" class="category-card">
+                    <div class="category-icon">
+                        <i class="fa-solid fa-house"></i>
+                    </div>
+                    <h3>Home & Living</h3>
+                    <p>Furniture, appliances and home goods</p>
+                </a>
+
+
+                <a href="#products" class="category-card">
+                    <div class="category-icon">
+                        <i class="fa-solid fa-egg"></i>
+                    </div>
+                    <h3>Animals & Birds</h3>
+                    <p>Hens, ducks, livestock and birds</p>
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Products -->
+    <section class="marketplace-section products-section" id="products">
+        <div class="container">
+
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">MARKETPLACE</span>
+                    <h2>Featured products</h2>
+                    <p>Discover products available from our marketplace.</p>
+                </div>
+
+                <div class="product-controls">
+
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">All categories</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="solar">Solar</option>
+                        <option value="vehicles">Vehicles</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="home">Home</option>
+                        <option value="animals">Animals</option>
+                    </select>
+
+                    <select id="sortProducts" class="filter-select">
+                        <option value="">Sort by</option>
+                        <option value="price_low">Price: Low to High</option>
+                        <option value="price_high">Price: High to Low</option>
+                        <option value="newest">Newest</option>
+                    </select>
+
+                </div>
+            </div>
+
+
+            <!-- Product API loading area -->
+            <div id="pageContent">
+
+                <div class="marketplace-loading">
+
+                    <div class="loading-spinner">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                    </div>
+
+                    <h3>Loading products...</h3>
+
+                    <p>
+                        Please wait while we load products from the marketplace.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Seller CTA -->
+    <section class="seller-marketplace-section">
+        <div class="container">
+
+            <div class="seller-marketplace-card">
+
+                <div class="seller-content">
+
+                    <span class="eyebrow">SELL ON ENOCK</span>
+
+                    <h2>
+                        Turn your products into
+                        <span>new opportunities.</span>
+                    </h2>
+
+                    <p>
+                        Join Enock Shopping Center and reach customers
+                        across Uganda and beyond.
+                    </p>
+
+                    <div class="seller-benefits">
+
+                        <div>
+                            <i class="fa-solid fa-users"></i>
+                            <span>Reach more customers</span>
+                        </div>
+
+                        <div>
+                            <i class="fa-solid fa-chart-line"></i>
+                            <span>Grow your sales</span>
+                        </div>
+
+                        <div>
+                            <i class="fa-solid fa-mobile-screen"></i>
+                            <span>Manage your store online</span>
+                        </div>
+
+                    </div>
+
+                    <a href="{% url 'storefront:sellers' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-store"></i>
+                        Become a Seller
+                    </a>
+
+                </div>
+
+                <div class="seller-visual">
+                    <div class="seller-circle">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Shopping Benefits -->
+    <section class="marketplace-section">
+        <div class="container">
+
+            <div class="section-heading centered">
+                <span class="eyebrow">WHY ENOCK</span>
+                <h2>Shopping made easier</h2>
+                <p>
+                    Everything you need for a simple and convenient
+                    online shopping experience.
+                </p>
+            </div>
+
+
+            <div class="benefits-grid">
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <h3>Secure Shopping</h3>
+
+                    <p>
+                        Shop with confidence using secure accounts
+                        and protected checkout.
+                    </p>
+                </div>
+
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </div>
+
+                    <h3>Flexible Payments</h3>
+
+                    <p>
+                        Designed for convenient mobile money and
+                        online payment experiences.
+                    </p>
+                </div>
+
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+
+                    <h3>Delivery</h3>
+
+                    <p>
+                        Order your products and keep track of your
+                        delivery journey.
+                    </p>
+                </div>
+
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+
+                    <h3>Customer Support</h3>
+
+                    <p>
+                        Get help when you need it throughout your
+                        shopping experience.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Final CTA -->
+    <section class="marketplace-final-cta">
+        <div class="container">
+
+            <div class="final-cta-content">
+
+                <span class="eyebrow">ENOCK SHOPPING CENTER</span>
+
+                <h2>Ready to start shopping?</h2>
+
+                <p>
+                    Explore products, discover great sellers and
+                    build your cart today.
+                </p>
+
+                <div class="cta-buttons">
+
+                    <a href="#products" class="btn btn-light">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        Browse Products
+                    </a>
+
+                    <a href="{% url 'storefront:cart' %}" class="btn btn-outline-light">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        My Cart
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("marketplaceSearch");
+    const searchButton = document.getElementById("searchButton");
+
+    function performSearch() {
+        const value = searchInput ? searchInput.value.trim() : "";
+
+        if (!value) {
+            document.getElementById("products")?.scrollIntoView({
+                behavior: "smooth"
+            });
+            return;
+        }
+
+        /*
+         * The current storefront does not yet have a dedicated
+         * search URL. For now, save the search term so app.js/API
+         * integration can use it.
+         */
+        sessionStorage.setItem("marketplace_search", value);
+
+        document.getElementById("products")?.scrollIntoView({
+            behavior: "smooth"
+        });
+
+        if (typeof window.searchProducts === "function") {
+            window.searchProducts(value);
+        }
+    }
+
+
+    if (searchButton) {
+        searchButton.addEventListener("click", performSearch);
+    }
+
+
+    if (searchInput) {
+        searchInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                performSearch();
+            }
+        });
+    }
+
+
+    document.querySelectorAll(".search-tag").forEach(function (tag) {
+
+        tag.addEventListener("click", function () {
+
+            const value = this.dataset.search || "";
+
+            if (searchInput) {
+                searchInput.value = value;
+            }
+
+            performSearch();
+
+        });
+
+    });
+
+
+    const categoryFilter = document.getElementById("categoryFilter");
+
+    if (categoryFilter) {
+
+        categoryFilter.addEventListener("change", function () {
+
+            const category = this.value;
+
+            if (typeof window.filterProducts === "function") {
+                window.filterProducts(category);
+            }
+
+        });
+
+    }
+
+
+    const sortProducts = document.getElementById("sortProducts");
+
+    if (sortProducts) {
+
+        sortProducts.addEventListener("change", function () {
+
+            const sort = this.value;
+
+            if (typeof window.sortProducts === "function") {
+                window.sortProducts(sort);
+            }
+
+        });
+
+    }
+
+
+    /*
+     * Use the existing page initializer when available.
+     * It can later connect directly to the Catalog API.
+     */
+    if (typeof window.initPage === "function") {
+        window.initPage("marketplace");
+    }
+
+});
+</script>
+
+{% endblock %}
+```
