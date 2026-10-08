@@ -1,1 +1,441 @@
-{% extends 'storefront/base.html' %}{% block title %}Enock Shopping Center — Global Marketplace{% endblock %}{% block content %}<section class="hero"><div class="hero-copy"><span class="eyebrow">🌍 Buy & sell across borders</span><h1>One marketplace.<br><span>Everywhere.</span></h1><p>Discover products from individuals, brands and businesses around the world.</p><div class="hero-search"><input id="heroSearch" placeholder="Search products..." onkeydown="if(event.key==='Enter') location.href='{% url 'storefront:marketplace' %}?search='+encodeURIComponent(this.value)"><button onclick="location.href='{% url 'storefront:marketplace' %}?search='+encodeURIComponent(document.getElementById('heroSearch').value)">Search</button></div><div class="hero-links"><a class="primary" href="{% url 'storefront:seller_dashboard' %}">+ Start selling</a><a class="text-btn" href="{% url 'storefront:marketplace' %}">Explore marketplace →</a></div></div><div class="hero-card"><div class="globe">🌎</div><h3>International by design</h3><p>C2C + B2C sellers, multiple currencies and delivery options.</p></div></section><section class="trust-strip"><span>🔐 Secure accounts</span><span>✓ Verified sellers</span><span>🌍 Global marketplace</span><span>📦 DHL tracking ready</span><span>💳 MTN • Airtel • Cards</span></section><section class="section"><div class="section-head"><div><span class="eyebrow">Explore</span><h2>Shop by category</h2></div><a class="text-btn" href="{% url 'storefront:marketplace' %}">View all →</a></div><div id="categories" class="category-grid"></div></section>{% endblock %}{% block scripts %}<script src="{% static 'storefront/js/app.js' %}"></script><script>if(window.loadCategories) loadCategories();</script>{% endblock %}
+{% extends "storefront/base.html" %}
+{% load static %}
+
+{% block title %}Enock Shopping Center — Global Marketplace{% endblock %}
+
+{% block content %}
+
+<!-- =========================================================
+     HERO SECTION
+========================================================= -->
+<section class="hero">
+
+    <div class="hero-copy">
+
+        <span class="eyebrow">
+            🌍 Buy & sell across borders
+        </span>
+
+        <h1>
+            One marketplace.
+            <br>
+            <span>Everywhere.</span>
+        </h1>
+
+        <p>
+            Discover phones, electronics, solar products, fashion,
+            vehicles, agriculture products and more from trusted sellers.
+        </p>
+
+        <!-- Search -->
+        <form
+            class="hero-search"
+            action="{% url 'storefront:marketplace' %}"
+            method="get"
+        >
+            <input
+                id="heroSearch"
+                type="search"
+                name="search"
+                placeholder="Search products..."
+                autocomplete="off"
+                aria-label="Search products"
+            >
+
+            <button type="submit">
+                <span>🔍</span>
+                Search
+            </button>
+        </form>
+
+        <!-- Main actions -->
+        <div class="hero-links">
+
+            <a
+                class="primary"
+                href="{% url 'storefront:seller_dashboard' %}"
+            >
+                <span>＋</span>
+                Start selling
+            </a>
+
+            <a
+                class="text-btn"
+                href="{% url 'storefront:marketplace' %}"
+            >
+                Explore marketplace →
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Hero card -->
+    <div class="hero-card">
+
+        <div class="globe">
+            🌎
+        </div>
+
+        <span class="eyebrow">
+            Enock Marketplace
+        </span>
+
+        <h3>
+            International by design
+        </h3>
+
+        <p>
+            Connect buyers and sellers with multiple currencies,
+            flexible delivery options and modern online shopping.
+        </p>
+
+        <div class="hero-card-stats">
+
+            <div>
+                <strong>24/7</strong>
+                <small>Marketplace</small>
+            </div>
+
+            <div>
+                <strong>UGX</strong>
+                <small>Local currency</small>
+            </div>
+
+            <div>
+                <strong>🌍</strong>
+                <small>Global ready</small>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     TRUST STRIP
+========================================================= -->
+<section class="trust-strip">
+
+    <span>
+        🔐 Secure accounts
+    </span>
+
+    <span>
+        ✓ Verified sellers
+    </span>
+
+    <span>
+        🌍 Global marketplace
+    </span>
+
+    <span>
+        📦 Delivery tracking
+    </span>
+
+    <span>
+        💳 MTN • Airtel • Cards
+    </span>
+
+</section>
+
+
+<!-- =========================================================
+     CATEGORIES
+========================================================= -->
+<section class="section">
+
+    <div class="section-head">
+
+        <div>
+            <span class="eyebrow">
+                Explore
+            </span>
+
+            <h2>
+                Shop by category
+            </h2>
+
+            <p>
+                Find what you need from our growing marketplace.
+            </p>
+        </div>
+
+        <a
+            class="text-btn"
+            href="{% url 'storefront:marketplace' %}"
+        >
+            View all →
+        </a>
+
+    </div>
+
+
+    <div class="category-grid">
+
+        {% for category in categories %}
+
+        <a
+            class="category-card"
+            href="{{ category.url }}"
+        >
+
+            <div class="category-icon">
+                <i class="fa-solid {{ category.icon }}"></i>
+            </div>
+
+            <div>
+                <h3>
+                    {{ category.name }}
+                </h3>
+
+                <span>
+                    Explore products →
+                </span>
+            </div>
+
+        </a>
+
+        {% empty %}
+
+        <!-- Fallback categories -->
+        <a
+            class="category-card"
+            href="{% url 'storefront:marketplace' %}"
+        >
+            <div class="category-icon">
+                📱
+            </div>
+
+            <div>
+                <h3>
+                    Phones & Electronics
+                </h3>
+
+                <span>
+                    Explore products →
+                </span>
+            </div>
+        </a>
+
+
+        <a
+            class="category-card"
+            href="{% url 'storefront:marketplace' %}"
+        >
+            <div class="category-icon">
+                ☀️
+            </div>
+
+            <div>
+                <h3>
+                    Solar Products
+                </h3>
+
+                <span>
+                    Explore products →
+                </span>
+            </div>
+        </a>
+
+
+        <a
+            class="category-card"
+            href="{% url 'storefront:marketplace' %}"
+        >
+            <div class="category-icon">
+                🏍️
+            </div>
+
+            <div>
+                <h3>
+                    Vehicles & Bikes
+                </h3>
+
+                <span>
+                    Explore products →
+                </span>
+            </div>
+        </a>
+
+
+        <a
+            class="category-card"
+            href="{% url 'storefront:marketplace' %}"
+        >
+            <div class="category-icon">
+                👕
+            </div>
+
+            <div>
+                <h3>
+                    Fashion
+                </h3>
+
+                <span>
+                    Explore products →
+                </span>
+            </div>
+        </a>
+
+
+        <a
+            class="category-card"
+            href="{% url 'storefront:marketplace' %}"
+        >
+            <div class="category-icon">
+                🏠
+            </div>
+
+            <div>
+                <h3>
+                    Home & Living
+                </h3>
+
+                <span>
+                    Explore products →
+                </span>
+            </div>
+        </a>
+
+
+        <a
+            class="category-card"
+            href="{% url 'storefront:marketplace' %}"
+        >
+            <div class="category-icon">
+                🌱
+            </div>
+
+            <div>
+                <h3>
+                    Agriculture & Animals
+                </h3>
+
+                <span>
+                    Explore products →
+                </span>
+            </div>
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     WHY ENOCK
+========================================================= -->
+<section class="section">
+
+    <div class="section-head">
+
+        <div>
+            <span class="eyebrow">
+                Why Enock?
+            </span>
+
+            <h2>
+                Everything you need to shop online
+            </h2>
+        </div>
+
+    </div>
+
+
+    <div class="features-grid">
+
+        {% for feature in features %}
+
+        <article class="feature-card">
+
+            <div class="feature-icon">
+                <i class="fa-solid {{ feature.icon }}"></i>
+            </div>
+
+            <h3>
+                {{ feature.title }}
+            </h3>
+
+            <p>
+                {{ feature.description }}
+            </p>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     SELLER CTA
+========================================================= -->
+<section class="seller-cta">
+
+    <div>
+
+        <span class="eyebrow">
+            Grow your business
+        </span>
+
+        <h2>
+            Turn your products into an online business.
+        </h2>
+
+        <p>
+            Join Enock Shopping Center and reach customers
+            locally and internationally.
+        </p>
+
+    </div>
+
+    <a
+        class="primary"
+        href="{% url 'storefront:seller_dashboard' %}"
+    >
+        Start selling →
+    </a>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * Optional JavaScript enhancement.
+     *
+     * The homepage already renders correctly from Django,
+     * so the site does not depend on JavaScript to display
+     * the categories.
+     */
+
+    if (typeof window.loadCategories === "function") {
+        try {
+            window.loadCategories();
+        } catch (error) {
+            console.warn(
+                "Category enhancement unavailable:",
+                error
+            );
+        }
+    }
+
+});
+</script>
+
+{% endblock %}
