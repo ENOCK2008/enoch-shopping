@@ -3,9 +3,12 @@ from django.db import transaction
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
 from catalog.models import Product
+from shipping.models import Shipment, ShipmentEvent
+
 
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
@@ -45,9 +48,7 @@ class OrderViewSet(viewsets.ModelViewSet):
                 return Response({"detail": "Quantity must be at least 1."}, status=400)
 
             try:
-                product = Product.objects.select_for_update().select_related("seller").get(
-                    pk=product_id, active=True
-                )
+                product = Product.objects.select_for_update().select_related("seller").get(pk=product_id, active=True)
             except Product.DoesNotExist:
                 return Response({"detail": f"Product {product_id} is unavailable."}, status=400)
 
@@ -60,8 +61,6 @@ class OrderViewSet(viewsets.ModelViewSet):
             subtotal += product.price * quantity
             prepared.append((product, quantity))
 
-        # Pricing engine placeholder: tax and shipping are explicit fields so
-        # country/provider rules can be plugged in without changing checkout.
         shipping_fee = Decimal(str(request.data.get("shipping_fee", "0") or "0"))
         tax = Decimal(str(request.data.get("tax", "0") or "0"))
         total = subtotal + shipping_fee + tax
@@ -90,6 +89,25 @@ class OrderViewSet(viewsets.ModelViewSet):
             )
             product.stock_quantity -= quantity
             product.save(update_fields=["stock_quantity", "updated_at"])
+
+        shipment = Shipment.objects.create(
+            order=order,
+            carrier=request.data.get("carrier", "Local Courier"),
+            status=Shipment.Status.PENDING,
+            destination_address=address,
+            destination_latitude=request.data.get("destination_latitude"),
+            destination_longitude=request.data.get("destination_longitude"),
+            origin_address=request.data.get("origin_address", "Warehouse"),
+            estimated_delivery=request.data.get("estimated_delivery"),
+        )
+
+        ShipmentEvent.objects.create(
+            shipment=shipment,
+            event_type=ShipmentEvent.EventType.CREATED,
+            title="Order placed",
+            description="Your order has been created and is waiting for pickup.",
+            location=country,
+        )
 
         return Response(OrderSerializer(order).data, status=201)
 
