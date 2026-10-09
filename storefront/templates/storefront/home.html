@@ -2,888 +2,1207 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Enock Shopping Center | Shop Smart in Uganda{% endblock %}
+{% block title %}Enock Shopping Center | One Marketplace, A World of Possibilities{% endblock %}
 
 {% block meta_description %}
-Shop smartphones, solar products, electronics, fashion, home goods and more at Enock Shopping Center.
+Discover a world of products at Enock Shopping Center. Explore electronics, smartphones, fashion, solar products, home essentials and more. Connect with sellers and discover shopping opportunities across the globe.
 {% endblock %}
 
 {% block extra_head %}
 <style>
-    /* Homepage design */
-    .home-section {
-        margin-bottom: 35px;
+:root {
+    --global-blue: #2563eb;
+    --global-purple: #7c3aed;
+    --global-ink: #172033;
+    --global-muted: #64748b;
+    --global-border: #e7edf5;
+    --global-surface: #f8fafc;
+    --global-radius: 18px;
+}
+
+.global-home {
+    color: var(--global-ink);
+}
+
+.global-home a {
+    text-decoration: none;
+}
+
+.global-section {
+    margin-bottom: 42px;
+}
+
+.global-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.global-heading h2 {
+    font-size: clamp(19px, 2.5vw, 25px);
+    font-weight: 850;
+    letter-spacing: -.7px;
+    margin: 0;
+}
+
+.global-heading p {
+    color: var(--global-muted);
+    font-size: 13px;
+    margin: 6px 0 0;
+}
+
+.global-link {
+    color: var(--global-blue);
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.global-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 18px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: var(--global-blue);
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    transition: .2s ease;
+    cursor: pointer;
+}
+
+.global-btn:hover {
+    background: #1d4ed8;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.global-btn-light {
+    background: white;
+    color: #3730a3;
+}
+
+.global-btn-light:hover {
+    background: #eef2ff;
+    color: #312e81;
+}
+
+.global-btn-outline {
+    background: transparent;
+    color: var(--global-blue);
+    border-color: #bfdbfe;
+}
+
+.global-btn-outline:hover {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+/* Global announcement */
+
+.global-announcement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    padding: 11px 15px;
+    margin-bottom: 22px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Hero */
+
+.global-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 380px;
+    display: flex;
+    align-items: center;
+    padding: clamp(26px, 5vw, 58px);
+    color: white;
+    border-radius: 26px;
+    margin-bottom: 25px;
+    background:
+        radial-gradient(circle at 85% 20%, #a78bfa70, transparent 30%),
+        linear-gradient(120deg, #111c4e 0%, #3730a3 55%, #7c3aed 100%);
+}
+
+.global-hero::before {
+    content: "";
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    right: -100px;
+    bottom: -180px;
+    border: 55px solid #ffffff12;
+    border-radius: 50%;
+}
+
+.global-hero-copy {
+    position: relative;
+    z-index: 2;
+    max-width: 610px;
+}
+
+.global-hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 13px;
+    border: 1px solid #ffffff30;
+    background: #ffffff15;
+    border-radius: 40px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .7px;
+    margin-bottom: 20px;
+}
+
+.global-hero h1 {
+    font-size: clamp(32px, 5vw, 55px);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -2px;
+    max-width: 650px;
+    margin-bottom: 18px;
+}
+
+.global-hero h1 span {
+    color: #c4b5fd;
+}
+
+.global-hero p {
+    max-width: 510px;
+    color: #e0e7ff;
+    font-size: 15px;
+    line-height: 1.9;
+    margin-bottom: 24px;
+}
+
+.global-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 11px;
+}
+
+.global-hero-art {
+    position: absolute;
+    right: 7%;
+    top: 50%;
+    transform: translateY(-50%) rotate(-7deg);
+    width: 190px;
+    height: 190px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #ffffff30;
+    border-radius: 42px;
+    background: #ffffff12;
+    box-shadow: 0 25px 70px #00000020;
+}
+
+.global-hero-art i {
+    font-size: 95px;
+    color: white;
+}
+
+/* Search */
+
+.global-search-panel {
+    position: relative;
+    z-index: 3;
+    max-width: 850px;
+    margin: -1px auto 38px;
+    padding: 8px;
+    background: white;
+    border: 1px solid var(--global-border);
+    border-radius: 17px;
+    box-shadow: 0 15px 45px #1720330d;
+}
+
+.global-search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.global-search-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px 12px;
+    border: 0;
+    outline: 0;
+    color: var(--global-ink);
+    font-size: 13px;
+    background: transparent;
+}
+
+.global-search-form input:focus {
+    box-shadow: none;
+}
+
+.global-search-form button {
+    flex-shrink: 0;
+}
+
+/* Benefits */
+
+.global-benefit {
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 18px;
+    border: 1px solid var(--global-border);
+    border-radius: 16px;
+    background: white;
+}
+
+.global-icon {
+    flex-shrink: 0;
+    width: 45px;
+    height: 45px;
+    display: grid;
+    place-items: center;
+    color: var(--global-blue);
+    background: #eff6ff;
+    border-radius: 14px;
+    font-size: 19px;
+}
+
+.global-benefit strong {
+    display: block;
+    font-size: 12px;
+    margin: 2px 0 5px;
+}
+
+.global-benefit p {
+    color: var(--global-muted);
+    font-size: 11px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Category cards */
+
+.global-category {
+    height: 100%;
+    display: block;
+    padding: 21px 8px;
+    text-align: center;
+    color: var(--global-ink);
+    border: 1px solid var(--global-border);
+    border-radius: 17px;
+    background: white;
+    transition: .2s ease;
+}
+
+.global-category:hover {
+    color: var(--global-blue);
+    border-color: #bfdbfe;
+    box-shadow: 0 12px 25px #1720330c;
+    transform: translateY(-4px);
+}
+
+.global-category-icon {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 12px;
+    border-radius: 18px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 23px;
+}
+
+.global-category:nth-child(2) .global-category-icon {
+    background: #f3e8ff;
+    color: #7c3aed;
+}
+
+.global-category:nth-child(3) .global-category-icon {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.global-category:nth-child(4) .global-category-icon {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.global-category:nth-child(5) .global-category-icon {
+    background: #fce7f3;
+    color: #be185d;
+}
+
+.global-category:nth-child(6) .global-category-icon {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.global-category:nth-child(7) .global-category-icon {
+    background: #ccfbf1;
+    color: #0f766e;
+}
+
+.global-category:nth-child(8) .global-category-icon {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.global-category strong {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+/* Products */
+
+.global-product {
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--global-border);
+    border-radius: 17px;
+    background: white;
+    transition: .2s ease;
+}
+
+.global-product:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px #17203310;
+}
+
+.global-product-image {
+    height: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+.global-product-image img {
+    width: 100%;
+    height: 100%;
+    padding: 14px;
+    object-fit: contain;
+    transition: transform .25s;
+}
+
+.global-product:hover .global-product-image img {
+    transform: scale(1.05);
+}
+
+.global-product-placeholder {
+    color: #94a3b8;
+    font-size: 45px;
+}
+
+.global-product-label {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    padding: 5px 8px;
+    border-radius: 7px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: 9px;
+    font-weight: 900;
+}
+
+.global-product-info {
+    padding: 14px;
+}
+
+.global-product-category {
+    font-size: 10px;
+    color: var(--global-muted);
+    margin-bottom: 6px;
+}
+
+.global-product-name {
+    min-height: 38px;
+    margin-bottom: 8px;
+    color: var(--global-ink);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.global-product-price {
+    color: var(--global-blue);
+    font-size: 15px;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.global-product-actions {
+    display: flex;
+    gap: 7px;
+}
+
+.global-product-actions .global-btn {
+    flex: 1;
+    padding: 10px 5px;
+    font-size: 11px;
+}
+
+.global-wishlist-link {
+    width: 39px;
+    min-width: 39px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--global-border);
+    border-radius: 10px;
+    color: #64748b;
+    background: white;
+}
+
+.global-wishlist-link:hover {
+    color: #e11d48;
+    border-color: #fecdd3;
+}
+
+.global-empty {
+    text-align: center;
+    padding: 42px 20px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 18px;
+    background: white;
+    color: var(--global-muted);
+}
+
+.global-empty i {
+    font-size: 40px;
+    margin-bottom: 14px;
+}
+
+.global-empty h3 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--global-ink);
+}
+
+/* Global trade banner */
+
+.global-trade {
+    position: relative;
+    overflow: hidden;
+    padding: 32px;
+    color: white;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 90% 10%, #ffffff20, transparent 28%),
+        linear-gradient(120deg, #0f766e, #155e75);
+}
+
+.global-trade h2 {
+    max-width: 600px;
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 900;
+    letter-spacing: -.7px;
+}
+
+.global-trade p {
+    max-width: 630px;
+    color: #d9fffb;
+    font-size: 13px;
+    line-height: 1.9;
+}
+
+.global-trade-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin: 20px 0;
+}
+
+.global-trade-points span {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.global-trade-points i {
+    margin-right: 5px;
+}
+
+/* Seller banner */
+
+.global-seller {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 29px;
+    border: 1px solid #dbeafe;
+    border-radius: 21px;
+    background: linear-gradient(120deg, #eff6ff, #f5f3ff);
+}
+
+.global-seller h2 {
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.global-seller p {
+    color: #475569;
+    font-size: 12px;
+    line-height: 1.8;
+    margin-bottom: 0;
+}
+
+/* Platform features */
+
+.global-feature {
+    height: 100%;
+    padding: 23px;
+    border: 1px solid var(--global-border);
+    border-radius: 17px;
+    background: white;
+}
+
+.global-feature .global-icon {
+    margin-bottom: 15px;
+}
+
+.global-feature h3 {
+    font-size: 14px;
+    font-weight: 850;
+}
+
+.global-feature p {
+    color: var(--global-muted);
+    font-size: 12px;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* Newsletter presentation */
+
+.global-newsletter {
+    padding: 30px;
+    border-radius: 21px;
+    text-align: center;
+    color: white;
+    background: linear-gradient(120deg, #312e81, #6d28d9);
+}
+
+.global-newsletter h2 {
+    font-size: 23px;
+    font-weight: 900;
+}
+
+.global-newsletter p {
+    color: #e0e7ff;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+/* Responsive */
+
+@media (max-width: 767.98px) {
+    .global-section {
+        margin-bottom: 32px;
     }
 
-    .section-heading {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 18px;
+    .global-hero {
+        min-height: 350px;
+        padding: 27px 22px;
+        border-radius: 20px;
     }
 
-    .section-heading h2 {
-        font-size: 21px;
-        font-weight: 800;
-        letter-spacing: -.6px;
-        margin: 0;
+    .global-hero h1 {
+        font-size: 34px;
+        letter-spacing: -1.4px;
     }
 
-    .section-heading p {
-        font-size: 12px;
-        color: #64748b;
-        margin: 5px 0 0;
+    .global-hero p {
+        max-width: 340px;
+        font-size: 13px;
     }
 
-    .view-all {
-        color: #2563eb;
-        font-size: 12px;
-        font-weight: 700;
-        white-space: nowrap;
+    .global-hero-art {
+        width: 135px;
+        height: 135px;
+        right: -25px;
+        top: auto;
+        bottom: -15px;
+        transform: rotate(-8deg);
+        opacity: .18;
     }
 
-    /* Hero */
-    .hero-banner {
-        background: linear-gradient(120deg, #172554, #3730a3 65%, #7c3aed);
-        color: white;
-        border-radius: 23px;
-        padding: 45px;
-        min-height: 320px;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
+    .global-hero-art i {
+        font-size: 65px;
+    }
+
+    .global-search-panel {
         margin-bottom: 30px;
     }
 
-    .hero-banner::after {
-        content: "";
-        position: absolute;
-        width: 310px;
-        height: 310px;
-        right: -70px;
-        top: -110px;
-        border: 45px solid #ffffff12;
-        border-radius: 50%;
-        pointer-events: none;
+    .global-search-form {
+        flex-wrap: wrap;
     }
 
-    .hero-copy {
-        position: relative;
-        z-index: 2;
-        max-width: 570px;
+    .global-search-form input {
+        flex-basis: 65%;
     }
 
-    .hero-tag {
-        display: inline-block;
-        background: #ffffff20;
-        border: 1px solid #ffffff30;
-        border-radius: 30px;
-        padding: 7px 12px;
-        font-size: 11px;
-        font-weight: 700;
-        margin-bottom: 17px;
-    }
-
-    .hero-banner h1 {
-        font-size: clamp(29px, 4vw, 43px);
-        font-weight: 800;
-        line-height: 1.15;
-        letter-spacing: -1.5px;
-        margin-bottom: 15px;
-    }
-
-    .hero-banner p {
-        color: #e0e7ff;
-        font-size: 14px;
-        line-height: 1.9;
-        max-width: 440px;
-        margin-bottom: 23px;
-    }
-
-    .hero-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        background: white;
-        color: #1d4ed8;
-        padding: 13px 20px;
-        border-radius: 12px;
-        font-size: 13px;
-        font-weight: 800;
-    }
-
-    .hero-button:hover {
-        color: #3730a3;
-        transform: translateY(-2px);
-    }
-
-    .hero-art {
-        position: absolute;
-        right: 35px;
-        bottom: 15px;
-        width: 36%;
-        max-width: 350px;
-        height: 85%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .hero-art img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        filter: drop-shadow(0 15px 20px #00000030);
-    }
-
-    .hero-art-icon {
-        width: 170px;
-        height: 170px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #ffffff18;
-        border: 1px solid #ffffff30;
-        border-radius: 35px;
-        transform: rotate(-8deg);
-    }
-
-    .hero-art-icon i {
-        font-size: 90px;
-        color: #ffffff;
-    }
-
-    /* Trust benefits */
-    .benefit-card {
-        height: 100%;
-        display: flex;
-        gap: 13px;
-        align-items: center;
-        background: white;
-        border: 1px solid #e8edf5;
-        border-radius: 15px;
-        padding: 17px;
-    }
-
-    .benefit-icon {
-        width: 43px;
-        height: 43px;
-        flex-shrink: 0;
-        display: grid;
-        place-items: center;
-        background: #eff6ff;
-        color: #2563eb;
-        border-radius: 13px;
-        font-size: 18px;
-    }
-
-    .benefit-card strong {
-        display: block;
-        font-size: 12px;
-        margin-bottom: 4px;
-    }
-
-    .benefit-card small {
-        color: #64748b;
-        font-size: 10px;
-    }
-
-    /* Category cards */
-    .category-card {
-        display: block;
-        height: 100%;
-        background: white;
-        border: 1px solid #e8edf5;
-        border-radius: 17px;
-        padding: 22px 10px;
-        text-align: center;
-        color: #172033;
-        transition: transform .2s, box-shadow .2s, border-color .2s;
-    }
-
-    .category-card:hover {
-        transform: translateY(-4px);
-        border-color: #bfdbfe;
-        box-shadow: 0 10px 25px #1720330c;
-        color: #2563eb;
-    }
-
-    .category-icon {
-        width: 58px;
-        height: 58px;
-        border-radius: 18px;
-        display: grid;
-        place-items: center;
-        margin: 0 auto 13px;
-        font-size: 24px;
-        background: #eff6ff;
-        color: #2563eb;
-    }
-
-    .category-card:nth-child(2) .category-icon {
-        background: #f3e8ff;
-        color: #7c3aed;
-    }
-
-    .category-card:nth-child(3) .category-icon {
-        background: #dcfce7;
-        color: #15803d;
-    }
-
-    .category-card:nth-child(4) .category-icon {
-        background: #ffedd5;
-        color: #c2410c;
-    }
-
-    .category-card:nth-child(5) .category-icon {
-        background: #fce7f3;
-        color: #be185d;
-    }
-
-    .category-card:nth-child(6) .category-icon {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .category-card strong {
-        display: block;
-        font-size: 11px;
-        font-weight: 700;
-    }
-
-    /* Product cards */
-    .product-card {
-        background: white;
-        border: 1px solid #e8edf5;
-        border-radius: 17px;
-        overflow: hidden;
-        height: 100%;
-        transition: transform .2s, box-shadow .2s;
-    }
-
-    .product-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 25px #17203310;
-    }
-
-    .product-image-wrap {
-        position: relative;
-        height: 185px;
-        background: #f8fafc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
-
-    .product-image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        padding: 14px;
-        transition: transform .25s;
-    }
-
-    .product-card:hover .product-image {
-        transform: scale(1.05);
-    }
-
-    .product-placeholder {
-        color: #94a3b8;
-        font-size: 42px;
-    }
-
-    .product-badge {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        padding: 5px 8px;
-        border-radius: 7px;
-        background: #dcfce7;
-        color: #15803d;
-        font-size: 9px;
-        font-weight: 800;
-    }
-
-    .product-details {
-        padding: 14px;
-    }
-
-    .product-category {
-        color: #64748b;
-        font-size: 10px;
-        margin-bottom: 7px;
-    }
-
-    .product-name {
-        color: #172033;
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 1.6;
-        margin-bottom: 9px;
-        min-height: 38px;
-    }
-
-    .product-price {
-        color: #2563eb;
-        font-size: 16px;
-        font-weight: 800;
-        margin-bottom: 10px;
-    }
-
-    .product-price small {
-        color: #64748b;
-        font-size: 10px;
-        font-weight: 500;
-    }
-
-    .product-rating {
-        color: #f59e0b;
-        font-size: 10px;
-        margin-bottom: 12px;
-    }
-
-    .product-rating span {
-        color: #64748b;
-        margin-left: 4px;
-    }
-
-    .product-actions {
-        display: flex;
-        gap: 7px;
-    }
-
-    .add-cart {
+    .global-search-form button {
         flex: 1;
-        background: #2563eb;
-        color: white;
-        border: 0;
-        border-radius: 9px;
-        padding: 10px 5px;
-        font-size: 11px;
-        font-weight: 700;
-        text-align: center;
     }
 
-    .add-cart:hover {
-        background: #1d4ed8;
-        color: white;
+    .global-heading {
+        align-items: flex-start;
     }
 
-    .wish-button {
-        width: 38px;
-        border: 1px solid #e8edf5;
-        background: white;
-        border-radius: 9px;
-        color: #64748b;
+    .global-category {
+        padding: 15px 4px;
     }
 
-    .wish-button:hover {
-        color: #e11d48;
-        border-color: #fecdd3;
-    }
-
-    /* Promotional banner */
-    .promo-banner {
-        border-radius: 20px;
-        background: linear-gradient(120deg, #ecfdf5, #dbeafe);
-        border: 1px solid #dbeafe;
-        padding: 27px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-    }
-
-    .promo-banner h3 {
-        font-size: 22px;
-        font-weight: 800;
-        margin-bottom: 8px;
-    }
-
-    .promo-banner p {
-        font-size: 12px;
-        color: #475569;
-        margin: 0;
-    }
-
-    /* Shopping assistant */
-    .assistant-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-        background: linear-gradient(120deg, #312e81, #6d28d9);
-        color: white;
-        border-radius: 20px;
-        padding: 28px;
-    }
-
-    .assistant-icon {
-        width: 56px;
-        height: 56px;
-        flex-shrink: 0;
-        display: grid;
-        place-items: center;
-        background: #ffffff20;
-        border-radius: 17px;
-        font-size: 26px;
-    }
-
-    .assistant-card h3 {
+    .global-category-icon {
+        width: 47px;
+        height: 47px;
         font-size: 19px;
-        font-weight: 800;
-        margin-bottom: 7px;
     }
 
-    .assistant-card p {
-        color: #e0e7ff;
-        font-size: 12px;
-        margin: 0;
-        line-height: 1.8;
+    .global-category strong {
+        font-size: 10px;
     }
 
-    .assistant-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        white-space: nowrap;
-        background: white;
-        color: #4338ca;
-        padding: 12px 16px;
-        border-radius: 11px;
-        font-size: 12px;
-        font-weight: 800;
+    .global-product-image {
+        height: 145px;
     }
 
-    .assistant-link:hover {
-        color: #6d28d9;
+    .global-product-info {
+        padding: 10px;
     }
 
-    .empty-products {
-        background: white;
-        border: 1px dashed #cbd5e1;
-        border-radius: 17px;
-        padding: 35px 20px;
-        text-align: center;
-        color: #64748b;
+    .global-product-name {
+        font-size: 11px;
+    }
+
+    .global-product-price {
         font-size: 13px;
     }
 
-    @media (max-width: 767.98px) {
-        .hero-banner {
-            padding: 28px 23px;
-            min-height: 290px;
-            border-radius: 19px;
-        }
-
-        .hero-copy {
-            max-width: 100%;
-        }
-
-        .hero-banner h1 {
-            font-size: 30px;
-            max-width: 340px;
-        }
-
-        .hero-banner p {
-            max-width: 300px;
-            font-size: 12px;
-        }
-
-        .hero-art {
-            right: -55px;
-            bottom: -20px;
-            width: 190px;
-            height: 190px;
-            opacity: .18;
-        }
-
-        .hero-art-icon {
-            width: 130px;
-            height: 130px;
-        }
-
-        .hero-art-icon i {
-            font-size: 65px;
-        }
-
-        .section-heading h2 {
-            font-size: 18px;
-        }
-
-        .category-card {
-            padding: 16px 5px;
-        }
-
-        .category-icon {
-            width: 48px;
-            height: 48px;
-            font-size: 20px;
-        }
-
-        .product-image-wrap {
-            height: 140px;
-        }
-
-        .product-details {
-            padding: 10px;
-        }
-
-        .product-name {
-            font-size: 11px;
-        }
-
-        .product-price {
-            font-size: 14px;
-        }
-
-        .promo-banner {
-            padding: 22px;
-        }
-
-        .promo-banner h3 {
-            font-size: 19px;
-        }
-
-        .assistant-card {
-            align-items: flex-start;
-            flex-wrap: wrap;
-            padding: 22px;
-        }
+    .global-trade,
+    .global-seller,
+    .global-newsletter {
+        padding: 23px;
     }
+
+    .global-seller {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .global-seller h2 {
+        font-size: 20px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .global-home *,
+    .global-home *::before,
+    .global-home *::after {
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="global-home container">
 
-<!-- HERO BANNER -->
-<section class="hero-banner">
-    <div class="hero-copy">
-        <span class="hero-tag">
-            <i class="fa-solid fa-sparkles me-1"></i>
-            YOUR EVERYDAY MARKETPLACE
-        </span>
-
-        <h1>Everything you need, all in one place.</h1>
-
-        <p>
-            Discover great products, explore local sellers and find
-            everyday essentials at Enock Shopping Center.
-        </p>
-
-        <a href="{% url 'storefront:marketplace' %}" class="hero-button">
-            Start shopping
-            <i class="fa-solid fa-arrow-right"></i>
-        </a>
+    <!-- GLOBAL ANNOUNCEMENT -->
+    <div class="global-announcement">
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>One Marketplace. A World of Possibilities.</span>
+        <span aria-hidden="true">|</span>
+        <span>Discover products and sellers across the globe.</span>
     </div>
 
-    <div class="hero-art" aria-hidden="true">
-        <div class="hero-art-icon">
-            <i class="fa-solid fa-bag-shopping"></i>
-        </div>
-    </div>
-</section>
+    <!-- HERO -->
+    <section class="global-hero">
+        <div class="global-hero-copy">
+            <span class="global-hero-tag">
+                <i class="fa-solid fa-globe"></i>
+                YOUR WORLDWIDE SHOPPING DESTINATION
+            </span>
 
-<!-- BENEFITS -->
-<section class="home-section">
-    <div class="row g-3">
-        <div class="col-6 col-lg-3">
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fa-solid fa-store"></i>
-                </div>
-                <div>
-                    <strong>Multiple Sellers</strong>
-                    <small>Explore different shops</small>
-                </div>
-            </div>
-        </div>
+            <h1>
+                Everything you need,
+                <span>from a world of possibilities.</span>
+            </h1>
 
-        <div class="col-6 col-lg-3">
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                </div>
-                <div>
-                    <strong>Shop Anywhere</strong>
-                    <small>Mobile-friendly shopping</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-lg-3">
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fa-solid fa-tags"></i>
-                </div>
-                <div>
-                    <strong>Great Finds</strong>
-                    <small>Explore available offers</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-6 col-lg-3">
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <i class="fa-solid fa-headset"></i>
-                </div>
-                <div>
-                    <strong>Customer Support</strong>
-                    <small>Help with your shopping</small>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CATEGORIES -->
-<section class="home-section" id="categories">
-    <div class="section-heading">
-        <div>
-            <h2>Shop by category</h2>
-            <p>Find what you are looking for.</p>
-        </div>
-        <a href="{% url 'storefront:marketplace' %}" class="view-all">
-            All products <i class="fa-solid fa-arrow-right ms-1"></i>
-        </a>
-    </div>
-
-    <div class="row g-3">
-        <div class="col-4 col-md-2">
-            <a href="{% url 'storefront:marketplace' %}?category=phones"
-               class="category-card">
-                <span class="category-icon">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                </span>
-                <strong>Phones</strong>
-            </a>
-        </div>
-
-        <div class="col-4 col-md-2">
-            <a href="{% url 'storefront:marketplace' %}?category=electronics"
-               class="category-card">
-                <span class="category-icon">
-                    <i class="fa-solid fa-laptop"></i>
-                </span>
-                <strong>Electronics</strong>
-            </a>
-        </div>
-
-        <div class="col-4 col-md-2">
-            <a href="{% url 'storefront:marketplace' %}?category=solar"
-               class="category-card">
-                <span class="category-icon">
-                    <i class="fa-solid fa-solar-panel"></i>
-                </span>
-                <strong>Solar</strong>
-            </a>
-        </div>
-
-        <div class="col-4 col-md-2">
-            <a href="{% url 'storefront:marketplace' %}?category=fashion"
-               class="category-card">
-                <span class="category-icon">
-                    <i class="fa-solid fa-shirt"></i>
-                </span>
-                <strong>Fashion</strong>
-            </a>
-        </div>
-
-        <div class="col-4 col-md-2">
-            <a href="{% url 'storefront:marketplace' %}?category=home"
-               class="category-card">
-                <span class="category-icon">
-                    <i class="fa-solid fa-couch"></i>
-                </span>
-                <strong>Home & Living</strong>
-            </a>
-        </div>
-
-        <div class="col-4 col-md-2">
-            <a href="{% url 'storefront:marketplace' %}?category=vehicles"
-               class="category-card">
-                <span class="category-icon">
-                    <i class="fa-solid fa-motorcycle"></i>
-                </span>
-                <strong>Vehicles</strong>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- FEATURED PRODUCTS -->
-<section class="home-section" id="products">
-    <div class="section-heading">
-        <div>
-            <h2>Featured products</h2>
-            <p>Discover products available in our marketplace.</p>
-        </div>
-
-        <a href="{% url 'storefront:marketplace' %}" class="view-all">
-            View all <i class="fa-solid fa-arrow-right ms-1"></i>
-        </a>
-    </div>
-
-    <div class="row g-3">
-        {% for product in featured_products %}
-            <div class="col-6 col-md-4 col-lg-3">
-                <article class="product-card">
-                    <a href="{% url 'storefront:marketplace' %}"
-                       aria-label="Browse products">
-                        <div class="product-image-wrap">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}"
-                                     class="product-image"
-                                     alt="{{ product.name }}"
-                                     loading="lazy">
-                            {% else %}
-                                <i class="fa-solid fa-box product-placeholder"></i>
-                            {% endif %}
-
-                            {% if product.is_on_sale %}
-                                <span class="product-badge">SPECIAL OFFER</span>
-                            {% endif %}
-                        </div>
-                    </a>
-
-                    <div class="product-details">
-                        <div class="product-category">
-                            {% if product.category %}
-                                {{ product.category.name }}
-                            {% else %}
-                                Marketplace product
-                            {% endif %}
-                        </div>
-
-                        <div class="product-name">{{ product.name }}</div>
-
-                        <div class="product-price">
-                            UGX {{ product.price|floatformat:0 }}
-                        </div>
-
-                        <div class="product-rating">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-regular fa-star"></i>
-                            <span>Explore item</span>
-                        </div>
-
-                        <div class="product-actions">
-                            <a href="{% url 'storefront:marketplace' %}"
-                               class="add-cart">
-                                <i class="fa-solid fa-eye me-1"></i>
-                                View products
-                            </a>
-
-                            <a href="{% url 'storefront:wishlist' %}"
-                               class="wish-button d-flex align-items-center justify-content-center"
-                               aria-label="Open wishlist">
-                                <i class="fa-regular fa-heart"></i>
-                            </a>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        {% empty %}
-            <div class="col-12">
-                <div class="empty-products">
-                    <i class="fa-solid fa-box-open fs-2 mb-3"></i>
-                    <h5 class="fw-bold">Products coming soon</h5>
-                    <p class="mb-3">
-                        Products will appear here when they are available
-                        in the marketplace.
-                    </p>
-                    <a href="{% url 'storefront:marketplace' %}"
-                       class="btn-primary-custom">
-                        Explore marketplace
-                    </a>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-</section>
-
-<!-- PROMOTION -->
-<section class="home-section" id="deals">
-    <div class="promo-banner">
-        <div>
-            <span class="badge text-bg-success mb-2">SELLER OPPORTUNITY</span>
-            <h3>Have products to sell?</h3>
             <p>
-                Bring your products to Enock Shopping Center and
-                introduce your business to more customers.
+                Discover amazing products, explore businesses, connect with
+                sellers and find new shopping opportunities—all in one
+                global marketplace.
             </p>
+
+            <div class="global-hero-actions">
+                <a href="{% url 'storefront:marketplace' %}"
+                   class="global-btn global-btn-light">
+                    Explore marketplace
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+                <a href="{% url 'storefront:sellers' %}"
+                   class="global-btn"
+                   style="background:#ffffff18;border-color:#ffffff40;">
+                    <i class="fa-solid fa-store"></i>
+                    Discover sellers
+                </a>
+            </div>
         </div>
 
-        <a href="{% url 'storefront:seller_dashboard' %}"
-           class="btn-primary-custom flex-shrink-0">
-            <i class="fa-solid fa-store"></i>
-            Become a seller
-        </a>
-    </div>
-</section>
-
-<!-- SELLER DISCOVERY -->
-<section class="home-section">
-    <div class="section-heading">
-        <div>
-            <h2>Discover our sellers</h2>
-            <p>Explore shops and discover more products.</p>
+        <div class="global-hero-art" aria-hidden="true">
+            <i class="fa-solid fa-earth-americas"></i>
         </div>
+    </section>
 
-        <a href="{% url 'storefront:sellers' %}" class="view-all">
-            Browse sellers <i class="fa-solid fa-arrow-right ms-1"></i>
-        </a>
+    <!-- SEARCH -->
+    <div class="global-search-panel">
+        <form action="{% url 'storefront:marketplace' %}"
+              method="get"
+              class="global-search-form">
+            <i class="fa-solid fa-magnifying-glass ms-3 text-secondary"
+               aria-hidden="true"></i>
+
+            <input type="search"
+                   name="q"
+                   value="{{ request.GET.q|default:'' }}"
+                   placeholder="Search products, brands and categories..."
+                   aria-label="Search marketplace">
+
+            <button type="submit" class="global-btn">
+                Search
+            </button>
+        </form>
     </div>
 
-    <div class="page-card text-center py-4">
-        <div class="benefit-icon mx-auto mb-3"
-             style="width:58px;height:58px;">
-            <i class="fa-solid fa-shop"></i>
-        </div>
-
-        <h5 class="fw-bold">A marketplace for everyone</h5>
-
-        <p class="muted-text mb-3">
-            Discover available sellers or start showcasing your own products.
-        </p>
-
-        <a href="{% url 'storefront:sellers' %}"
-           class="btn-outline-custom">
-            Explore sellers
-        </a>
-    </div>
-</section>
-
-<!-- SHOPPING ASSISTANT -->
-<section class="home-section">
-    <div class="assistant-card">
-        <div class="d-flex align-items-start gap-3">
-            <div class="assistant-icon">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
+    <!-- BENEFITS -->
+    <section class="global-section">
+        <div class="row g-3">
+            <div class="col-6 col-lg-3">
+                <div class="global-benefit">
+                    <div class="global-icon">
+                        <i class="fa-solid fa-earth-americas"></i>
+                    </div>
+                    <div>
+                        <strong>Global Marketplace</strong>
+                        <p>Discover products from different markets.</p>
+                    </div>
+                </div>
             </div>
 
+            <div class="col-6 col-lg-3">
+                <div class="global-benefit">
+                    <div class="global-icon">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <div>
+                        <strong>Seller Opportunities</strong>
+                        <p>Give businesses a place to showcase products.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="global-benefit">
+                    <div class="global-icon">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <div>
+                        <strong>Shop Anywhere</strong>
+                        <p>Enjoy a responsive shopping experience.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="global-benefit">
+                    <div class="global-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <strong>Shopping Confidence</strong>
+                        <p>Look for clear product and seller information.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="global-section" id="categories">
+        <div class="global-heading">
             <div>
-                <h3>Your smarter shopping journey</h3>
+                <h2>Explore product categories</h2>
+                <p>Discover products for everyday life and business.</p>
+            </div>
+            <a href="{% url 'storefront:marketplace' %}" class="global-link">
+                All products <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=phones"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </span>
+                    <strong>Smartphones</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=electronics"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-laptop"></i>
+                    </span>
+                    <strong>Electronics</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=solar"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-solar-panel"></i>
+                    </span>
+                    <strong>Solar & Energy</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=fashion"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-shirt"></i>
+                    </span>
+                    <strong>Fashion</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=home"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-couch"></i>
+                    </span>
+                    <strong>Home & Living</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=vehicles"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-car"></i>
+                    </span>
+                    <strong>Vehicles</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=beauty"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-spa"></i>
+                    </span>
+                    <strong>Beauty & Care</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=sports"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-person-biking"></i>
+                    </span>
+                    <strong>Sports & Outdoors</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=agriculture"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-seedling"></i>
+                    </span>
+                    <strong>Agriculture</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=accessories"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-gem"></i>
+                    </span>
+                    <strong>Accessories</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=office"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </span>
+                    <strong>Office & Business</strong>
+                </a>
+            </div>
+
+            <div class="col-4 col-md-3 col-lg-2">
+                <a href="{% url 'storefront:marketplace' %}?category=other"
+                   class="global-category">
+                    <span class="global-category-icon">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </span>
+                    <strong>More Categories</strong>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS -->
+    <section class="global-section" id="products">
+        <div class="global-heading">
+            <div>
+                <h2>Discover products</h2>
+                <p>Explore items listed in the marketplace.</p>
+            </div>
+            <a href="{% url 'storefront:marketplace' %}" class="global-link">
+                Browse marketplace <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-3">
+            {% for product in featured_products %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    <article class="global-product">
+                        <a href="{% url 'storefront:marketplace' %}"
+                           aria-label="Browse marketplace products">
+                            <div class="global-product-image">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}"
+                                         alt="{{ product.name|default:'Product' }}"
+                                         loading="lazy">
+                                {% else %}
+                                    <i class="fa-solid fa-box global-product-placeholder"
+                                       aria-hidden="true"></i>
+                                {% endif %}
+
+                                {% if product.is_on_sale %}
+                                    <span class="global-product-label">
+                                        SPECIAL OFFER
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </a>
+
+                        <div class="global-product-info">
+                            <div class="global-product-category">
+                                {% if product.category %}
+                                    {{ product.category.name }}
+                                {% else %}
+                                    General products
+                                {% endif %}
+                            </div>
+
+                            <div class="global-product-name">
+                                {{ product.name|default:"Product listing" }}
+                            </div>
+
+                            <div class="global-product-price">
+                                {{ product.currency|default:"UGX" }}
+                                {{ product.price|default_if_none:0|floatformat:2 }}
+                            </div>
+
+                            <div class="global-product-actions">
+                                <a href="{% url 'storefront:marketplace' %}"
+                                   class="global-btn">
+                                    <i class="fa-solid fa-eye"></i>
+                                    View item
+                                </a>
+
+                                <a href="{% url 'storefront:wishlist' %}"
+                                   class="global-wishlist-link"
+                                   aria-label="Open wishlist">
+                                    <i class="fa-regular fa-heart"
+                                       aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="global-empty">
+                        <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+                        <h3>Discover your next great find</h3>
+                        <p>
+                            Product listings will appear here when they are
+                            available in the marketplace.
+                        </p>
+                        <a href="{% url 'storefront:marketplace' %}"
+                           class="global-btn mt-2">
+                            Explore marketplace
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- INTERNATIONAL SHOPPING -->
+    <section class="global-section">
+        <div class="global-trade">
+            <span class="global-hero-tag">
+                <i class="fa-solid fa-earth-americas"></i>
+                BUILT FOR GLOBAL COMMERCE
+            </span>
+
+            <h2>Bring the world's marketplace closer to you.</h2>
+
+            <p>
+                Discover products and businesses across markets. Enock
+                Shopping Center is designed to grow into a marketplace
+                that supports international shopping, regional preferences
+                and cross-border business.
+            </p>
+
+            <div class="global-trade-points">
+                <span><i class="fa-solid fa-check-circle"></i> Multiple markets</span>
+                <span><i class="fa-solid fa-check-circle"></i> Currency-ready design</span>
+                <span><i class="fa-solid fa-check-circle"></i> International seller opportunities</span>
+                <span><i class="fa-solid fa-check-circle"></i> Responsive shopping</span>
+            </div>
+
+            <a href="{% url 'storefront:marketplace' %}"
+               class="global-btn global-btn-light">
+                Explore products
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- SELLER OPPORTUNITY -->
+    <section class="global-section" id="sell">
+        <div class="global-seller">
+            <div>
+                <span class="badge text-bg-primary mb-2">SELL ON ENOCK</span>
+                <h2>Take your business beyond borders.</h2>
                 <p>
-                    Browse products, compare available options and find
-                    items that suit your needs.
+                    Showcase your products, build your online presence and
+                    reach customers through a growing digital marketplace.
+                    Seller eligibility, shipping coverage and payments depend
+                    on the platform's supported markets.
                 </p>
             </div>
+
+            <a href="{% url 'storefront:seller_dashboard' %}"
+               class="global-btn flex-shrink-0">
+                <i class="fa-solid fa-store"></i>
+                Seller centre
+            </a>
+        </div>
+    </section>
+
+    <!-- PLATFORM FEATURES -->
+    <section class="global-section" id="features">
+        <div class="global-heading">
+            <div>
+                <h2>A smarter shopping experience</h2>
+                <p>Features to support buyers and sellers as the platform grows.</p>
+            </div>
         </div>
 
-        <a href="{% url 'storefront:marketplace' %}"
-           class="assistant-link">
-            Start exploring
-            <i class="fa-solid fa-arrow-right"></i>
-        </a>
-    </div>
-</section>
+        <div class="row g-3">
+            <div class="col-6 col-lg-3">
+                <div class="global-feature">
+                    <div class="global-icon">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <h3>Smart Discovery</h3>
+                    <p>Search for products and explore available categories.</p>
+                </div>
+            </div>
 
+            <div class="col-6 col-lg-3">
+                <div class="global-feature">
+                    <div class="global-icon">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+                    <h3>Seller Marketplace</h3>
+                    <p>Give businesses a digital place to present their products.</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="global-feature">
+                    <div class="global-icon">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                    <h3>Wishlist</h3>
+                    <p>Keep track of products you may want to revisit.</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="global-feature">
+                    <div class="global-icon">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <h3>Customer Assistance</h3>
+                    <p>Make it easier to find support when shopping.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOPPING ASSISTANT PROMOTION -->
+    <section class="global-section">
+        <div class="global-newsletter">
+            <div class="mb-3">
+                <i class="fa-solid fa-wand-magic-sparkles fs-1"></i>
+            </div>
+
+            <h2>Your world of shopping starts here.</h2>
+
+            <p class="mx-auto" style="max-width:620px;">
+                Explore products, discover sellers and find new possibilities
+                for your home, lifestyle or business.
+            </p>
+
+            <a href="{% url 'storefront:marketplace' %}"
+               class="global-btn global-btn-light">
+                Start exploring
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+</div>
 {% endblock %}
+
