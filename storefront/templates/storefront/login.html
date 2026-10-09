@@ -1,33 +1,30 @@
-
-
+```django
 {% extends "storefront/base.html" %}
 {% load static %}
 
-{% url 'storefront:password_reset' as password_reset_url %}
-
 {% block title %}Sign In | Enock Shopping Center{% endblock %}
+
+{% url 'storefront:password_reset' as password_reset_url %}
+{% url 'storefront:home' as home_url %}
+{% url 'storefront:register' as register_url %}
+{% url 'storefront:marketplace' as marketplace_url %}
 
 {% block extra_css %}
 <style>
-/* =========================================================
-   ENOCK SHOPPING CENTER — MODERN AUTHENTICATION
-   ========================================================= */
-
 .auth-page {
-    --auth-primary: #4f46e5;
-    --auth-secondary: #7c3aed;
-    --auth-text: #172033;
-    --auth-muted: #687386;
-    --auth-border: #e5e9f2;
-    --auth-surface: #ffffff;
+    --primary: #4f46e5;
+    --secondary: #7c3aed;
+    --text: #172033;
+    --muted: #687386;
+    --border: #e5e9f2;
 
     min-height: calc(100vh - 80px);
     padding: 42px 18px;
+    color: var(--text);
     background:
         radial-gradient(circle at 5% 10%, rgba(99,102,241,.09), transparent 28%),
         radial-gradient(circle at 95% 90%, rgba(124,58,237,.08), transparent 28%),
         #f7f8fc;
-    color: var(--auth-text);
 }
 
 .auth-page *,
@@ -44,12 +41,11 @@
 
 .auth-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(380px, .95fr);
-    align-items: stretch;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
     overflow: hidden;
-    background: var(--auth-surface);
+    background: #fff;
     border: 1px solid rgba(226,232,240,.9);
-    border-radius: 28px;
+    border-radius: 26px;
     box-shadow: 0 25px 80px rgba(31,41,55,.09);
 }
 
@@ -63,7 +59,7 @@
     padding: 48px;
     overflow: hidden;
     color: #fff;
-    background: linear-gradient(145deg, #312e81 0%, #4f46e5 48%, #7c3aed 100%);
+    background: linear-gradient(145deg, #312e81, #4f46e5 48%, #7c3aed);
 }
 
 .auth-promo::before,
@@ -100,7 +96,7 @@
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 70px;
+    margin-bottom: 55px;
     color: #fff;
     text-decoration: none;
 }
@@ -116,17 +112,16 @@
     width: 48px;
     height: 48px;
     place-items: center;
-    color: var(--auth-primary);
+    color: var(--primary);
     background: #fff;
     border-radius: 15px;
     font-size: 21px;
     box-shadow: 0 8px 24px rgba(15,23,42,.14);
 }
 
-.auth-brand-name {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+.auth-brand-name strong,
+.auth-brand-name span {
+    display: block;
 }
 
 .auth-brand-name strong {
@@ -136,6 +131,7 @@
 }
 
 .auth-brand-name span {
+    margin-top: 2px;
     color: rgba(255,255,255,.76);
     font-size: 12px;
 }
@@ -144,7 +140,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
     color: #c7d2fe;
     font-size: 11px;
     font-weight: 800;
@@ -174,7 +170,7 @@
 
 .auth-promo-description {
     max-width: 390px;
-    margin-bottom: 35px;
+    margin-bottom: 32px;
     color: rgba(255,255,255,.8);
     font-size: 15px;
     line-height: 1.85;
@@ -182,7 +178,7 @@
 
 .auth-benefits {
     display: grid;
-    gap: 14px;
+    gap: 13px;
 }
 
 .auth-benefit {
@@ -191,9 +187,8 @@
     gap: 14px;
     padding: 14px;
     border: 1px solid rgba(255,255,255,.13);
-    border-radius: 16px;
+    border-radius: 15px;
     background: rgba(255,255,255,.075);
-    backdrop-filter: blur(8px);
 }
 
 .auth-benefit-icon {
@@ -227,7 +222,7 @@
 }
 
 .auth-promo-footer {
-    margin-top: 35px;
+    margin-top: 30px;
     color: rgba(255,255,255,.68);
     font-size: 11px;
 }
@@ -238,7 +233,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 52px clamp(28px, 5vw, 64px);
+    min-width: 0;
+    padding: 48px clamp(24px, 4vw, 58px);
 }
 
 .auth-mobile-brand {
@@ -246,18 +242,18 @@
 }
 
 .auth-card-header {
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 }
 
 .auth-card-header .auth-eyebrow {
     margin-bottom: 12px;
-    color: var(--auth-primary);
+    color: var(--primary);
     font-size: 10px;
 }
 
 .auth-card-header h2 {
     margin: 0 0 10px;
-    color: var(--auth-text);
+    color: var(--text);
     font-size: 32px;
     font-weight: 850;
     letter-spacing: -1.1px;
@@ -265,15 +261,14 @@
 
 .auth-card-header p {
     margin: 0;
-    color: var(--auth-muted);
+    color: var(--muted);
     font-size: 14px;
     line-height: 1.7;
 }
 
 .auth-message {
-    display: none;
-    margin-bottom: 20px;
-    padding: 13px 15px;
+    margin-bottom: 17px;
+    padding: 12px 14px;
     border: 1px solid transparent;
     border-radius: 12px;
     font-size: 13px;
@@ -282,37 +277,38 @@
 }
 
 .auth-message.error {
-    display: block;
     color: #b42318;
     background: #fff1f0;
     border-color: #ffd5d2;
 }
 
 .auth-message.success {
-    display: block;
     color: #067647;
     background: #ecfdf3;
     border-color: #abefc6;
 }
 
 .auth-message.info {
-    display: block;
     color: #1d4ed8;
     background: #eff6ff;
     border-color: #bfdbfe;
 }
 
+.auth-message:empty {
+    display: none;
+}
+
 .auth-form {
     display: grid;
-    gap: 21px;
+    gap: 20px;
 }
 
 .auth-form-group {
     min-width: 0;
 }
 
-.auth-form-group label,
-.auth-password-label-row label {
+.auth-form-group > label,
+.auth-password-label-row > label {
     display: block;
     margin-bottom: 9px;
     color: #344054;
@@ -324,11 +320,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-}
-
-.auth-password-label-row label {
-    margin-bottom: 9px;
+    gap: 10px;
 }
 
 .auth-input-wrapper {
@@ -349,15 +341,15 @@
     width: 100%;
     min-width: 0;
     height: 52px;
-    padding: 0 47px;
-    color: var(--auth-text);
-    border: 1px solid var(--auth-border);
+    padding: 0 48px;
+    color: var(--text);
+    border: 1px solid var(--border);
     border-radius: 13px;
     outline: none;
     background: #fff;
     font-family: inherit;
     font-size: 14px;
-    transition: border-color .2s, box-shadow .2s, background .2s;
+    transition: border-color .2s, box-shadow .2s;
 }
 
 .auth-input-wrapper input::placeholder {
@@ -365,12 +357,8 @@
 }
 
 .auth-input-wrapper input:focus {
-    border-color: var(--auth-primary);
+    border-color: var(--primary);
     box-shadow: 0 0 0 4px rgba(79,70,229,.10);
-}
-
-.auth-input-wrapper input:focus + .auth-password-toggle {
-    color: var(--auth-primary);
 }
 
 .auth-password-toggle {
@@ -388,20 +376,20 @@
 }
 
 .auth-password-toggle:hover {
-    color: var(--auth-primary);
+    color: var(--primary);
     background: #f4f4ff;
 }
 
 .auth-forgot-link {
     margin-bottom: 9px;
-    color: var(--auth-primary);
+    color: var(--primary);
     font-size: 12px;
     font-weight: 750;
     text-decoration: none;
 }
 
 .auth-forgot-link:hover {
-    color: var(--auth-secondary);
+    color: var(--secondary);
     text-decoration: underline;
 }
 
@@ -410,7 +398,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-top: -4px;
+    margin-top: -3px;
 }
 
 .auth-checkbox-label {
@@ -426,7 +414,7 @@
     width: 16px;
     height: 16px;
     margin: 0;
-    accent-color: var(--auth-primary);
+    accent-color: var(--primary);
     cursor: pointer;
 }
 
@@ -442,7 +430,7 @@
     color: #fff;
     border: 0;
     border-radius: 13px;
-    background: linear-gradient(100deg, var(--auth-primary), var(--auth-secondary));
+    background: linear-gradient(100deg, var(--primary), var(--secondary));
     box-shadow: 0 9px 22px rgba(79,70,229,.23);
     font-family: inherit;
     font-size: 14px;
@@ -461,7 +449,7 @@
     cursor: wait;
 }
 
-.auth-submit .auth-submit-arrow {
+.auth-submit-arrow {
     margin-left: auto;
 }
 
@@ -475,21 +463,22 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    margin: 26px 0;
+    margin: 25px 0;
     color: #98a2b3;
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .auth-divider::before,
 .auth-divider::after {
     flex: 1;
     height: 1px;
-    background: var(--auth-border);
+    background: var(--border);
     content: "";
 }
 
 .auth-register-prompt {
-    color: var(--auth-muted);
+    color: var(--muted);
     font-size: 13px;
     line-height: 1.8;
     text-align: center;
@@ -497,7 +486,7 @@
 
 .auth-register-prompt a {
     margin-left: 4px;
-    color: var(--auth-primary);
+    color: var(--primary);
     font-weight: 800;
     text-decoration: none;
 }
@@ -511,7 +500,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 28px;
+    margin-top: 26px;
     color: #7b8494;
     font-size: 11px;
     line-height: 1.6;
@@ -529,7 +518,7 @@
     justify-content: center;
     gap: 8px;
     align-self: center;
-    margin-top: 25px;
+    margin-top: 22px;
     color: #667085;
     font-size: 13px;
     font-weight: 650;
@@ -537,15 +526,7 @@
 }
 
 .auth-back-shopping:hover {
-    color: var(--auth-primary);
-}
-
-.auth-back-shopping i {
-    transition: transform .2s;
-}
-
-.auth-back-shopping:hover i {
-    transform: translateX(-3px);
+    color: var(--primary);
 }
 
 /* Responsive */
@@ -555,16 +536,12 @@
         padding: 28px 16px;
     }
 
-    .auth-layout {
-        grid-template-columns: minmax(0, .9fr) minmax(350px, 1.1fr);
-    }
-
     .auth-promo {
         padding: 35px 28px;
     }
 
     .auth-brand {
-        margin-bottom: 48px;
+        margin-bottom: 40px;
     }
 
     .auth-promo h1 {
@@ -572,7 +549,7 @@
     }
 
     .auth-form-panel {
-        padding: 42px 30px;
+        padding: 38px 28px;
     }
 }
 
@@ -580,14 +557,12 @@
     .auth-page {
         min-height: auto;
         padding: 18px 12px 30px;
-        background: #f7f8fc;
     }
 
     .auth-layout {
         display: block;
         max-width: 480px;
         margin: 0 auto;
-        overflow: visible;
         border-radius: 22px;
         box-shadow: 0 15px 45px rgba(31,41,55,.07);
     }
@@ -604,7 +579,9 @@
         display: flex;
         align-items: center;
         gap: 11px;
-        margin-bottom: 32px;
+        margin-bottom: 30px;
+        color: var(--text);
+        text-decoration: none;
     }
 
     .auth-mobile-brand .auth-brand-icon {
@@ -616,7 +593,6 @@
 
     .auth-mobile-brand strong {
         display: block;
-        color: var(--auth-text);
         font-size: 16px;
         font-weight: 850;
     }
@@ -624,20 +600,12 @@
     .auth-mobile-brand span {
         display: block;
         margin-top: 3px;
-        color: var(--auth-muted);
+        color: var(--muted);
         font-size: 11px;
-    }
-
-    .auth-card-header {
-        margin-bottom: 25px;
     }
 
     .auth-card-header h2 {
         font-size: 29px;
-    }
-
-    .auth-back-shopping {
-        margin-top: 20px;
     }
 }
 
@@ -652,11 +620,6 @@
         gap: 0;
     }
 
-    .auth-password-label-row label,
-    .auth-forgot-link {
-        margin-bottom: 9px;
-    }
-
     .auth-remember-row {
         align-items: flex-start;
     }
@@ -666,7 +629,6 @@
     .auth-page *,
     .auth-page *::before,
     .auth-page *::after {
-        scroll-behavior: auto !important;
         transition: none !important;
         animation: none !important;
     }
@@ -679,11 +641,14 @@
     <div class="auth-container">
         <div class="auth-layout">
 
-            <!-- Marketplace introduction -->
             <aside class="auth-promo">
                 <div class="auth-promo-content">
 
-                    <a href="{% url 'storefront:home' %}" class="auth-brand">
+                    {% if home_url %}
+                    <a href="{{ home_url }}" class="auth-brand">
+                    {% else %}
+                    <a href="/" class="auth-brand">
+                    {% endif %}
                         <div class="auth-brand-icon">
                             <i class="fa-solid fa-bag-shopping"></i>
                         </div>
@@ -743,11 +708,13 @@
                 </div>
             </aside>
 
-            <!-- Sign-in form -->
             <main class="auth-form-panel">
 
-                <a href="{% url 'storefront:home' %}"
-                   class="auth-mobile-brand">
+                {% if home_url %}
+                <a href="{{ home_url }}" class="auth-mobile-brand">
+                {% else %}
+                <a href="/" class="auth-mobile-brand">
+                {% endif %}
                     <div class="auth-brand-icon">
                         <i class="fa-solid fa-bag-shopping"></i>
                     </div>
@@ -763,10 +730,9 @@
                     <p>Sign in to continue shopping and manage your account.</p>
                 </header>
 
-                <!-- Django messages -->
                 {% if messages %}
                     {% for msg in messages %}
-                        <div class="auth-message {% if msg.tags == 'error' %}error{% elif msg.tags == 'success' %}success{% else %}info{% endif %}"
+                        <div class="auth-message {% if 'error' in msg.tags %}error{% elif 'success' in msg.tags %}success{% else %}info{% endif %}"
                              role="status">
                             {{ msg }}
                         </div>
@@ -776,7 +742,8 @@
                 <div id="loginMessage"
                      class="auth-message"
                      role="alert"
-                     aria-live="polite"></div>
+                     aria-live="polite"
+                     hidden></div>
 
                 <form id="loginForm"
                       class="auth-form"
@@ -814,10 +781,13 @@
                     <div class="auth-form-group">
                         <div class="auth-password-label-row">
                             <label for="loginPassword">Password</label>
-                            <a href="{% url 'storefront:password_reset' %}"
+
+                            {% if password_reset_url %}
+                            <a href="{{ password_reset_url }}"
                                class="auth-forgot-link">
                                 Forgot password?
                             </a>
+                            {% endif %}
                         </div>
 
                         <div class="auth-input-wrapper">
@@ -875,18 +845,24 @@
 
                 <div class="auth-register-prompt">
                     Don't have an account?
-                    <a href="{% url 'storefront:register' %}">
-                        Create an account
-                    </a>
+
+                    {% if register_url %}
+                    <a href="{{ register_url }}">Create an account</a>
+                    {% else %}
+                    <a href="/register/">Create an account</a>
+                    {% endif %}
                 </div>
 
                 <div class="auth-security">
                     <i class="fa-solid fa-shield-halved"></i>
-                    <span>Your password is submitted securely over HTTPS when HTTPS is configured.</span>
+                    <span>Never share your password. Make sure you are using the official website.</span>
                 </div>
 
-                <a href="{% url 'storefront:marketplace' %}"
-                   class="auth-back-shopping">
+                {% if marketplace_url %}
+                <a href="{{ marketplace_url }}" class="auth-back-shopping">
+                {% else %}
+                <a href="/" class="auth-back-shopping">
+                {% endif %}
                     <i class="fa-solid fa-arrow-left"></i>
                     Continue browsing the marketplace
                 </a>
@@ -917,7 +893,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         message.textContent = text;
         message.className = "auth-message " + (type || "info");
-        message.style.display = "block";
+        message.hidden = false;
     }
 
     function hideMessage() {
@@ -925,7 +901,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         message.textContent = "";
         message.className = "auth-message";
-        message.style.display = "none";
+        message.hidden = true;
     }
 
     function setLoading(loading) {
@@ -947,13 +923,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Password visibility
     if (togglePassword && password) {
         togglePassword.addEventListener("click", function () {
             const show = password.type === "password";
 
             password.type = show ? "text" : "password";
-            togglePassword.setAttribute("aria-label", show ? "Hide password" : "Show password");
+            togglePassword.setAttribute(
+                "aria-label",
+                show ? "Hide password" : "Show password"
+            );
             togglePassword.setAttribute("aria-pressed", String(show));
 
             togglePassword.innerHTML = show
@@ -962,13 +940,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    /*
-     * Important:
-     * This template uses ordinary Django POST by default.
-     * Do not prevent submission unless you have confirmed
-     * that your authentication API is implemented.
-     */
-    if (form) {
+    if (form && email && password) {
         form.addEventListener("submit", function (event) {
             hideMessage();
 
@@ -987,22 +959,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             /*
-             * Allow the browser to submit the form to Django.
-             * The loading indicator is visual feedback only.
+             * Submit normally to Django.
+             * The login view must accept the field names
+             * "email" and "password".
              */
             setLoading(true);
         });
     }
 
-    // Clear loading state if the browser restores this page from cache.
     window.addEventListener("pageshow", function () {
         setLoading(false);
     });
-
-    if (typeof window.initPage === "function") {
-        window.initPage("login");
-    }
 });
 </script>
 {% endblock %}
-
+```
