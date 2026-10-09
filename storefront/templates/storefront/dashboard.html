@@ -1,0 +1,666 @@
+
+{% extends "storefront/base.html" %}
+
+{% block title %}Advertising Dashboard | Enock Shopping Center{% endblock %}
+
+{% block content %}
+
+<style>
+    .ad-dashboard {
+        background: #f5f7fb;
+        min-height: 85vh;
+        padding: 32px 0 55px;
+        color: #172033;
+    }
+
+    .ad-container {
+        max-width: 1250px;
+        margin: auto;
+        padding: 0 18px;
+    }
+
+    .ad-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+    }
+
+    .ad-header h1 {
+        font-size: clamp(25px, 4vw, 34px);
+        font-weight: 800;
+        margin: 0 0 8px;
+    }
+
+    .ad-header p {
+        color: #718096;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .ad-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 17px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none !important;
+        border: 0;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .ad-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .ad-btn-primary {
+        color: #fff !important;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        box-shadow: 0 5px 15px rgba(37, 99, 235, .18);
+    }
+
+    .ad-btn-light {
+        background: #eef2f7;
+        color: #344054 !important;
+    }
+
+    .ad-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .ad-stat-card {
+        background: #fff;
+        border: 1px solid #e7ebf3;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 5px 22px rgba(15, 23, 42, .035);
+    }
+
+    .ad-stat-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .ad-stat-label {
+        color: #718096;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .ad-stat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: #edf3ff;
+        color: #2563eb;
+        font-size: 19px;
+    }
+
+    .ad-stat-value {
+        font-size: clamp(24px, 3vw, 31px);
+        font-weight: 800;
+        letter-spacing: -.7px;
+        overflow-wrap: anywhere;
+    }
+
+    .ad-stat-note {
+        margin-top: 7px;
+        font-size: 12px;
+        color: #8490a3;
+    }
+
+    .ad-panel {
+        background: #fff;
+        border: 1px solid #e7ebf3;
+        border-radius: 16px;
+        margin-bottom: 24px;
+        box-shadow: 0 5px 22px rgba(15, 23, 42, .035);
+        overflow: hidden;
+    }
+
+    .ad-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        padding: 22px 24px;
+        border-bottom: 1px solid #edf0f5;
+    }
+
+    .ad-panel-header h2 {
+        font-size: 18px;
+        font-weight: 800;
+        margin: 0 0 5px;
+    }
+
+    .ad-panel-header p {
+        color: #8490a3;
+        font-size: 12px;
+        margin: 0;
+    }
+
+    .ad-panel-body {
+        padding: 24px;
+    }
+
+    .ad-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 18px;
+        border-radius: 13px;
+        background: #eef4ff;
+        border: 1px solid #dce8ff;
+        margin-bottom: 25px;
+    }
+
+    .ad-notice-icon {
+        font-size: 22px;
+        color: #2563eb;
+    }
+
+    .ad-notice strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .ad-notice p {
+        margin: 0;
+        color: #64748b;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .ad-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .ad-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 820px;
+    }
+
+    .ad-table th {
+        text-align: left;
+        padding: 14px 16px;
+        background: #f8faff;
+        color: #718096;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        white-space: nowrap;
+    }
+
+    .ad-table td {
+        padding: 17px 16px;
+        border-bottom: 1px solid #edf0f5;
+        vertical-align: middle;
+        font-size: 13px;
+    }
+
+    .ad-table tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .ad-campaign-name {
+        font-weight: 750;
+        color: #253047;
+        margin-bottom: 5px;
+        overflow-wrap: anywhere;
+    }
+
+    .ad-campaign-date {
+        font-size: 11px;
+        color: #8490a3;
+    }
+
+    .ad-status {
+        display: inline-block;
+        border-radius: 20px;
+        padding: 6px 10px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: capitalize;
+        background: #eef2f7;
+        color: #475467;
+        white-space: nowrap;
+    }
+
+    .ad-status-approved,
+    .ad-status-active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .ad-status-pending,
+    .ad-status-pending-approval,
+    .ad-status-pending-payment,
+    .ad-status-payment-review {
+        background: #fff3cd;
+        color: #805b00;
+    }
+
+    .ad-status-rejected,
+    .ad-status-ended {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .ad-status-paused,
+    .ad-status-draft {
+        background: #eef2f7;
+        color: #475467;
+    }
+
+    .ad-status-payment-verified {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .ad-action-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+
+    .ad-small-btn {
+        display: inline-block;
+        border-radius: 7px;
+        padding: 7px 10px;
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none !important;
+        background: #edf3ff;
+        color: #2563eb !important;
+        white-space: nowrap;
+    }
+
+    .ad-small-btn:hover {
+        background: #dce8ff;
+    }
+
+    .ad-small-btn-pay {
+        background: #dcfce7;
+        color: #166534 !important;
+    }
+
+    .ad-empty {
+        padding: 48px 20px;
+        text-align: center;
+    }
+
+    .ad-empty-icon {
+        font-size: 42px;
+        margin-bottom: 12px;
+    }
+
+    .ad-empty h3 {
+        font-size: 18px;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .ad-empty p {
+        color: #718096;
+        font-size: 13px;
+        margin: 0 auto 20px;
+        max-width: 420px;
+        line-height: 1.7;
+    }
+
+    .ad-bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .ad-tip {
+        display: flex;
+        gap: 13px;
+        margin-bottom: 18px;
+    }
+
+    .ad-tip:last-child {
+        margin-bottom: 0;
+    }
+
+    .ad-tip-icon {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #edf3ff;
+        color: #2563eb;
+        font-weight: 800;
+    }
+
+    .ad-tip strong {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .ad-tip p {
+        margin: 0;
+        color: #718096;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .ad-money {
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 1000px) {
+        .ad-stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 650px) {
+        .ad-dashboard {
+            padding-top: 22px;
+        }
+
+        .ad-stats,
+        .ad-bottom-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ad-stat-card {
+            padding: 18px;
+        }
+
+        .ad-panel-header,
+        .ad-panel-body {
+            padding: 18px;
+        }
+
+        .ad-header .ad-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="ad-dashboard">
+    <div class="ad-container">
+
+        <!-- Dashboard heading -->
+        <div class="ad-header">
+            <div>
+                <h1>Advertising Dashboard</h1>
+                <p>Manage your promotions and monitor your advertising campaigns.</p>
+            </div>
+
+            <a href="{% url 'advertising:create' %}"
+               class="ad-btn ad-btn-primary">
+                <span>＋</span> Create Campaign
+            </a>
+        </div>
+
+        <!-- Platform messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="ad-notice">
+                    <div class="ad-notice-icon">ⓘ</div>
+                    <div><p>{{ message }}</p></div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Summary statistics -->
+        <div class="ad-stats">
+
+            <div class="ad-stat-card">
+                <div class="ad-stat-top">
+                    <span class="ad-stat-label">Total Campaigns</span>
+                    <span class="ad-stat-icon">▤</span>
+                </div>
+                <div class="ad-stat-value">
+                    {{ total_campaigns|default:"0" }}
+                </div>
+                <div class="ad-stat-note">Campaigns created by you</div>
+            </div>
+
+            <div class="ad-stat-card">
+                <div class="ad-stat-top">
+                    <span class="ad-stat-label">Approved Campaigns</span>
+                    <span class="ad-stat-icon">✓</span>
+                </div>
+                <div class="ad-stat-value">
+                    {{ approved_campaigns|default:"0" }}
+                </div>
+                <div class="ad-stat-note">Campaigns approved for advertising</div>
+            </div>
+
+            <div class="ad-stat-card">
+                <div class="ad-stat-top">
+                    <span class="ad-stat-label">Total Impressions</span>
+                    <span class="ad-stat-icon">◉</span>
+                </div>
+                <div class="ad-stat-value">
+                    {{ total_impressions|default:"0" }}
+                </div>
+                <div class="ad-stat-note">Recorded advert views</div>
+            </div>
+
+            <div class="ad-stat-card">
+                <div class="ad-stat-top">
+                    <span class="ad-stat-label">Total Clicks</span>
+                    <span class="ad-stat-icon">↗</span>
+                </div>
+                <div class="ad-stat-value">
+                    {{ total_clicks|default:"0" }}
+                </div>
+                <div class="ad-stat-note">Recorded advert clicks</div>
+            </div>
+
+        </div>
+
+        <!-- Campaign table -->
+        <section class="ad-panel">
+            <div class="ad-panel-header">
+                <div>
+                    <h2>Your campaigns</h2>
+                    <p>Review campaign status, budget and performance.</p>
+                </div>
+
+                <a href="{% url 'advertising:create' %}"
+                   class="ad-btn ad-btn-light">
+                    + New Advert
+                </a>
+            </div>
+
+            {% if campaigns %}
+                <div class="ad-table-wrap">
+                    <table class="ad-table">
+                        <thead>
+                            <tr>
+                                <th>Campaign</th>
+                                <th>Placement</th>
+                                <th>Budget</th>
+                                <th>Performance</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for campaign in campaigns %}
+                                <tr>
+                                    <td>
+                                        <div class="ad-campaign-name">
+                                            {{ campaign.title }}
+                                        </div>
+                                        <div class="ad-campaign-date">
+                                            {% if campaign.created_at %}
+                                                Created {{ campaign.created_at|date:"d M Y" }}
+                                            {% endif %}
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        {{ campaign.get_placement_display|default:campaign.placement|default:"—" }}
+                                    </td>
+
+                                    <td class="ad-money">
+                                        UGX {{ campaign.budget_ugx|default:"0"|floatformat:0 }}
+                                    </td>
+
+                                    <td>
+                                        <div><strong>{{ campaign.impressions|default:"0" }}</strong> views</div>
+                                        <div style="color:#8490a3;font-size:11px;margin-top:4px;">
+                                            {{ campaign.clicks|default:"0" }} clicks
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="ad-status ad-status-{{ campaign.status|slugify }}">
+                                            {{ campaign.get_status_display|default:campaign.status|default:"Unknown" }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <div class="ad-action-links">
+                                            {% if campaign.status == "pending_payment" or campaign.status == "payment_review" %}
+                                                <a href="{% url 'advertising:payment' campaign.id %}"
+                                                   class="ad-small-btn ad-small-btn-pay">
+                                                    Payment
+                                                </a>
+                                            {% endif %}
+
+                                            <a href="{% url 'admin:advertising_adcampaign_change' campaign.id %}"
+                                               class="ad-small-btn">
+                                                Details
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            {% else %}
+                <div class="ad-empty">
+                    <div class="ad-empty-icon">📢</div>
+                    <h3>You haven't created a campaign yet</h3>
+                    <p>
+                        Advertise your products, reach more customers and grow your
+                        business through Enock Shopping Center.
+                    </p>
+                    <a href="{% url 'advertising:create' %}"
+                       class="ad-btn ad-btn-primary">
+                        Create Your First Campaign
+                    </a>
+                </div>
+            {% endif %}
+        </section>
+
+        <!-- Guidance panels -->
+        <div class="ad-bottom-grid">
+
+            <section class="ad-panel">
+                <div class="ad-panel-header">
+                    <div>
+                        <h2>How advertising works</h2>
+                        <p>From submission to publication.</p>
+                    </div>
+                </div>
+
+                <div class="ad-panel-body">
+                    <div class="ad-tip">
+                        <div class="ad-tip-icon">1</div>
+                        <div>
+                            <strong>Create your campaign</strong>
+                            <p>Add your campaign details, promotional image, placement, budget and duration.</p>
+                        </div>
+                    </div>
+
+                    <div class="ad-tip">
+                        <div class="ad-tip-icon">2</div>
+                        <div>
+                            <strong>Complete payment</strong>
+                            <p>Follow the payment instructions and submit the required transaction details.</p>
+                        </div>
+                    </div>
+
+                    <div class="ad-tip">
+                        <div class="ad-tip-icon">3</div>
+                        <div>
+                            <strong>Get approval</strong>
+                            <p>The administrator verifies payment and approves the campaign before it goes live.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ad-panel">
+                <div class="ad-panel-header">
+                    <div>
+                        <h2>Advertising tips</h2>
+                        <p>Make your campaigns more effective.</p>
+                    </div>
+                </div>
+
+                <div class="ad-panel-body">
+                    <div class="ad-tip">
+                        <div class="ad-tip-icon">✦</div>
+                        <div>
+                            <strong>Use clear images</strong>
+                            <p>Choose bright, relevant images that show customers what you offer.</p>
+                        </div>
+                    </div>
+
+                    <div class="ad-tip">
+                        <div class="ad-tip-icon">◎</div>
+                        <div>
+                            <strong>Write a strong title</strong>
+                            <p>Keep your title simple, accurate and easy to understand.</p>
+                        </div>
+                    </div>
+
+                    <div class="ad-tip">
+                        <div class="ad-tip-icon">↗</div>
+                        <div>
+                            <strong>Send customers to the right page</strong>
+                            <p>Check your destination link before submitting your campaign.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <p style="text-align:center;color:#8490a3;font-size:11px;margin-top:28px;">
+            Enock Shopping Center · Advertising Management
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}
+
