@@ -1,6 +1,29 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
+from django.urls import path
 
+urlpatterns = [
+    # Keep your existing routes.
+
+    path(
+        "password-reset/",
+        auth_views.PasswordResetView.as_view(
+            template_name="storefront/password_reset.html",
+            email_template_name="storefront/password_reset_email.html",
+            success_url="/password-reset/done/",
+        ),
+        name="password_reset",
+    ),
+
+    path(
+        "password-reset/done/",
+        auth_views.PasswordResetDoneView.as_view(
+            template_name="storefront/password_reset_done.html",
+        ),
+        name="password_reset_done",
+    ),
+]
 app_name = "storefront"
 urlpatterns = [
     path("", views.home, name="home"),
