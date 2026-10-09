@@ -1,470 +1,978 @@
+
 {% extends "storefront/base.html" %}
 {% load static %}
 
-{% block title %}Sellers — Enock Shopping Center{% endblock %}
-
-{% block content %}
-
-<!-- Seller Hero -->
-
-<section class="seller-hero">
-    <div class="container">
-        <div class="seller-hero-grid">
-
-```
-        <div class="seller-hero-content">
-            <span class="eyebrow">
-                <i class="fa-solid fa-store"></i>
-                Enock Shopping Center
-            </span>
-
-            <h1>Discover trusted sellers and local businesses.</h1>
-
-            <p>
-                Shop from independent sellers, local businesses and growing
-                brands across Uganda. Find the right seller, explore their
-                products and shop with confidence.
-            </p>
-
-            <div class="seller-hero-actions">
-                <a href="{% url 'storefront:marketplace' %}" class="btn btn-primary">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    Start Shopping
-                </a>
-
-                <a href="{% url 'storefront:seller_dashboard' %}" class="btn btn-outline">
-                    <i class="fa-solid fa-store"></i>
-                    Become a Seller
-                </a>
-            </div>
-        </div>
-
-        <div class="seller-hero-card">
-            <div class="seller-hero-icon">
-                <i class="fa-solid fa-shop"></i>
-            </div>
-
-            <h3>Grow with Enock Shopping Center</h3>
-
-            <p>
-                Reach more customers and showcase your products through
-                our growing online marketplace.
-            </p>
-
-            <div class="seller-mini-stats">
-                <div>
-                    <strong>24/7</strong>
-                    <span>Online Store</span>
-                </div>
-
-                <div>
-                    <strong>UGX</strong>
-                    <span>Local Payments</span>
-                </div>
-
-                <div>
-                    <strong>Global</strong>
-                    <span>Opportunities</span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-```
-
-</section>
-
-<!-- Seller Search -->
-
-<section class="section seller-search-section">
-    <div class="container">
-
-```
-    <div class="section-heading centered">
-        <span class="eyebrow">Find a seller</span>
-        <h2>Explore our seller community</h2>
-        <p>
-            Search for sellers, businesses and brands available on
-            Enock Shopping Center.
-        </p>
-    </div>
-
-    <div class="seller-search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-            type="search"
-            id="sellerSearch"
-            placeholder="Search sellers or businesses..."
-            autocomplete="off"
-        />
-
-        <button type="button" id="sellerSearchButton" class="btn btn-primary">
-            Search
-        </button>
-    </div>
-
-</div>
-```
-
-</section>
-
-<!-- Seller Results -->
-
-<section class="section sellers-section">
-    <div class="container">
-
-```
-    <div class="section-heading-row">
-        <div>
-            <span class="eyebrow">Marketplace sellers</span>
-            <h2>Featured sellers</h2>
-        </div>
-
-        <a href="{% url 'storefront:marketplace' %}" class="text-link">
-            Browse products
-            <i class="fa-solid fa-arrow-right"></i>
-        </a>
-    </div>
-
-    <div id="pageContent" class="seller-grid">
-
-        <!-- Safe default cards -->
-        <article class="seller-card">
-            <div class="seller-card-cover">
-                <span class="seller-badge">
-                    <i class="fa-solid fa-circle-check"></i>
-                    Trusted
-                </span>
-            </div>
-
-            <div class="seller-card-body">
-
-                <div class="seller-avatar">
-                    <i class="fa-solid fa-store"></i>
-                </div>
-
-                <h3>Enock Marketplace</h3>
-
-                <p class="seller-location">
-                    <i class="fa-solid fa-location-dot"></i>
-                    Uganda
-                </p>
-
-                <p class="seller-description">
-                    Discover a wide range of products and services from
-                    sellers across the marketplace.
-                </p>
-
-                <div class="seller-meta">
-                    <span>
-                        <i class="fa-solid fa-box"></i>
-                        Marketplace
-                    </span>
-
-                    <span>
-                        <i class="fa-solid fa-star"></i>
-                        Trusted
-                    </span>
-                </div>
-
-                <a href="{% url 'storefront:marketplace' %}" class="seller-link">
-                    View products
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
-
-            </div>
-        </article>
-
-
-        <article class="seller-card seller-placeholder-card">
-            <div class="seller-placeholder-icon">
-                <i class="fa-solid fa-store"></i>
-            </div>
-
-            <h3>More sellers are joining</h3>
-
-            <p>
-                New businesses and independent sellers can join
-                Enock Shopping Center and reach customers online.
-            </p>
-
-            <a href="{% url 'storefront:seller_dashboard' %}" class="btn btn-outline">
-                Become a Seller
-            </a>
-        </article>
-
-    </div>
-
-    <div id="sellerEmptyState" class="empty-state" style="display:none;">
-        <div class="empty-icon">
-            <i class="fa-solid fa-store-slash"></i>
-        </div>
-
-        <h3>No sellers found</h3>
-
-        <p>
-            Try another seller or business name.
-        </p>
-
-        <button
-            type="button"
-            class="btn btn-primary"
-            onclick="clearSellerSearch()"
-        >
-            Show All Sellers
-        </button>
-    </div>
-
-</div>
-```
-
-</section>
-
-<!-- Why Shop From Sellers -->
-
-<section class="section seller-benefits-section">
-    <div class="container">
-
-```
-    <div class="section-heading centered">
-        <span class="eyebrow">Shop with confidence</span>
-        <h2>Why shop from our sellers?</h2>
-        <p>
-            Enock Shopping Center is designed to connect customers with
-            local sellers and businesses.
-        </p>
-    </div>
-
-    <div class="benefit-grid">
-
-        <div class="benefit-card">
-            <div class="benefit-icon">
-                <i class="fa-solid fa-shield-halved"></i>
-            </div>
-
-            <h3>Trusted marketplace</h3>
-
-            <p>
-                Discover sellers through one convenient online
-                marketplace.
-            </p>
-        </div>
-
-
-        <div class="benefit-card">
-            <div class="benefit-icon">
-                <i class="fa-solid fa-mobile-screen-button"></i>
-            </div>
-
-            <h3>Convenient shopping</h3>
-
-            <p>
-                Browse products, compare options and place orders
-                from your phone or computer.
-            </p>
-        </div>
-
-
-        <div class="benefit-card">
-            <div class="benefit-icon">
-                <i class="fa-solid fa-money-bill-transfer"></i>
-            </div>
-
-            <h3>Flexible payments</h3>
-
-            <p>
-                The platform is designed for convenient local payment
-                options and future digital payment integrations.
-            </p>
-        </div>
-
-
-        <div class="benefit-card">
-            <div class="benefit-icon">
-                <i class="fa-solid fa-truck-fast"></i>
-            </div>
-
-            <h3>Delivery focused</h3>
-
-            <p>
-                Connect your shopping experience with delivery and
-                order tracking features.
-            </p>
-        </div>
-
-    </div>
-
-</div>
-```
-
-</section>
-
-<!-- Seller CTA -->
-
-<section class="section seller-cta-section">
-    <div class="container">
-
-```
-    <div class="seller-cta">
-
-        <div class="seller-cta-icon">
-            <i class="fa-solid fa-rocket"></i>
-        </div>
-
-        <div class="seller-cta-content">
-            <span class="eyebrow">For businesses & entrepreneurs</span>
-
-            <h2>Ready to sell online?</h2>
-
-            <p>
-                Create your seller presence, showcase your products
-                and connect with customers through Enock Shopping Center.
-            </p>
-        </div>
-
-        <div class="seller-cta-action">
-            <a href="{% url 'storefront:seller_dashboard' %}" class="btn btn-light">
-                Open Seller Center
-                <i class="fa-solid fa-arrow-right"></i>
-            </a>
-        </div>
-
-    </div>
-
-</div>
-```
-
-</section>
-
-<!-- Help -->
-
-<section class="section seller-help-section">
-    <div class="container">
-
-```
-    <div class="help-card">
-
-        <div class="help-icon">
-            <i class="fa-solid fa-circle-question"></i>
-        </div>
-
-        <div>
-            <h3>Looking for something specific?</h3>
-
-            <p>
-                Browse the marketplace to find products from different
-                sellers and categories.
-            </p>
-        </div>
-
-        <a href="{% url 'storefront:marketplace' %}" class="btn btn-primary">
-            Explore Marketplace
-        </a>
-
-    </div>
-
-</div>
-```
-
-</section>
-
+{% block title %}Discover Sellers | Enock Shopping Center{% endblock %}
+
+{% url 'storefront:home' as home_url %}
+{% url 'storefront:marketplace' as marketplace_url %}
+{% url 'storefront:seller_dashboard' as seller_dashboard_url %}
+
+{% block extra_css %}
+<style>
+/* ==========================================================
+   ENOCK SHOPPING CENTER — GLOBAL SELLER DIRECTORY
+   ========================================================== */
+
+.sellers-page {
+    --seller-primary: #4f46e5;
+    --seller-primary-dark: #3730a3;
+    --seller-secondary: #7c3aed;
+    --seller-text: #111827;
+    --seller-muted: #64748b;
+    --seller-border: #e5e7eb;
+    --seller-bg: #f8fafc;
+    color: var(--seller-text);
+    background: #fff;
+}
+
+.sellers-page *,
+.sellers-page *::before,
+.sellers-page *::after {
+    box-sizing: border-box;
+}
+
+.sellers-page a {
+    text-decoration: none;
+}
+
+.sellers-page button,
+.sellers-page input {
+    font: inherit;
+}
+
+.seller-container {
+    width: min(1200px, calc(100% - 36px));
+    margin-inline: auto;
+}
+
+.seller-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--seller-primary);
+    font-size: .76rem;
+    font-weight: 850;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.seller-section {
+    padding: 76px 0;
+}
+
+.seller-section-muted {
+    background: var(--seller-bg);
+}
+
+.seller-heading {
+    max-width: 690px;
+    margin-bottom: 35px;
+}
+
+.seller-heading.centered {
+    margin-inline: auto;
+    text-align: center;
+}
+
+.seller-heading h2 {
+    margin: 12px 0;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900;
+    letter-spacing: -.045em;
+    line-height: 1.2;
+}
+
+.seller-heading p {
+    margin: 0;
+    color: var(--seller-muted);
+    line-height: 1.8;
+}
+
+.sellers-page .seller-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 47px;
+    padding: 13px 19px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-size: .88rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease,
+                box-shadow .2s ease;
+}
+
+.sellers-page .seller-btn:hover {
+    transform: translateY(-2px);
+}
+
+.seller-btn-primary {
+    color: #fff !important;
+    background: var(--seller-primary);
+    box-shadow: 0 7px 18px #4f46e526;
+}
+
+.seller-btn-primary:hover {
+    background: var(--seller-primary-dark);
+}
+
+.seller-btn-light {
+    color: #312e81 !important;
+    background: #fff;
+}
+
+.seller-btn-outline {
+    color: var(--seller-text) !important;
+    border-color: #dbe1ea !important;
+    background: #fff;
+}
+
+.sellers-page a:focus-visible,
+.sellers-page button:focus-visible,
+.sellers-page input:focus-visible {
+    outline: 3px solid #a5b4fc;
+    outline-offset: 3px;
+}
+
+/* Hero */
+
+.seller-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 76px 0 82px;
+    color: #fff;
+    background:
+        radial-gradient(circle at 90% 10%, #a78bfa55, transparent 28%),
+        radial-gradient(circle at 5% 100%, #6366f144, transparent 35%),
+        linear-gradient(125deg, #0f172a, #312e81 60%, #4f46e5);
+}
+
+.seller-hero::after {
+    position: absolute;
+    right: -100px;
+    bottom: -190px;
+    width: 390px;
+    height: 390px;
+    border: 1px solid #ffffff20;
+    border-radius: 50%;
+    content: "";
+    pointer-events: none;
+}
+
+.seller-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(290px, .7fr);
+    align-items: center;
+    gap: 55px;
+}
+
+.seller-hero .seller-eyebrow {
+    color: #c7d2fe;
+}
+
+.seller-hero h1 {
+    max-width: 750px;
+    margin: 20px 0;
+    color: #fff;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 950;
+    letter-spacing: -.06em;
+    line-height: 1.05;
+}
+
+.seller-hero-content > p {
+    max-width: 670px;
+    color: #e0e7ff;
+    font-size: 1.02rem;
+    line-height: 1.9;
+}
+
+.seller-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.seller-hero-card {
+    padding: 30px;
+    border: 1px solid #ffffff25;
+    border-radius: 25px;
+    background: #ffffff12;
+    box-shadow: 0 24px 65px #00000018;
+    backdrop-filter: blur(12px);
+}
+
+.seller-hero-icon {
+    display: grid;
+    width: 65px;
+    height: 65px;
+    place-items: center;
+    border-radius: 20px;
+    background: #ffffff20;
+    color: #fff;
+    font-size: 27px;
+}
+
+.seller-hero-card h2 {
+    margin: 22px 0 10px;
+    color: #fff;
+    font-size: 1.45rem;
+    font-weight: 850;
+}
+
+.seller-hero-card > p {
+    color: #e0e7ff;
+    font-size: .9rem;
+    line-height: 1.8;
+}
+
+.seller-mini-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 25px;
+    padding-top: 22px;
+    border-top: 1px solid #ffffff25;
+}
+
+.seller-mini-stats strong,
+.seller-mini-stats span {
+    display: block;
+}
+
+.seller-mini-stats strong {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.seller-mini-stats span {
+    margin-top: 6px;
+    color: #c7d2fe;
+    font-size: .7rem;
+    line-height: 1.5;
+}
+
+/* Search */
+
+.seller-search-section {
+    padding: 65px 0 25px;
+}
+
+.seller-search-box {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 17px;
+    background: #fff;
+    box-shadow: 0 12px 35px #0f172a0b;
+}
+
+.seller-search-box > i {
+    padding-left: 12px;
+    color: #94a3b8;
+    font-size: 19px;
+}
+
+.seller-search-box input {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--seller-text);
+    font-size: .92rem;
+}
+
+.seller-search-box input:focus-visible {
+    outline: none;
+}
+
+.seller-search-box .seller-btn {
+    flex-shrink: 0;
+}
+
+.seller-search-hint {
+    margin: 12px 0 0;
+    color: var(--seller-muted);
+    font-size: .78rem;
+    text-align: center;
+}
+
+/* Seller directory */
+
+.sellers-section {
+    padding-top: 40px;
+}
+
+.seller-section-heading-row {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.seller-section-heading-row h2 {
+    margin: 9px 0 0;
+    font-size: clamp(1.65rem, 3vw, 2.2rem);
+    font-weight: 900;
+    letter-spacing: -.045em;
+}
+
+.seller-text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--seller-primary);
+    font-size: .87rem;
+    font-weight: 800;
+}
+
+.seller-text-link:hover {
+    color: var(--seller-primary-dark);
+}
+
+.seller-results-info {
+    margin: 0 0 18px;
+    color: var(--seller-muted);
+    font-size: .83rem;
+}
+
+.seller-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 23px;
+}
+
+.seller-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--seller-border);
+    border-radius: 21px;
+    background: #fff;
+    box-shadow: 0 8px 27px #0f172a08;
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.seller-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 38px #0f172a12;
+}
+
+.seller-card-cover {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 115px;
+    padding: 18px;
+    background:
+        radial-gradient(circle at 85% 20%, #ffffff45, transparent 25%),
+        linear-gradient(135deg, #312e81, #6366f1 60%, #a78bfa);
+}
+
+.seller-card:nth-child(3n + 2) .seller-card-cover {
+    background: linear-gradient(135deg, #064e3b, #059669, #6ee7b7);
+}
+
+.seller-card:nth-child(3n) .seller-card-cover {
+    background: linear-gradient(135deg, #7c2d12, #ea580c, #fdba74);
+}
+
+.seller-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 11px;
+    border: 1px solid #ffffff55;
+    border-radius: 999px;
+    background: #ffffffed;
+    color: #3730a3;
+    font-size: .72rem;
+    font-weight: 850;
+}
+
+.seller-cover-icon {
+    color: #ffffffd9;
+    font-size: 35px;
+}
+
+.seller-card-body {
+    position: relative;
+    padding: 0 22px 23px;
+}
+
+.seller-avatar {
+    display: grid;
+    width: 66px;
+    height: 66px;
+    margin-top: -33px;
+    margin-bottom: 15px;
+    place-items: center;
+    border: 4px solid #fff;
+    border-radius: 19px;
+    background: #eef2ff;
+    color: var(--seller-primary);
+    font-size: 24px;
+    box-shadow: 0 4px 12px #0f172a0b;
+}
+
+.seller-card h3 {
+    margin: 0 0 9px;
+    overflow-wrap: anywhere;
+    font-size: 1.12rem;
+    font-weight: 900;
+    letter-spacing: -.025em;
+}
+
+.seller-location {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 13px;
+    color: var(--seller-muted);
+    font-size: .8rem;
+}
+
+.seller-location i {
+    color: var(--seller-primary);
+}
+
+.seller-description {
+    min-height: 67px;
+    margin: 0;
+    color: #64748b;
+    font-size: .85rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+}
+
+.seller-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 17px;
+}
+
+.seller-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 9px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: .72rem;
+    font-weight: 750;
+}
+
+.seller-meta .seller-verified {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.seller-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 21px;
+    padding-top: 17px;
+    border-top: 1px solid #f1f5f9;
+    color: var(--seller-primary);
+    font-size: .85rem;
+    font-weight: 850;
+}
+
+.seller-link:hover {
+    color: var(--seller-primary-dark);
+}
+
+.seller-placeholder-card {
+    display: flex;
+    min-height: 350px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 30px;
+    border-style: dashed;
+    background: linear-gradient(145deg, #fafaff, #f5f3ff);
+}
+
+.seller-placeholder-icon {
+    display: grid;
+    width: 62px;
+    height: 62px;
+    margin-bottom: 20px;
+    place-items: center;
+    border-radius: 19px;
+    background: #e0e7ff;
+    color: var(--seller-primary);
+    font-size: 25px;
+}
+
+.seller-placeholder-card h3 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+}
+
+.seller-placeholder-card p {
+    color: var(--seller-muted);
+    font-size: .88rem;
+    line-height: 1.8;
+}
+
+.seller-placeholder-card .seller-btn {
+    margin-top: 12px;
+}
+
+/* Empty state */
+
+.seller-empty-state {
+    padding: 48px 20px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 20px;
+    background: #fff;
+    text-align: center;
+}
+
+.seller-empty-state[hidden] {
+    display: none !important;
+}
+
+.seller-empty-icon {
+    display: grid;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 18px;
+    place-items: center;
+    border-radius: 22px;
+    background: #eef2ff;
+    color: var(--seller-primary);
+    font-size: 27px;
+}
+
+.seller-empty-state h3 {
+    margin: 0 0 9px;
+    font-size: 1.3rem;
+    font-weight: 900;
+}
+
+.seller-empty-state p {
+    margin: 0 0 22px;
+    color: var(--seller-muted);
+    line-height: 1.7;
+}
+
+/* Benefits */
+
+.seller-benefit-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.seller-benefit-card {
+    padding: 25px 22px;
+    border: 1px solid var(--seller-border);
+    border-radius: 18px;
+    background: #fff;
+}
+
+.seller-benefit-icon {
+    display: grid;
+    width: 49px;
+    height: 49px;
+    margin-bottom: 19px;
+    place-items: center;
+    border-radius: 15px;
+    background: #eef2ff;
+    color: var(--seller-primary);
+    font-size: 20px;
+}
+
+.seller-benefit-card h3 {
+    margin: 0 0 9px;
+    font-size: .98rem;
+    font-weight: 850;
+}
+
+.seller-benefit-card p {
+    margin: 0;
+    color: var(--seller-muted);
+    font-size: .83rem;
+    line-height: 1.8;
+}
+
+/* Seller call to action */
+
+.seller-cta {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 25px;
+    padding: 38px;
+    border-radius: 25px;
+    background:
+        radial-gradient(circle at 95% 10%, #a78bfa40, transparent 30%),
+        linear-gradient(125deg, #111827, #312e81);
+    color: #fff;
+}
+
+.seller-cta-icon {
+    display: grid;
+    width: 68px;
+    height: 68px;
+    place-items: center;
+    border-radius: 21px;
+    background: #ffffff1a;
+    color: #ddd6fe;
+    font-size: 29px;
+}
+
+.seller-cta .seller-eyebrow {
+    color: #c7d2fe;
+}
+
+.seller-cta h2 {
+    margin: 10px 0;
+    color: #fff;
+    font-size: clamp(1.6rem, 3vw, 2.35rem);
+    font-weight: 900;
+    letter-spacing: -.04em;
+}
+
+.seller-cta p {
+    max-width: 650px;
+    margin: 0;
+    color: #e0e7ff;
+    font-size: .9rem;
+    line-height: 1.8;
+}
+
+/* Help */
+
+.seller-help-section {
+    padding-top: 0;
+}
+
+.seller-help-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 26px;
+    border: 1px solid var(--seller-border);
+    border-radius: 19px;
+    background: #fff;
+}
+
+.seller-help-icon {
+    display: grid;
+    flex: 0 0 53px;
+    width: 53px;
+    height: 53px;
+    place-items: center;
+    border-radius: 16px;
+    background: #eef2ff;
+    color: var(--seller-primary);
+    font-size: 23px;
+}
+
+.seller-help-copy {
+    flex: 1;
+}
+
+.seller-help-copy h3 {
+    margin: 0 0 6px;
+    font-size: 1rem;
+    font-weight: 850;
+}
+
+.seller-help-copy p {
+    margin: 0;
+    color: var(--seller-muted);
+    font-size: .85rem;
+    line-height: 1.7;
+}
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+    .seller-hero-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr);
+        gap: 28px;
+    }
+
+    .seller-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .seller-benefit-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .seller-cta {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .seller-cta-action {
+        grid-column: 2;
+    }
+}
+
+@media (max-width: 700px) {
+    .seller-container {
+        width: calc(100% - 28px);
+    }
+
+    .seller-section {
+        padding: 53px 0;
+    }
+
+    .seller-hero {
+        padding: 52px 0;
+    }
+
+    .seller-hero-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seller-hero h1 {
+        font-size: clamp(2.3rem, 10vw, 3.5rem);
+    }
+
+    .seller-hero-card {
+        padding: 23px;
+    }
+
+    .seller-section-heading-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .seller-search-box {
+        flex-wrap: wrap;
+    }
+
+    .seller-search-box input {
+        flex: 1;
+    }
+
+    .seller-search-box .seller-btn {
+        width: 100%;
+    }
+
+    .seller-cta {
+        grid-template-columns: 1fr;
+        padding: 26px;
+    }
+
+    .seller-cta-action {
+        grid-column: auto;
+    }
+
+    .seller-help-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .seller-help-card .seller-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .seller-grid,
+    .seller-benefit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seller-mini-stats {
+        gap: 7px;
+    }
+
+    .seller-mini-stats span {
+        font-size: .66rem;
+    }
+
+    .seller-hero-actions {
+        flex-direction: column;
+    }
+
+    .seller-hero-actions .seller-btn {
+        width: 100%;
+    }
+
+    .seller-card-body {
+        padding-inline: 18px;
+    }
+
+    .seller-placeholder-card {
+        min-height: 280px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sellers-page *,
+    .sellers-page *::before,
+    .sellers-page *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
+</style>
 {% endblock %}
 
-{% block scripts %}
+{% block content %}
+<div class="sellers-page">
 
-<script src="{% static 'storefront/js/app.js' %}"></script>
+    <!-- HERO -->
+    <section class="seller-hero">
+        <div class="seller-container">
+            <div class="seller-hero-grid">
 
-<script>
-(function () {
-    const searchInput = document.getElementById("sellerSearch");
-    const searchButton = document.getElementById("sellerSearchButton");
-    const pageContent = document.getElementById("pageContent");
-    const emptyState = document.getElementById("sellerEmptyState");
+                <div class="seller-hero-content">
+                    <span class="seller-eyebrow">
+                        <i class="fa-solid fa-store"></i>
+                        Enock Shopping Center
+                    </span>
 
-    function filterSellers() {
-        if (!searchInput || !pageContent) return;
+                    <h1>Discover sellers. Find products. Shop with confidence.</h1>
 
-        const query = searchInput.value.trim().toLowerCase();
-        const cards = pageContent.querySelectorAll(".seller-card");
-        let visible = 0;
+                    <p>
+                        Explore independent sellers, local businesses and
+                        growing brands. Discover products, compare choices
+                        and connect with businesses through one marketplace.
+                    </p>
 
-        cards.forEach(function (card) {
-            const text = card.textContent.toLowerCase();
+                    <div class="seller-hero-actions">
+                        <a href="{{ marketplace_url|default:'/' }}"
+                           class="seller-btn seller-btn-light">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            Start shopping
+                        </a>
 
-            if (!query || text.includes(query)) {
-                card.style.display = "";
-                visible++;
-            } else {
-                card.style.display = "none";
-            }
-        });
+                        <a href="{{ seller_dashboard_url|default:'/seller/dashboard/' }}"
+                           class="seller-btn seller-btn-outline">
+                            <i class="fa-solid fa-store"></i>
+                            Become a seller
+                        </a>
+                    </div>
+                </div>
 
-        if (emptyState) {
-            emptyState.style.display = visible === 0 ? "block" : "none";
-        }
-    }
+                <aside class="seller-hero-card">
+                    <div class="seller-hero-icon">
+                        <i class="fa-solid fa-shop"></i>
+                    </div>
 
-    function clearSellerSearch() {
-        if (searchInput) {
-            searchInput.value = "";
-        }
+                    <h2>Grow your business online</h2>
 
-        filterSellers();
-    }
+                    <p>
+                        Showcase your products, reach new customers and
+                        build your online presence with Enock Shopping Center.
+                    </p>
 
-    window.clearSellerSearch = clearSellerSearch;
+                    <div class="seller-mini-stats">
+                        <div>
+                            <strong>24/7</strong>
+                            <span>Online visibility</span>
+                        </div>
+                        <div>
+                            <strong>UGX</strong>
+                            <span>Local currency</span>
+                        </div>
+                        <div>
+                            <strong>Global</strong>
+                            <span>Growth potential</span>
+                        </div>
+                    </div>
+                </aside>
 
-    if (searchInput) {
-        searchInput.addEventListener("input", filterSellers);
+            </div>
+        </div>
+    </section>
 
-        searchInput.addEventListener("keydown", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                filterSellers();
-            }
-        });
-    }
+    <!-- SEARCH -->
+    <section class="seller-search-section">
+        <div class="seller-container">
+            <div class="seller-heading centered">
+                <span class="seller-eyebrow">Find a seller</span>
+                <h2>Explore our seller community</h2>
+                <p>
+                    Search the seller cards currently displayed on this page.
+                    More seller results can be connected to your database.
+                </p>
+            </div>
 
-    if (searchButton) {
-        searchButton.addEventListener("click", filterSellers);
-    }
+            <form class="seller-search-box" id="sellerSearchForm" role="search">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
 
-    /*
-     * Optional backend integration.
-     *
-     * If app.js later provides seller data through
-     * window.renderSellers([...]), this page can be connected
-     * without changing the template structure.
-     */
-    window.renderSellers = function (sellers) {
-        if (!pageContent || !Array.isArray(sellers)) return;
+                <input
+                    type="search"
+                    id="sellerSearch"
+                    placeholder="Search by seller name, location or business..."
+                    autocomplete="off"
+                    aria-label="Search sellers"
+                >
 
-        if (sellers.length === 0) {
-            pageContent.innerHTML = "";
-            if (emptyState) emptyState.style.display = "block";
-            return;
-        }
+                <button type="submit" id="sellerSearchButton"
+                        class="seller-btn seller-btn-primary">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Search
+                </button>
+            </form>
 
-        pageContent.innerHTML = sellers.map(function (seller) {
-            const name = seller.name || seller.store_name || "Seller";
-            const location = seller.location || seller.city || "Uganda";
-            const description =
-                seller.description ||
-                "Discover products from this seller on Enock Shopping Center.";
+            <p class="seller-search-hint">
+                Search results update as you type.
+            </p>
+        </div>
+    </section>
 
-            const productsUrl =
-                seller.url ||
-                "{% url 'storefront:marketplace' %}";
+    <!-- SELLER DIRECTORY -->
+    <section class="seller-section sellers-section">
+        <div class="seller-container">
 
-            return `
-                <article class="seller-card">
+            <div class="seller-section-heading-row">
+                <div>
+                    <span class="seller-eyebrow">Marketplace directory</span>
+                    <h2>Discover businesses</h2>
+                </div>
+
+                <a href="{{ marketplace_url|default:'/' }}"
+                   class="seller-text-link">
+                    Browse products
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <p id="sellerResultsInfo" class="seller-results-info"
+               aria-live="polite">
+                Showing featured marketplace information.
+            </p>
+
+            <div id="pageContent" class="seller-grid">
+
+                <!-- General marketplace card, not a claim about a verified seller -->
+                <article class="seller-card" data-featured="true">
                     <div class="seller-card-cover">
                         <span class="seller-badge">
-                            <i class="fa-solid fa-circle-check"></i>
-                            Seller
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            Marketplace
                         </span>
+                        <i class="fa-solid fa-store seller-cover-icon"
+                           aria-hidden="true"></i>
                     </div>
 
                     <div class="seller-card-body">
@@ -472,43 +980,408 @@
                             <i class="fa-solid fa-store"></i>
                         </div>
 
-                        <h3>${escapeSellerHtml(name)}</h3>
+                        <h3>Enock Shopping Center</h3>
 
                         <p class="seller-location">
                             <i class="fa-solid fa-location-dot"></i>
-                            ${escapeSellerHtml(location)}
+                            Uganda
                         </p>
 
                         <p class="seller-description">
-                            ${escapeSellerHtml(description)}
+                            Explore products listed across the marketplace
+                            and discover available sellers and businesses.
                         </p>
 
-                        <a href="${productsUrl}" class="seller-link">
-                            View products
+                        <div class="seller-meta">
+                            <span>
+                                <i class="fa-solid fa-box"></i>
+                                Product directory
+                            </span>
+                        </div>
+
+                        <a href="{{ marketplace_url|default:'/' }}"
+                           class="seller-link">
+                            Browse products
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
                 </article>
-            `;
-        }).join("");
 
-        if (emptyState) emptyState.style.display = "none";
+                <article class="seller-card seller-placeholder-card"
+                         data-featured="true">
+                    <div class="seller-placeholder-icon">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+
+                    <span class="seller-eyebrow">For entrepreneurs</span>
+
+                    <h3>Bring your business online</h3>
+
+                    <p>
+                        Interested in selling products? Open the Seller Center
+                        to access the seller options available on the platform.
+                    </p>
+
+                    <a href="{{ seller_dashboard_url|default:'/seller/dashboard/' }}"
+                       class="seller-btn seller-btn-outline">
+                        Become a seller
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </article>
+
+            </div>
+
+            <div id="sellerEmptyState" class="seller-empty-state" hidden>
+                <div class="seller-empty-icon">
+                    <i class="fa-solid fa-store-slash"></i>
+                </div>
+
+                <h3>No matching sellers found</h3>
+
+                <p>
+                    Try a different search term or clear your search.
+                </p>
+
+                <button type="button" id="clearSellerSearch"
+                        class="seller-btn seller-btn-primary">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Show all
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- BENEFITS -->
+    <section class="seller-section seller-section-muted">
+        <div class="seller-container">
+
+            <div class="seller-heading centered">
+                <span class="seller-eyebrow">A better shopping experience</span>
+                <h2>Why use Enock Shopping Center?</h2>
+                <p>
+                    Discover products and businesses through a convenient
+                    online marketplace.
+                </p>
+            </div>
+
+            <div class="seller-benefit-grid">
+
+                <article class="seller-benefit-card">
+                    <div class="seller-benefit-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3>Shop thoughtfully</h3>
+                    <p>
+                        Review product information and seller details before
+                        placing an order.
+                    </p>
+                </article>
+
+                <article class="seller-benefit-card">
+                    <div class="seller-benefit-icon">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <h3>Convenient browsing</h3>
+                    <p>
+                        Explore the marketplace from a phone, tablet or
+                        computer.
+                    </p>
+                </article>
+
+                <article class="seller-benefit-card">
+                    <div class="seller-benefit-icon">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </div>
+                    <h3>Payment options</h3>
+                    <p>
+                        Check the payment methods supported by the platform
+                        during checkout.
+                    </p>
+                </article>
+
+                <article class="seller-benefit-card">
+                    <div class="seller-benefit-icon">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <h3>Delivery information</h3>
+                    <p>
+                        Check delivery availability, charges and order details
+                        before confirming a purchase.
+                    </p>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SELLER CTA -->
+    <section class="seller-section">
+        <div class="seller-container">
+            <div class="seller-cta">
+
+                <div class="seller-cta-icon">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+
+                <div class="seller-cta-content">
+                    <span class="seller-eyebrow">
+                        For businesses and entrepreneurs
+                    </span>
+
+                    <h2>Ready to sell online?</h2>
+
+                    <p>
+                        Explore the Seller Center to find the seller registration
+                        and product management features available to your account.
+                    </p>
+                </div>
+
+                <div class="seller-cta-action">
+                    <a href="{{ seller_dashboard_url|default:'/seller/dashboard/' }}"
+                       class="seller-btn seller-btn-light">
+                        Open Seller Center
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- HELP -->
+    <section class="seller-section seller-help-section">
+        <div class="seller-container">
+            <div class="seller-help-card">
+
+                <div class="seller-help-icon">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+
+                <div class="seller-help-copy">
+                    <h3>Looking for a particular product?</h3>
+                    <p>
+                        Visit the marketplace to browse available products
+                        and categories.
+                    </p>
+                </div>
+
+                <a href="{{ marketplace_url|default:'/' }}"
+                   class="seller-btn seller-btn-primary">
+                    Explore marketplace
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'storefront/js/app.js' %}"></script>
+
+<script>
+(function () {
+    "use strict";
+
+    const searchForm = document.getElementById("sellerSearchForm");
+    const searchInput = document.getElementById("sellerSearch");
+    const searchButton = document.getElementById("sellerSearchButton");
+    const pageContent = document.getElementById("pageContent");
+    const emptyState = document.getElementById("sellerEmptyState");
+    const clearButton = document.getElementById("clearSellerSearch");
+    const resultsInfo = document.getElementById("sellerResultsInfo");
+
+    if (!pageContent || !searchInput) return;
+
+    function filterSellers() {
+        const query = searchInput.value.trim().toLocaleLowerCase();
+        const cards = Array.from(pageContent.querySelectorAll(".seller-card"));
+        let visibleCount = 0;
+
+        cards.forEach(function (card) {
+            const searchableText = card.textContent.toLocaleLowerCase();
+            const matches = !query || searchableText.includes(query);
+
+            card.hidden = !matches;
+
+            if (matches) visibleCount++;
+        });
+
+        if (emptyState) {
+            emptyState.hidden = visibleCount !== 0;
+        }
+
+        if (resultsInfo) {
+            resultsInfo.textContent = query
+                ? visibleCount + " matching result(s) found."
+                : "Showing " + visibleCount + " seller listing(s).";
+        }
+    }
+
+    function clearSellerSearch() {
+        searchInput.value = "";
+        filterSellers();
+        searchInput.focus();
+    }
+
+    if (searchForm) {
+        searchForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            filterSellers();
+        });
+    }
+
+    searchInput.addEventListener("input", filterSellers);
+
+    if (searchButton) {
+        searchButton.addEventListener("click", filterSellers);
+    }
+
+    if (clearButton) {
+        clearButton.addEventListener("click", clearSellerSearch);
+    }
+
+    /*
+     * Optional integration point.
+     *
+     * Your backend or app.js can call:
+     * window.renderSellers([{name, location, description, url}])
+     *
+     * This creates cards safely using textContent instead of inserting
+     * seller-supplied text into HTML.
+     */
+    window.renderSellers = function (sellers) {
+        if (!Array.isArray(sellers)) return;
+
+        pageContent.replaceChildren();
+
+        sellers.forEach(function (seller) {
+            const card = document.createElement("article");
+            card.className = "seller-card";
+
+            const cover = document.createElement("div");
+            cover.className = "seller-card-cover";
+
+            const badge = document.createElement("span");
+            badge.className = "seller-badge";
+
+            const badgeIcon = document.createElement("i");
+            badgeIcon.className = "fa-solid fa-store";
+            badgeIcon.setAttribute("aria-hidden", "true");
+
+            badge.append(badgeIcon, document.createTextNode(" Seller"));
+
+            const coverIcon = document.createElement("i");
+            coverIcon.className = "fa-solid fa-shop seller-cover-icon";
+            coverIcon.setAttribute("aria-hidden", "true");
+
+            cover.append(badge, coverIcon);
+
+            const body = document.createElement("div");
+            body.className = "seller-card-body";
+
+            const avatar = document.createElement("div");
+            avatar.className = "seller-avatar";
+
+            const avatarIcon = document.createElement("i");
+            avatarIcon.className = "fa-solid fa-store";
+            avatarIcon.setAttribute("aria-hidden", "true");
+            avatar.appendChild(avatarIcon);
+
+            const heading = document.createElement("h3");
+            heading.textContent =
+                seller.name || seller.store_name || "Seller";
+
+            const location = document.createElement("p");
+            location.className = "seller-location";
+
+            const locationIcon = document.createElement("i");
+            locationIcon.className = "fa-solid fa-location-dot";
+            locationIcon.setAttribute("aria-hidden", "true");
+
+            location.append(
+                locationIcon,
+                document.createTextNode(
+                    " " + (seller.location || seller.city || "Uganda")
+                )
+            );
+
+            const description = document.createElement("p");
+            description.className = "seller-description";
+            description.textContent =
+                seller.description ||
+                "Discover products from this seller on Enock Shopping Center.";
+
+            const meta = document.createElement("div");
+            meta.className = "seller-meta";
+
+            const metaLabel = document.createElement("span");
+            const metaIcon = document.createElement("i");
+            metaIcon.className = "fa-solid fa-box";
+            metaIcon.setAttribute("aria-hidden", "true");
+
+            metaLabel.append(
+                metaIcon,
+                document.createTextNode(" Seller listing")
+            );
+            meta.appendChild(metaLabel);
+
+            const link = document.createElement("a");
+            link.className = "seller-link";
+            link.textContent = "View products ";
+
+            const linkIcon = document.createElement("i");
+            linkIcon.className = "fa-solid fa-arrow-right";
+            linkIcon.setAttribute("aria-hidden", "true");
+            link.appendChild(linkIcon);
+
+            /*
+             * Only accept relative URLs or same-origin URLs.
+             * Fall back to the marketplace if the supplied URL is invalid.
+             */
+            const fallbackUrl = "{{ marketplace_url|default:'/'|escapejs }}";
+            let productUrl = fallbackUrl || "/";
+
+            if (seller.url) {
+                try {
+                    const parsedUrl = new URL(seller.url, window.location.origin);
+
+                    if (parsedUrl.origin === window.location.origin) {
+                        productUrl = parsedUrl.pathname +
+                            parsedUrl.search + parsedUrl.hash;
+                    }
+                } catch (error) {
+                    console.warn("Ignoring invalid seller URL.");
+                }
+            }
+
+            link.href = productUrl;
+
+            body.append(
+                avatar,
+                heading,
+                location,
+                description,
+                meta,
+                link
+            );
+
+            card.append(cover, body);
+            pageContent.appendChild(card);
+        });
+
         filterSellers();
     };
 
-    function escapeSellerHtml(value) {
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+    if (typeof window.initPage === "function") {
+        window.initPage("sellers");
     }
 
-    if (window.initPage) {
-        initPage("sellers");
-    }
+    filterSellers();
 })();
 </script>
-
 {% endblock %}
+
