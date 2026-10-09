@@ -2,37 +2,43 @@
 {% extends "storefront/base.html" %}
 {% load static %}
 
+{% url 'storefront:home' as home_url %}
+{% url 'storefront:marketplace' as marketplace_url %}
+{% url 'storefront:checkout' as checkout_url %}
+
 {% block title %}Shopping Cart | Enock Shopping Center{% endblock %}
 
-{% block extra_head %}
+{% block extra_css %}
 <style>
-/* ==================================================
-   ENOCK SHOPPING CENTER — MODERN CART
-   ================================================== */
-
-.cart-page {
+:root {
     --cart-primary: #4f46e5;
     --cart-primary-dark: #3730a3;
     --cart-text: #111827;
-    --cart-muted: #6b7280;
+    --cart-muted: #64748b;
     --cart-border: #e5e7eb;
     --cart-bg: #f8fafc;
-    color: var(--cart-text);
 }
 
+.cart-page,
 .cart-page * { box-sizing: border-box; }
+
+.cart-page {
+    color: var(--cart-text);
+    background: var(--cart-bg);
+}
+
 .cart-page a { text-decoration: none; }
 
 .cart-container {
-    width: min(1200px, calc(100% - 36px));
-    margin-inline: auto;
+    width: min(1200px, calc(100% - 32px));
+    margin: 0 auto;
 }
 
 .cart-hero {
-    padding: 35px 0 45px;
-    color: #fff;
+    padding: 36px 0 44px;
+    color: white;
     background:
-        radial-gradient(circle at 90% 0%, #a78bfa50, transparent 30%),
+        radial-gradient(circle at 90% 0%, #a78bfa55, transparent 30%),
         linear-gradient(125deg, #111827, #312e81 60%, #4f46e5);
 }
 
@@ -41,35 +47,36 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
     color: #c7d2fe;
     font-size: .85rem;
 }
 
-.cart-breadcrumb a { color: #fff; }
-.cart-breadcrumb a:hover { text-decoration: underline; }
+.cart-breadcrumb a { color: white; }
 
 .cart-heading {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 25px;
+    align-items: center;
+    gap: 24px;
 }
 
-.cart-heading .eyebrow {
-    color: #c7d2fe;
-    font-size: .76rem;
-    font-weight: 800;
-    letter-spacing: .13em;
+.cart-eyebrow {
+    color: var(--cart-primary);
+    font-size: .75rem;
+    font-weight: 850;
+    letter-spacing: .12em;
 }
+
+.cart-hero .cart-eyebrow { color: #c7d2fe; }
 
 .cart-heading h1 {
     margin: 12px 0;
-    color: #fff;
-    font-size: clamp(2.1rem, 5vw, 3.7rem);
+    color: white;
+    font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 850;
-    letter-spacing: -.05em;
-    line-height: 1.1;
+    letter-spacing: -.045em;
+    line-height: 1.12;
 }
 
 .cart-heading p {
@@ -79,58 +86,50 @@
     line-height: 1.8;
 }
 
-.cart-page .cart-btn {
+.cart-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 9px;
-    min-height: 45px;
+    min-height: 44px;
     padding: 12px 17px;
     border: 1px solid transparent;
     border-radius: 12px;
-    font-size: .88rem;
-    font-weight: 750;
+    font-size: .87rem;
+    font-weight: 800;
     cursor: pointer;
     transition: .2s ease;
 }
 
-.cart-page .cart-btn:hover {
-    transform: translateY(-2px);
-}
-
-.cart-page .cart-btn:focus-visible,
-.cart-page button:focus-visible,
-.cart-page a:focus-visible,
-.cart-page input:focus-visible {
-    outline: 3px solid #a5b4fc;
-    outline-offset: 3px;
-}
+.cart-btn:hover { transform: translateY(-2px); }
 
 .cart-btn-white {
+    flex-shrink: 0;
     color: #312e81;
-    background: #fff;
+    background: white;
 }
 
 .cart-btn-primary {
-    color: #fff;
+    color: white;
     background: var(--cart-primary);
 }
 
 .cart-btn-primary:hover {
-    color: #fff;
+    color: white;
     background: var(--cart-primary-dark);
 }
 
 .cart-btn-outline {
     color: var(--cart-text);
-    background: #fff;
-    border-color: var(--cart-border) !important;
+    background: white;
+    border-color: var(--cart-border);
 }
 
-.cart-btn-danger {
-    color: #dc2626;
-    background: #fff;
-    border-color: #fecaca !important;
+.cart-page button:focus-visible,
+.cart-page a:focus-visible,
+.cart-page input:focus-visible {
+    outline: 3px solid #a5b4fc;
+    outline-offset: 3px;
 }
 
 .cart-page button:disabled {
@@ -142,9 +141,9 @@
 /* Checkout progress */
 
 .cart-progress-section {
-    padding: 25px 0;
+    padding: 22px 0;
     border-bottom: 1px solid var(--cart-border);
-    background: #fff;
+    background: white;
 }
 
 .checkout-progress {
@@ -157,9 +156,11 @@
 .progress-step {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 9px;
     color: #9ca3af;
 }
+
+.progress-step.active { color: var(--cart-primary); }
 
 .progress-number {
     display: grid;
@@ -169,11 +170,8 @@
     place-items: center;
     border: 1px solid #d1d5db;
     border-radius: 50%;
-    font-size: .85rem;
     font-weight: 850;
 }
-
-.progress-step.active { color: var(--cart-primary); }
 
 .progress-step.active .progress-number {
     border-color: var(--cart-primary);
@@ -184,14 +182,15 @@
 .progress-step strong,
 .progress-step small { display: block; }
 
-.progress-step strong { font-size: .87rem; }
+.progress-step strong { font-size: .85rem; }
+
 .progress-step small {
     margin-top: 3px;
-    font-size: .73rem;
+    font-size: .72rem;
 }
 
 .progress-line {
-    width: clamp(20px, 6vw, 75px);
+    width: clamp(15px, 5vw, 65px);
     height: 1px;
     background: #e5e7eb;
 }
@@ -199,52 +198,45 @@
 /* Main layout */
 
 .cart-section {
-    padding: 42px 0 65px;
-    background: var(--cart-bg);
+    padding: 38px 0 55px;
 }
 
 .cart-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 355px;
+    grid-template-columns: minmax(0, 1fr) 350px;
     align-items: start;
-    gap: 25px;
+    gap: 24px;
 }
 
 .cart-main { min-width: 0; }
 
 .cart-card,
 .summary-card,
-.payment-trust-card {
-    overflow: hidden;
+.payment-trust-card,
+.cart-benefit {
     border: 1px solid var(--cart-border);
-    border-radius: 20px;
-    background: #fff;
+    border-radius: 18px;
+    background: white;
     box-shadow: 0 5px 22px #0f172a06;
 }
 
+.cart-card { overflow: hidden; }
+
 .cart-card-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 15px;
-    padding: 24px;
+    padding: 22px;
     border-bottom: 1px solid var(--cart-border);
-}
-
-.cart-card-header .eyebrow,
-.summary-header .eyebrow {
-    color: var(--cart-primary);
-    font-size: .72rem;
-    font-weight: 850;
-    letter-spacing: .1em;
 }
 
 .cart-card-header h2,
 .summary-header h2 {
-    margin: 8px 0 0;
-    font-size: 1.35rem;
+    margin: 7px 0 0;
+    font-size: 1.3rem;
     font-weight: 850;
-    letter-spacing: -.035em;
+    letter-spacing: -.03em;
 }
 
 #cartItemCount { color: var(--cart-muted); }
@@ -256,64 +248,63 @@
     padding: 10px 12px;
     border: 1px solid #fecaca;
     border-radius: 10px;
-    background: #fff;
+    background: white;
     color: #dc2626;
-    font-size: .8rem;
-    font-weight: 750;
+    font-size: .78rem;
+    font-weight: 800;
     cursor: pointer;
 }
 
-.clear-cart-btn[hidden] { display: none !important; }
+[hidden] { display: none !important; }
 
-#pageContent { padding: 0 24px; }
+#pageContent { padding: 0 22px; }
 
 .cart-loading,
 .cart-status {
-    padding: 55px 15px;
+    padding: 45px 12px;
     text-align: center;
+}
+
+.loading-spinner,
+.empty-cart-icon,
+.security-icon,
+.benefit-icon {
+    display: grid;
+    place-items: center;
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+    border-radius: 15px;
+    background: #eef2ff;
+    color: var(--cart-primary);
+    font-size: 22px;
 }
 
 .cart-loading h3,
 .cart-status h3 {
-    margin: 15px 0 8px;
-    font-size: 1.1rem;
-    font-weight: 800;
+    margin: 14px 0 8px;
+    font-weight: 850;
 }
 
 .cart-loading p,
 .cart-status p {
-    max-width: 450px;
+    max-width: 440px;
     margin: 0 auto;
     color: var(--cart-muted);
     font-size: .9rem;
     line-height: 1.8;
 }
 
-.loading-spinner {
-    display: grid;
-    width: 48px;
-    height: 48px;
-    margin: 0 auto;
-    place-items: center;
-    border-radius: 15px;
-    background: #eef2ff;
-    color: var(--cart-primary);
-    font-size: 23px;
-}
-
-.cart-status[hidden],
-#emptyCartState[hidden],
-#cartErrorState[hidden] {
-    display: none !important;
-}
-
-/* Product row — populated by app.js */
+/* Cart products */
 
 .cart-item {
     display: grid;
-    grid-template-columns: 110px minmax(0, 1fr);
-    gap: 19px;
-    padding: 23px 0;
+    grid-template-columns: 105px minmax(0, 1fr);
+    gap: 18px;
+    padding: 22px 0;
     border-bottom: 1px solid #f1f5f9;
 }
 
@@ -321,18 +312,18 @@
 
 .cart-item-image {
     display: grid;
-    width: 110px;
-    height: 120px;
+    width: 105px;
+    height: 115px;
     overflow: hidden;
     place-items: center;
-    border-radius: 14px;
-    background: #f8fafc;
+    border-radius: 13px;
+    background: #f1f5f9;
 }
 
 .cart-item-image img {
     width: 100%;
     height: 100%;
-    padding: 8px;
+    padding: 7px;
     object-fit: contain;
 }
 
@@ -341,15 +332,16 @@
 .cart-item-category {
     color: var(--cart-primary);
     font-size: .72rem;
-    font-weight: 800;
+    font-weight: 850;
     text-transform: uppercase;
 }
 
 .cart-item-name {
-    margin: 7px 0;
+    margin: 6px 0;
     font-size: 1rem;
-    font-weight: 800;
+    font-weight: 850;
     line-height: 1.5;
+    overflow-wrap: anywhere;
 }
 
 .cart-item-description {
@@ -364,8 +356,8 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 13px;
-    margin-top: 16px;
+    gap: 12px;
+    margin-top: 15px;
 }
 
 .cart-item-price {
@@ -398,10 +390,10 @@
 }
 
 .cart-quantity span {
-    min-width: 34px;
+    min-width: 35px;
     text-align: center;
     font-size: .85rem;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .cart-remove-btn {
@@ -410,27 +402,25 @@
     background: transparent;
     color: #dc2626;
     font-size: .8rem;
-    font-weight: 750;
+    font-weight: 800;
     cursor: pointer;
 }
 
 .cart-security {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 14px;
     margin-top: 18px;
-    padding: 20px;
-    border: 1px solid #d1fae5;
-    border-radius: 16px;
+    padding: 19px;
+    border: 1px solid #a7f3d0;
+    border-radius: 15px;
     background: #ecfdf5;
 }
 
 .security-icon {
-    display: grid;
     flex: 0 0 43px;
     width: 43px;
     height: 43px;
-    place-items: center;
     border-radius: 13px;
     background: #d1fae5;
     color: #047857;
@@ -453,41 +443,41 @@
     top: 20px;
 }
 
-.summary-card { padding: 24px; }
+.summary-card { padding: 23px; }
 
-.summary-header { margin-bottom: 23px; }
+.summary-header { margin-bottom: 22px; }
 
 .summary-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
-    margin: 18px 0;
+    gap: 12px;
+    margin: 17px 0;
     color: var(--cart-muted);
-    font-size: .88rem;
+    font-size: .87rem;
 }
 
 .summary-row strong {
     color: var(--cart-text);
     text-align: right;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .discount-row strong { color: #15803d; }
 
 .coupon-box {
-    margin: 24px 0;
-    padding: 16px;
+    margin: 23px 0;
+    padding: 15px;
     border: 1px solid var(--cart-border);
-    border-radius: 14px;
+    border-radius: 13px;
     background: #f8fafc;
 }
 
 .coupon-box label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 9px;
     font-size: .82rem;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .coupon-input {
@@ -499,11 +489,10 @@
     width: 100%;
     min-width: 0;
     height: 42px;
-    padding: 0 11px;
+    padding: 0 10px;
     border: 1px solid #d1d5db;
     border-radius: 9px;
-    background: #fff;
-    font-size: .85rem;
+    font-size: .84rem;
 }
 
 .coupon-input button {
@@ -522,50 +511,47 @@
     margin-top: 9px;
     color: var(--cart-muted);
     font-size: .78rem;
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 #couponMessage:empty { display: none; }
 
 .summary-total {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 12px;
-    margin: 23px 0;
-    padding-top: 20px;
+    margin: 22px 0;
+    padding-top: 19px;
     border-top: 1px dashed #d1d5db;
 }
 
-.summary-total span {
-    font-size: 1rem;
-    font-weight: 850;
-}
+.summary-total span { font-weight: 850; }
 
 .summary-total strong {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 900;
-    letter-spacing: -.04em;
+    letter-spacing: -.03em;
+    text-align: right;
 }
 
 .checkout-button {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 12px;
-    min-height: 53px;
-    padding: 15px 17px;
-    border-radius: 13px;
+    min-height: 52px;
+    padding: 15px 16px;
+    border-radius: 12px;
     background: var(--cart-primary);
-    color: #fff;
-    font-size: .88rem;
-    font-weight: 800;
-    transition: background .2s;
+    color: white;
+    font-size: .87rem;
+    font-weight: 850;
 }
 
 .checkout-button:hover {
+    color: white;
     background: var(--cart-primary-dark);
-    color: #fff;
 }
 
 .checkout-button.disabled {
@@ -576,24 +562,23 @@
 .continue-shopping {
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: 8px;
-    margin-top: 18px;
+    margin-top: 17px;
     color: #4b5563;
-    font-size: .85rem;
-    font-weight: 750;
+    font-size: .84rem;
+    font-weight: 800;
 }
 
 .continue-shopping:hover { color: var(--cart-primary); }
 
 .payment-trust-card {
-    margin-top: 18px;
-    padding: 21px;
+    margin-top: 17px;
+    padding: 20px;
 }
 
 .payment-trust-card h3 {
     margin: 0 0 10px;
-    font-size: .95rem;
+    font-size: .94rem;
     font-weight: 850;
 }
 
@@ -602,19 +587,19 @@
 .payment-trust-card p {
     margin: 0;
     color: var(--cart-muted);
-    font-size: .83rem;
+    font-size: .82rem;
     line-height: 1.7;
 }
 
 .payment-icons {
     display: flex;
-    gap: 10px;
-    margin-top: 17px;
+    gap: 9px;
+    margin-top: 15px;
 }
 
 .payment-icons span {
     display: grid;
-    width: 43px;
+    width: 42px;
     height: 38px;
     place-items: center;
     border: 1px solid var(--cart-border);
@@ -622,55 +607,43 @@
     color: #4b5563;
 }
 
-/* Empty/error state */
+/* Empty cart and errors */
 
-.empty-cart-section {
-    padding: 45px 0 65px;
-    background: var(--cart-bg);
-}
+.empty-cart-section { padding: 0 0 45px; }
 
 .empty-cart-card {
-    padding: 50px 20px;
+    padding: 42px 20px;
     border: 1px solid var(--cart-border);
-    border-radius: 23px;
-    background: #fff;
+    border-radius: 20px;
+    background: white;
     text-align: center;
 }
 
 .empty-cart-icon {
-    display: grid;
-    width: 85px;
-    height: 85px;
-    margin: 0 auto 24px;
-    place-items: center;
-    border-radius: 27px;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 22px;
+    border-radius: 25px;
     background: #eef2ff;
     color: var(--cart-primary);
-    font-size: 32px;
-}
-
-.empty-cart-card .eyebrow {
-    color: var(--cart-primary);
-    font-size: .75rem;
-    font-weight: 850;
-    letter-spacing: .1em;
+    font-size: 30px;
 }
 
 .empty-cart-card h2 {
     margin: 12px 0;
-    font-size: 1.8rem;
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
     font-weight: 850;
 }
 
 .empty-cart-card p {
     max-width: 480px;
-    margin: 0 auto 24px;
+    margin: 0 auto 23px;
     color: var(--cart-muted);
     line-height: 1.8;
 }
 
 .cart-error {
-    padding: 32px 20px;
+    padding: 30px 18px;
     text-align: center;
 }
 
@@ -684,34 +657,26 @@
 
 /* Benefits */
 
-.cart-benefits {
-    padding: 0 0 65px;
-    background: var(--cart-bg);
-}
+.cart-benefits { padding: 0 0 55px; }
 
 .cart-benefits-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 17px;
+    gap: 16px;
 }
 
 .cart-benefit {
     display: flex;
     align-items: flex-start;
-    gap: 14px;
-    padding: 22px;
-    border: 1px solid var(--cart-border);
-    border-radius: 17px;
-    background: #fff;
+    gap: 13px;
+    padding: 20px;
 }
 
 .benefit-icon {
-    display: grid;
-    flex: 0 0 45px;
-    width: 45px;
-    height: 45px;
-    place-items: center;
-    border-radius: 14px;
+    flex: 0 0 43px;
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
     background: #eef2ff;
     color: var(--cart-primary);
     font-size: 18px;
@@ -731,14 +696,13 @@
 }
 
 @media (max-width: 1000px) {
-    .cart-layout { grid-template-columns: minmax(0, 1fr) 310px; gap: 17px; }
+    .cart-layout { grid-template-columns: minmax(0, 1fr) 310px; gap: 16px; }
     .checkout-progress { gap: 8px; }
-    .progress-step { gap: 7px; }
+    .progress-step { gap: 6px; }
     .progress-step small { display: none; }
 }
 
 @media (max-width: 760px) {
-    .cart-container { width: min(100% - 28px, 1200px); }
     .cart-heading { align-items: flex-start; flex-direction: column; }
     .cart-layout { grid-template-columns: 1fr; }
     .cart-sidebar { position: static; }
@@ -751,19 +715,19 @@
 }
 
 @media (max-width: 480px) {
-    .cart-hero { padding: 25px 0 35px; }
-    .cart-breadcrumb { margin-bottom: 25px; }
-    .cart-progress-section { padding: 17px 0; }
-    .cart-section { padding: 25px 0 40px; }
-    .cart-card-header { align-items: flex-start; padding: 17px; }
-    .cart-card-header h2 { font-size: 1.08rem; }
-    .clear-cart-btn { font-size: .73rem; padding: 9px; }
-    #pageContent { padding: 0 15px; }
-    .cart-item { grid-template-columns: 82px minmax(0, 1fr); gap: 12px; padding: 17px 0; }
-    .cart-item-image { width: 82px; height: 100px; }
+    .cart-container { width: calc(100% - 24px); }
+    .cart-hero { padding: 25px 0 32px; }
+    .cart-breadcrumb { margin-bottom: 24px; }
+    .cart-progress-section { padding: 16px 0; }
+    .cart-section { padding: 24px 0 35px; }
+    .cart-card-header { padding: 16px; }
+    .cart-card-header h2 { font-size: 1.05rem; }
+    #pageContent { padding: 0 14px; }
+    .cart-item { grid-template-columns: 78px minmax(0, 1fr); gap: 11px; padding: 16px 0; }
+    .cart-item-image { width: 78px; height: 95px; }
     .cart-item-bottom { align-items: flex-start; flex-direction: column; gap: 10px; }
-    .summary-card { padding: 19px; }
-    .empty-cart-card { padding: 38px 17px; }
+    .summary-card { padding: 18px; }
+    .empty-cart-card { padding: 32px 15px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -780,11 +744,10 @@
 {% block content %}
 <section class="cart-page">
 
-    <!-- HERO -->
     <header class="cart-hero">
         <div class="cart-container">
             <nav class="cart-breadcrumb" aria-label="Breadcrumb">
-                <a href="{% url 'storefront:home' %}">
+                <a href="{{ home_url|default:'/' }}">
                     <i class="fa-solid fa-house"></i> Home
                 </a>
                 <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
@@ -793,15 +756,12 @@
 
             <div class="cart-heading">
                 <div>
-                    <span class="eyebrow">ENOCK SHOPPING CENTER</span>
+                    <span class="cart-eyebrow">ENOCK SHOPPING CENTER</span>
                     <h1>Your cart, your next discovery.</h1>
-                    <p>
-                        Review your selections, check your order total,
-                        and continue when you're ready.
-                    </p>
+                    <p>Review your selections, check your order total, and continue when you're ready.</p>
                 </div>
 
-                <a href="{% url 'storefront:marketplace' %}"
+                <a href="{{ marketplace_url|default:'/marketplace/' }}"
                    class="cart-btn cart-btn-white">
                     <i class="fa-solid fa-arrow-left"></i>
                     Continue shopping
@@ -810,7 +770,6 @@
         </div>
     </header>
 
-    <!-- CHECKOUT PROGRESS -->
     <section class="cart-progress-section" aria-label="Checkout progress">
         <div class="cart-container">
             <div class="checkout-progress">
@@ -837,7 +796,6 @@
         </div>
     </section>
 
-    <!-- CART CONTENT -->
     <section class="cart-section">
         <div class="cart-container">
             <div class="cart-layout">
@@ -846,11 +804,8 @@
                     <div class="cart-card">
                         <div class="cart-card-header">
                             <div>
-                                <span class="eyebrow">YOUR SELECTION</span>
-                                <h2>
-                                    Shopping Cart
-                                    <span id="cartItemCount">(0)</span>
-                                </h2>
+                                <span class="cart-eyebrow">YOUR SELECTION</span>
+                                <h2>Shopping Cart <span id="cartItemCount">(0)</span></h2>
                             </div>
 
                             <button type="button" id="clearCartButton"
@@ -874,8 +829,7 @@
                             <i class="fa-solid fa-triangle-exclamation"
                                style="font-size:30px;color:#dc2626;"></i>
                             <h3>We couldn't load your cart</h3>
-                            <p>Your items have not been intentionally removed.
-                               Check your connection and try again.</p>
+                            <p>Check your connection and try again.</p>
                             <button type="button" id="retryCartButton"
                                     class="cart-btn cart-btn-primary">
                                 <i class="fa-solid fa-rotate-right"></i>
@@ -890,19 +844,15 @@
                         </div>
                         <div>
                             <strong>Shop with confidence</strong>
-                            <p>
-                                Complete payment only through the secure
-                                payment methods offered by the platform.
-                            </p>
+                            <p>Complete payment only through the secure payment methods offered by the platform.</p>
                         </div>
                     </div>
                 </main>
 
-                <!-- SUMMARY -->
                 <aside class="cart-sidebar">
                     <div class="summary-card">
                         <div class="summary-header">
-                            <span class="eyebrow">YOUR ORDER</span>
+                            <span class="cart-eyebrow">YOUR ORDER</span>
                             <h2>Order summary</h2>
                         </div>
 
@@ -928,14 +878,10 @@
                             <div class="coupon-input">
                                 <input type="text" id="couponCode"
                                        placeholder="Enter code"
-                                       autocomplete="off"
-                                       maxlength="80">
-                                <button type="button" id="applyCoupon">
-                                    Apply
-                                </button>
+                                       autocomplete="off" maxlength="80">
+                                <button type="button" id="applyCoupon">Apply</button>
                             </div>
-                            <small id="couponMessage"
-                                   role="status" aria-live="polite"></small>
+                            <small id="couponMessage" role="status" aria-live="polite"></small>
                         </div>
 
                         <div class="summary-total">
@@ -943,7 +889,7 @@
                             <strong id="cartTotal">UGX 0</strong>
                         </div>
 
-                        <a href="{% url 'storefront:checkout' %}"
+                        <a href="{{ checkout_url|default:'/checkout/' }}"
                            id="checkoutButton"
                            class="checkout-button disabled"
                            aria-disabled="true">
@@ -951,7 +897,7 @@
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
 
-                        <a href="{% url 'storefront:marketplace' %}"
+                        <a href="{{ marketplace_url|default:'/marketplace/' }}"
                            class="continue-shopping">
                             <i class="fa-solid fa-arrow-left"></i>
                             Continue shopping
@@ -960,20 +906,11 @@
 
                     <div class="payment-trust-card">
                         <h3><i class="fa-solid fa-lock"></i> Payment options</h3>
-                        <p>
-                            Available payment methods and final delivery
-                            charges are confirmed during checkout.
-                        </p>
+                        <p>Available payment methods and final delivery charges are confirmed during checkout.</p>
                         <div class="payment-icons">
-                            <span title="Mobile Money">
-                                <i class="fa-solid fa-mobile-screen-button"></i>
-                            </span>
-                            <span title="Bank card">
-                                <i class="fa-solid fa-credit-card"></i>
-                            </span>
-                            <span title="Cash if supported">
-                                <i class="fa-solid fa-money-bill-wave"></i>
-                            </span>
+                            <span title="Mobile Money"><i class="fa-solid fa-mobile-screen-button"></i></span>
+                            <span title="Bank card"><i class="fa-solid fa-credit-card"></i></span>
+                            <span title="Cash if supported"><i class="fa-solid fa-money-bill-wave"></i></span>
                         </div>
                     </div>
                 </aside>
@@ -982,20 +919,16 @@
         </div>
     </section>
 
-    <!-- EMPTY CART -->
     <section id="emptyCartState" class="empty-cart-section" hidden>
         <div class="cart-container">
             <div class="empty-cart-card">
                 <div class="empty-cart-icon">
                     <i class="fa-solid fa-cart-shopping"></i>
                 </div>
-                <span class="eyebrow">A FRESH START</span>
+                <span class="cart-eyebrow">A FRESH START</span>
                 <h2>Your cart is waiting for something great.</h2>
-                <p>
-                    Explore phones, solar products, bikes, home essentials
-                    and more. Add your favourites when you find them.
-                </p>
-                <a href="{% url 'storefront:marketplace' %}"
+                <p>Explore phones, solar products, bikes, home essentials and more.</p>
+                <a href="{{ marketplace_url|default:'/marketplace/' }}"
                    class="cart-btn cart-btn-primary">
                     <i class="fa-solid fa-bag-shopping"></i>
                     Explore marketplace
@@ -1004,14 +937,11 @@
         </div>
     </section>
 
-    <!-- BENEFITS -->
     <section class="cart-benefits">
         <div class="cart-container">
             <div class="cart-benefits-grid">
                 <article class="cart-benefit">
-                    <div class="benefit-icon">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
+                    <div class="benefit-icon"><i class="fa-solid fa-shield-halved"></i></div>
                     <div>
                         <h3>Secure shopping</h3>
                         <p>Use the platform's supported checkout and payment flow.</p>
@@ -1019,9 +949,7 @@
                 </article>
 
                 <article class="cart-benefit">
-                    <div class="benefit-icon">
-                        <i class="fa-solid fa-truck-fast"></i>
-                    </div>
+                    <div class="benefit-icon"><i class="fa-solid fa-truck-fast"></i></div>
                     <div>
                         <h3>Delivery options</h3>
                         <p>Review delivery availability and charges at checkout.</p>
@@ -1029,9 +957,7 @@
                 </article>
 
                 <article class="cart-benefit">
-                    <div class="benefit-icon">
-                        <i class="fa-solid fa-headset"></i>
-                    </div>
+                    <div class="benefit-icon"><i class="fa-solid fa-headset"></i></div>
                     <div>
                         <h3>Customer support</h3>
                         <p>Get help through the support channels provided by the store.</p>
@@ -1043,42 +969,31 @@
 
 </section>
 
-<!-- Cart item template for storefront/js/app.js -->
 <template id="cartItemTemplate">
     <article class="cart-item">
         <div class="cart-item-image">
-            <img src="{% static 'storefront/images/product-placeholder.png' %}"
-                 alt="" loading="lazy">
+            <img src="" alt="Product image" loading="lazy">
         </div>
-
         <div class="cart-item-details">
             <span class="cart-item-category">Product</span>
             <h3 class="cart-item-name">Product name</h3>
             <p class="cart-item-description"></p>
-
             <div class="cart-item-bottom">
                 <strong class="cart-item-price">UGX 0</strong>
-
                 <div class="cart-item-actions">
                     <div class="cart-quantity">
-                        <button type="button" class="quantity-decrease"
-                                aria-label="Decrease quantity">−</button>
+                        <button type="button" class="quantity-decrease" aria-label="Decrease quantity">−</button>
                         <span class="quantity-value">1</span>
-                        <button type="button" class="quantity-increase"
-                                aria-label="Increase quantity">+</button>
+                        <button type="button" class="quantity-increase" aria-label="Increase quantity">+</button>
                     </div>
-
                     <button type="button" class="cart-remove-btn">
-                        <i class="fa-solid fa-trash-can"></i>
-                        Remove
+                        <i class="fa-solid fa-trash-can"></i> Remove
                     </button>
                 </div>
             </div>
         </div>
     </article>
 </template>
-
-</section>
 {% endblock %}
 
 {% block scripts %}
@@ -1088,11 +1003,11 @@
 (function () {
     "use strict";
 
+    const $ = id => document.getElementById(id);
     const root = document.querySelector(".cart-page");
+
     if (!root || root.dataset.cartInitialized === "true") return;
     root.dataset.cartInitialized = "true";
-
-    const $ = id => document.getElementById(id);
 
     const pageContent = $("pageContent");
     const emptyState = $("emptyCartState");
@@ -1100,18 +1015,33 @@
     const clearButton = $("clearCartButton");
     const retryButton = $("retryCartButton");
     const checkoutButton = $("checkoutButton");
+    const itemTemplate = $("cartItemTemplate");
+
+    const PLACEHOLDER = "data:image/svg+xml;charset=UTF-8," +
+        encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">' +
+            '<rect width="640" height="480" fill="#f1f5f9"/>' +
+            '<rect x="220" y="100" width="200" height="200" rx="16" fill="none" stroke="#94a3b8" stroke-width="12"/>' +
+            '<circle cx="280" cy="160" r="22" fill="none" stroke="#94a3b8" stroke-width="10"/>' +
+            '<path d="M235 275l65-65 40 40 35-35 30 60" fill="none" stroke="#94a3b8" stroke-width="10"/>' +
+            '<text x="320" y="370" font-family="Arial" font-size="28" text-anchor="middle" fill="#475569">Product image</text>' +
+            '</svg>'
+        );
 
     let loaded = false;
     let itemCount = 0;
     let requestGeneration = 0;
 
     function formatUGX(value) {
-        const number = Number(value);
-        if (!Number.isFinite(number)) return "UGX 0";
-
-        return "UGX " + number.toLocaleString("en-UG", {
+        const amount = Number(value);
+        if (!Number.isFinite(amount)) return "UGX 0";
+        return "UGX " + amount.toLocaleString("en-UG", {
             maximumFractionDigits: 0
         });
+    }
+
+    function show(element, visible) {
+        if (element) element.hidden = !visible;
     }
 
     function setCheckoutEnabled(enabled) {
@@ -1119,85 +1049,82 @@
         checkoutButton.setAttribute("aria-disabled", String(!enabled));
     }
 
-    function setVisible(element, visible) {
-        if (element) element.hidden = !visible;
+    function showError(message) {
+        show(errorState, true);
+        const paragraph = errorState.querySelector("p");
+        if (paragraph) paragraph.textContent = message;
     }
 
-    function showError(message) {
-        setVisible(errorState, true);
-        const paragraph = errorState.querySelector("p");
-        if (paragraph && message) paragraph.textContent = message;
+    function getItems(data) {
+        if (Array.isArray(data)) return data;
+        if (data && Array.isArray(data.items)) return data.items;
+        if (data && Array.isArray(data.results)) return data.results;
+        throw new Error("The cart response does not contain an items array.");
+    }
+
+    function getItemId(item) {
+        return item.cart_item_id ?? item.id ?? item.product_id;
     }
 
     function renderCart(data) {
-        /*
-         * app.js should call window.renderCart(cartData), or expose
-         * window.loadCart() returning an array or {items: [...]}.
-         *
-         * Expected item fields include id, name/title, image/image_url,
-         * price, quantity, category/category_name and description.
-         */
-        const items = Array.isArray(data) ? data :
-            data && Array.isArray(data.items) ? data.items :
-            data && Array.isArray(data.results) ? data.results : null;
-
-        if (!items) {
-            throw new Error("Cart data must contain an items array.");
-        }
+        const items = getItems(data);
+        const isObject = !Array.isArray(data);
 
         pageContent.replaceChildren();
+
         itemCount = items.reduce((sum, item) => {
             const quantity = Number(item.quantity ?? 1);
-            return sum + (Number.isFinite(quantity) && quantity > 0
-                ? quantity : 0);
+            return sum + (Number.isFinite(quantity) && quantity > 0 ? quantity : 0);
         }, 0);
 
-        $("cartItemCount").textContent = `(${itemCount})`;
-        $("summaryItemCount").textContent = itemCount;
+        $("cartItemCount").textContent = "(" + itemCount + ")";
+        $("summaryItemCount").textContent = String(itemCount);
 
         const subtotal = items.reduce((sum, item) => {
             const price = Number(item.price ?? item.sale_price ?? 0);
             const quantity = Number(item.quantity ?? 1);
-            return sum + (
-                Number.isFinite(price) && Number.isFinite(quantity)
-                    ? price * quantity : 0
-            );
+            if (!Number.isFinite(price) || !Number.isFinite(quantity)) return sum;
+            return sum + price * quantity;
         }, 0);
 
+        const discountValue = Number(isObject ? data.discount ?? 0 : 0);
+        const discount = Number.isFinite(discountValue)
+            ? Math.max(0, discountValue) : 0;
+
+        const deliveryValue = isObject ? data.delivery_cost : null;
+        const delivery = deliveryValue == null ? null : Number(deliveryValue);
+        const safeDelivery = delivery != null && Number.isFinite(delivery)
+            ? Math.max(0, delivery) : null;
+
+        const serverTotal = isObject && data.total != null
+            ? Number(data.total) : NaN;
+
+        const total = Number.isFinite(serverTotal)
+            ? Math.max(0, serverTotal)
+            : Math.max(0, subtotal - discount + (safeDelivery ?? 0));
+
         $("cartSubtotal").textContent = formatUGX(subtotal);
-
-        // Never invent delivery fees or discounts in the browser.
-        const discount = Number(data && !Array.isArray(data)
-            ? data.discount ?? 0 : 0);
-        const delivery = data && !Array.isArray(data)
-            ? data.delivery_cost : null;
-
         $("cartDiscount").textContent = formatUGX(discount);
-        $("cartDelivery").textContent = delivery == null
-            ? "At checkout" : formatUGX(delivery);
-
-        const total = data && !Array.isArray(data) &&
-            data.total != null
-            ? Number(data.total)
-            : subtotal - (Number.isFinite(discount) ? discount : 0) +
-                (Number.isFinite(Number(delivery)) ? Number(delivery) : 0);
-
-        $("cartTotal").textContent = formatUGX(Math.max(0, total));
-
-        const template = $("cartItemTemplate");
+        $("cartDelivery").textContent = safeDelivery == null
+            ? "At checkout" : formatUGX(safeDelivery);
+        $("cartTotal").textContent = formatUGX(total);
 
         items.forEach(item => {
-            const fragment = template.content.cloneNode(true);
+            const fragment = itemTemplate.content.cloneNode(true);
             const image = fragment.querySelector(".cart-item-image img");
-            const fallback =
-                "{% static 'storefront/images/product-placeholder.png' %}";
+            const quantity = Math.max(1, Number(item.quantity ?? 1));
+            const price = Number(item.price ?? item.sale_price ?? 0);
+            const itemId = getItemId(item);
 
             image.alt = String(item.name || item.title || "Product");
             image.onerror = function () {
                 this.onerror = null;
-                this.src = fallback;
+                this.src = PLACEHOLDER;
             };
-            image.src = item.image_url || item.image || item.thumbnail || fallback;
+
+            const imageUrl = item.image_url || item.image || item.thumbnail;
+            image.src = typeof imageUrl === "string" && imageUrl.trim()
+                ? imageUrl : PLACEHOLDER;
 
             fragment.querySelector(".cart-item-category").textContent =
                 item.category_name ||
@@ -1209,80 +1136,77 @@
             fragment.querySelector(".cart-item-description").textContent =
                 item.description || "";
 
-            const price = Number(item.price ?? item.sale_price ?? 0);
-            const quantity = Math.max(1, Number(item.quantity ?? 1));
-
             fragment.querySelector(".cart-item-price").textContent =
-                formatUGX(price * quantity);
+                formatUGX((Number.isFinite(price) ? price : 0) * quantity);
 
-            fragment.querySelector(".quantity-value").textContent = quantity;
+            fragment.querySelector(".quantity-value").textContent =
+                String(quantity);
 
             const decrease = fragment.querySelector(".quantity-decrease");
             const increase = fragment.querySelector(".quantity-increase");
             const remove = fragment.querySelector(".cart-remove-btn");
 
-            /*
-             * These controls require the real app.js/backend operations.
-             * They do not change database quantities by themselves.
-             */
-            decrease.addEventListener("click", async () => {
+            async function updateQuantity(newQuantity) {
                 if (typeof window.updateCartQuantity !== "function") {
-                    alert("Quantity updates are not connected yet.");
+                    alert("Quantity updates are not connected to the backend yet.");
                     return;
                 }
-                if (quantity <= 1) return;
+
+                if (itemId == null) {
+                    alert("This cart item has no ID. Please refresh the page.");
+                    return;
+                }
+
+                decrease.disabled = true;
+                increase.disabled = true;
 
                 try {
-                    const result = await window.updateCartQuantity(
-                        item.id ?? item.product_id, quantity - 1
-                    );
+                    const result = await window.updateCartQuantity(itemId, newQuantity);
                     if (result === false || (result && result.ok === false)) {
-                        throw new Error("Update failed");
+                        throw new Error("Quantity update failed.");
                     }
                     await loadCart();
                 } catch (error) {
                     console.error(error);
                     alert("Could not update the quantity. Please try again.");
+                } finally {
+                    decrease.disabled = false;
+                    increase.disabled = false;
                 }
+            }
+
+            decrease.addEventListener("click", function () {
+                if (quantity > 1) updateQuantity(quantity - 1);
             });
 
-            increase.addEventListener("click", async () => {
-                if (typeof window.updateCartQuantity !== "function") {
-                    alert("Quantity updates are not connected yet.");
-                    return;
-                }
-
-                try {
-                    const result = await window.updateCartQuantity(
-                        item.id ?? item.product_id, quantity + 1
-                    );
-                    if (result === false || (result && result.ok === false)) {
-                        throw new Error("Update failed");
-                    }
-                    await loadCart();
-                } catch (error) {
-                    console.error(error);
-                    alert("Could not update the quantity. Please try again.");
-                }
+            increase.addEventListener("click", function () {
+                updateQuantity(quantity + 1);
             });
 
-            remove.addEventListener("click", async () => {
+            remove.addEventListener("click", async function () {
                 if (typeof window.removeFromCart !== "function") {
-                    alert("Item removal is not connected yet.");
+                    alert("Item removal is not connected to the backend yet.");
                     return;
                 }
 
+                if (itemId == null) {
+                    alert("This cart item has no ID. Please refresh the page.");
+                    return;
+                }
+
+                remove.disabled = true;
+
                 try {
-                    const result = await window.removeFromCart(
-                        item.id ?? item.product_id
-                    );
+                    const result = await window.removeFromCart(itemId);
                     if (result === false || (result && result.ok === false)) {
-                        throw new Error("Removal failed");
+                        throw new Error("Item removal failed.");
                     }
                     await loadCart();
                 } catch (error) {
                     console.error(error);
                     alert("Could not remove this item. Please try again.");
+                } finally {
+                    remove.disabled = false;
                 }
             });
 
@@ -1290,13 +1214,12 @@
         });
 
         loaded = true;
-        setVisible(errorState, false);
-        setVisible(emptyState, items.length === 0);
-        setVisible(pageContent, items.length > 0);
-        setVisible(clearButton, items.length > 0);
+        show(errorState, false);
+        show(emptyState, items.length === 0);
+        show(pageContent, items.length > 0);
+        show(clearButton, items.length > 0);
         setCheckoutEnabled(items.length > 0);
 
-        // Keep totals and checkout eligibility in sync with the cart.
         if (items.length === 0) {
             $("cartSubtotal").textContent = formatUGX(0);
             $("cartDiscount").textContent = formatUGX(0);
@@ -1305,53 +1228,68 @@
         }
     }
 
-    // Public hook for existing or future storefront JavaScript.
+    // Allows app.js to provide cart data through this public callback.
     window.renderCart = renderCart;
 
     async function loadCart() {
         const generation = ++requestGeneration;
         loaded = false;
-        setVisible(errorState, false);
-        setVisible(emptyState, false);
-        setVisible(pageContent, true);
+
+        show(errorState, false);
+        show(emptyState, false);
+        show(pageContent, true);
         setCheckoutEnabled(false);
 
-        pageContent.innerHTML = `
-            <div class="cart-loading" role="status">
-                <div class="loading-spinner">
-                    <i class="fa-solid fa-spinner fa-spin"></i>
-                </div>
-                <h3>Loading your cart...</h3>
-                <p>Please wait while we retrieve your products.</p>
-            </div>`;
+        pageContent.replaceChildren();
+
+        const loading = document.createElement("div");
+        loading.className = "cart-loading";
+        loading.setAttribute("role", "status");
+
+        const spinner = document.createElement("div");
+        spinner.className = "loading-spinner";
+        const spinnerIcon = document.createElement("i");
+        spinnerIcon.className = "fa-solid fa-spinner fa-spin";
+        spinner.appendChild(spinnerIcon);
+
+        const heading = document.createElement("h3");
+        heading.textContent = "Loading your cart...";
+
+        const message = document.createElement("p");
+        message.textContent = "Please wait while we retrieve your products.";
+
+        loading.append(spinner, heading, message);
+        pageContent.appendChild(loading);
 
         try {
             if (typeof window.loadCart !== "function") {
                 throw new Error(
-                    "No cart loader configured. Connect window.loadCart() in app.js."
+                    "window.loadCart() is not defined in storefront/js/app.js."
                 );
             }
 
             const data = await window.loadCart();
             if (generation !== requestGeneration) return;
+
             renderCart(data);
         } catch (error) {
             if (generation !== requestGeneration) return;
+
             console.error("Cart loading failed:", error);
             pageContent.replaceChildren();
-            setVisible(pageContent, false);
-            setVisible(emptyState, false);
+            show(pageContent, false);
+            show(emptyState, false);
             showError(
-                "We couldn't retrieve your cart. Check your connection and try again."
+                "The cart service could not retrieve your items. Try again. If the problem continues, connect the cart loader in app.js."
             );
         }
     }
 
-    clearButton.addEventListener("click", async () => {
+    clearButton.addEventListener("click", async function () {
         if (!loaded || itemCount === 0) return;
 
         if (typeof window.clearCart !== "function") {
-            alert("Cart clearing is not connected to your backend yet.");
+            alert("Clear-cart functionality is not connected to the backend yet.");
             return;
         }
 
@@ -1362,7 +1300,7 @@
         try {
             const result = await window.clearCart();
             if (result === false || (result && result.ok === false)) {
-                throw new Error("Cart clearing failed");
+                throw new Error("Cart clearing failed.");
             }
             await loadCart();
         } catch (error) {
@@ -1375,11 +1313,11 @@
 
     retryButton.addEventListener("click", loadCart);
 
-    $("applyCoupon").addEventListener("click", async () => {
+    $("applyCoupon").addEventListener("click", async function () {
         const input = $("couponCode");
         const message = $("couponMessage");
-        const code = input.value.trim();
         const button = $("applyCoupon");
+        const code = input.value.trim();
 
         if (!code) {
             message.textContent = "Enter a discount code first.";
@@ -1388,7 +1326,7 @@
 
         if (typeof window.applyDiscount !== "function") {
             message.textContent =
-                "Coupon validation has not been connected yet.";
+                "Coupon validation is not connected to the backend yet.";
             return;
         }
 
@@ -1399,34 +1337,29 @@
             const result = await window.applyDiscount(code);
 
             if (!result || result.ok === false) {
-                message.textContent =
-                    result && result.message
-                        ? result.message
-                        : "This code could not be applied.";
+                message.textContent = result && result.message
+                    ? result.message : "This code could not be applied.";
                 return;
             }
 
-            message.textContent = result.message ||
-                "Coupon accepted. Refreshing your order summary...";
-
+            message.textContent = result.message || "Discount applied.";
             await loadCart();
         } catch (error) {
             console.error("Coupon validation failed:", error);
-            message.textContent =
-                "Could not validate the code. Please try again.";
+            message.textContent = "Could not validate the code. Please try again.";
         } finally {
             button.disabled = false;
         }
     });
 
-    $("couponCode").addEventListener("keydown", event => {
+    $("couponCode").addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
             $("applyCoupon").click();
         }
     });
 
-    checkoutButton.addEventListener("click", event => {
+    checkoutButton.addEventListener("click", function (event) {
         if (!loaded || itemCount <= 0) {
             event.preventDefault();
         }
