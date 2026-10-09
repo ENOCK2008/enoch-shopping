@@ -2,1088 +2,1515 @@
 {% extends "storefront/base.html" %}
 {% load static %}
 
-{% block title %}Order Details — Enock Shopping Center{% endblock %}
+{% block title %}Order Details | Enock Shopping Center{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =========================================================
+   ENOCK SHOPPING CENTER — ORDER DETAILS
+   ========================================================= */
+
+.order-detail-page {
+    --od-primary: #4f46e5;
+    --od-purple: #7c3aed;
+    --od-text: #172033;
+    --od-muted: #667085;
+    --od-border: #e7eaf2;
+    --od-surface: #fff;
+
+    min-height: 70vh;
+    padding-bottom: 60px;
+    color: var(--od-text);
+    background: #f7f8fc;
+}
+
+.order-detail-page *,
+.order-detail-page *::before,
+.order-detail-page *::after {
+    box-sizing: border-box;
+}
+
+.order-detail-page .container {
+    width: min(1160px, calc(100% - 36px));
+    margin-inline: auto;
+}
+
+.order-detail-hero {
+    padding: 35px 0 32px;
+    background:
+        radial-gradient(circle at 90% 0%, rgba(124,58,237,.09), transparent 30%),
+        linear-gradient(180deg, #fff, #f7f8fc);
+    border-bottom: 1px solid #edf0f6;
+}
+
+.order-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    color: #98a2b3;
+    font-size: 12px;
+}
+
+.order-breadcrumb a {
+    color: #667085;
+    text-decoration: none;
+}
+
+.order-breadcrumb a:hover {
+    color: var(--od-primary);
+}
+
+.order-breadcrumb > span {
+    color: var(--od-primary);
+    font-weight: 700;
+}
+
+.order-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.order-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    color: var(--od-primary);
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 1.7px;
+}
+
+.order-eyebrow::before {
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    content: "";
+}
+
+.order-heading h1 {
+    margin: 0 0 10px;
+    color: var(--od-text);
+    font-size: clamp(28px, 4vw, 39px);
+    font-weight: 850;
+    letter-spacing: -1.3px;
+}
+
+.order-heading p {
+    margin: 0;
+    color: var(--od-muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* Buttons */
+
+.order-detail-page .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 43px;
+    padding: 11px 16px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    font-size: 12px;
+    font-weight: 750;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform .18s, box-shadow .18s, background .18s;
+}
+
+.order-detail-page .btn:hover {
+    transform: translateY(-1px);
+}
+
+.order-detail-page .btn-primary {
+    color: #fff;
+    border-color: var(--od-primary);
+    background: linear-gradient(100deg, var(--od-primary), var(--od-purple));
+    box-shadow: 0 5px 14px rgba(79,70,229,.17);
+}
+
+.order-detail-page .btn-primary:hover {
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(79,70,229,.25);
+}
+
+.order-detail-page .btn-outline {
+    color: #344054;
+    border-color: #dfe3ed;
+    background: #fff;
+}
+
+.order-detail-page .btn-outline:hover {
+    color: var(--od-primary);
+    border-color: #c7d2fe;
+    background: #fafaff;
+}
+
+/* Main layout */
+
+.order-detail-section {
+    padding-top: 30px;
+}
+
+.order-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    align-items: start;
+    gap: 24px;
+}
+
+.order-detail-main {
+    display: grid;
+    min-width: 0;
+    gap: 20px;
+}
+
+.order-card,
+.order-summary-card,
+.order-help-card,
+.order-security-card {
+    min-width: 0;
+    padding: 25px;
+    border: 1px solid var(--od-border);
+    border-radius: 18px;
+    background: var(--od-surface);
+    box-shadow: 0 4px 18px rgba(16,24,40,.025);
+}
+
+.order-card-header,
+.order-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.order-card-header h2,
+.order-card-title h2 {
+    margin: 0;
+    color: var(--od-text);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -.35px;
+}
+
+.order-card-header .order-eyebrow,
+.order-card-title .order-eyebrow {
+    margin-bottom: 8px;
+    font-size: 9px;
+}
+
+.order-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 11px;
+    color: #92400e;
+    border: 1px solid #fde68a;
+    border-radius: 999px;
+    background: #fffbeb;
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.order-status::before {
+    width: 6px;
+    height: 6px;
+    flex: 0 0 6px;
+    border-radius: 50%;
+    background: currentColor;
+    content: "";
+}
+
+.order-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 24px;
+    padding-top: 21px;
+    border-top: 1px solid #edf0f5;
+}
+
+.order-meta > div {
+    min-width: 0;
+}
+
+.order-meta span {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+    color: var(--od-muted);
+    font-size: 11px;
+}
+
+.order-meta span i {
+    color: #98a2b3;
+}
+
+.order-meta strong {
+    display: block;
+    color: var(--od-text);
+    font-size: 13px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+/* Delivery timeline */
+
+.order-timeline {
+    display: grid;
+    gap: 0;
+    margin-top: 26px;
+}
+
+.timeline-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    min-height: 58px;
+    color: #98a2b3;
+}
+
+.timeline-icon {
+    display: grid;
+    z-index: 1;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border: 1px solid #e4e7ec;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 12px;
+}
+
+.timeline-step > div:last-child {
+    padding: 2px 0 17px;
+}
+
+.timeline-step strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #667085;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.timeline-step span {
+    display: block;
+    color: #98a2b3;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.timeline-step.completed .timeline-icon {
+    color: #fff;
+    border-color: #16a34a;
+    background: #16a34a;
+}
+
+.timeline-step.completed strong {
+    color: #344054;
+}
+
+.timeline-step.active .timeline-icon {
+    color: #fff;
+    border-color: var(--od-primary);
+    background: var(--od-primary);
+    box-shadow: 0 0 0 5px #eef2ff;
+}
+
+.timeline-step.active strong {
+    color: var(--od-primary);
+}
+
+.timeline-line {
+    width: 2px;
+    height: 17px;
+    margin: -4px 0 -4px 16px;
+    background: #e4e7ec;
+}
+
+.timeline-line.completed {
+    background: #16a34a;
+}
+
+.text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--od-primary);
+    font-size: 12px;
+    font-weight: 750;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.text-link:hover {
+    color: var(--od-purple);
+}
+
+/* Items */
+
+.order-items {
+    display: grid;
+    margin-top: 20px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 17px 0;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.order-item:first-child {
+    padding-top: 0;
+}
+
+.order-item:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.order-item-image {
+    display: grid;
+    width: 76px;
+    height: 76px;
+    flex: 0 0 76px;
+    overflow: hidden;
+    place-items: center;
+    border: 1px solid #edf0f5;
+    border-radius: 13px;
+    background: #f8fafc;
+}
+
+.order-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.order-item-image i {
+    color: #98a2b3;
+    font-size: 23px;
+}
+
+.order-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.order-item-info h3 {
+    margin: 0 0 7px;
+    color: var(--od-text);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.order-item-info span {
+    color: var(--od-muted);
+    font-size: 11px;
+}
+
+.order-item-price {
+    color: var(--od-text);
+    font-size: 13px;
+    font-weight: 850;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.order-item-placeholder {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    color: var(--od-muted);
+    border: 1px dashed #dfe3ed;
+    border-radius: 12px;
+    background: #fafbff;
+    font-size: 12px;
+}
+
+.order-item-placeholder i {
+    color: var(--od-primary);
+    font-size: 19px;
+}
+
+/* Delivery and payment */
+
+.delivery-information,
+.payment-information {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-top: 22px;
+}
+
+.delivery-icon,
+.payment-method-icon {
+    display: grid;
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    place-items: center;
+    color: var(--od-primary);
+    border-radius: 13px;
+    background: #eef2ff;
+    font-size: 17px;
+}
+
+.delivery-information strong,
+.payment-information strong {
+    display: block;
+    margin: 2px 0 7px;
+    color: var(--od-text);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.delivery-information p,
+.payment-information p {
+    margin: 0 0 5px;
+    color: var(--od-muted);
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.payment-status {
+    color: #92400e;
+    font-weight: 800;
+}
+
+/* Actions */
+
+.order-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.order-actions .btn {
+    flex: 1 1 auto;
+}
+
+/* Sidebar */
+
+.order-detail-sidebar {
+    display: grid;
+    gap: 18px;
+    min-width: 0;
+}
+
+.order-summary-card {
+    position: sticky;
+    top: 20px;
+}
+
+.order-summary-card h2 {
+    margin: 0 0 23px;
+    color: var(--od-text);
+    font-size: 19px;
+    font-weight: 850;
+    letter-spacing: -.5px;
+}
+
+.order-summary-card .order-eyebrow {
+    margin-bottom: 9px;
+    font-size: 9px;
+}
+
+.summary-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    color: var(--od-muted);
+    font-size: 12px;
+}
+
+.summary-row strong {
+    color: #344054;
+    font-size: 12px;
+    font-weight: 750;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.summary-divider {
+    height: 1px;
+    margin: 20px 0;
+    background: #e9ecf3;
+}
+
+.summary-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.summary-total span {
+    color: var(--od-text);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.summary-total strong {
+    color: var(--od-primary);
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -.5px;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.order-help-card {
+    background:
+        radial-gradient(circle at 100% 0%, rgba(124,58,237,.09), transparent 45%),
+        #fff;
+}
+
+.help-icon {
+    display: grid;
+    width: 43px;
+    height: 43px;
+    margin-bottom: 17px;
+    place-items: center;
+    color: var(--od-primary);
+    border-radius: 13px;
+    background: #eef2ff;
+    font-size: 18px;
+}
+
+.order-help-card h3 {
+    margin: 0 0 9px;
+    font-size: 16px;
+    font-weight: 850;
+}
+
+.order-help-card p {
+    margin: 0 0 18px;
+    color: var(--od-muted);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.order-help-card a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--od-primary);
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.order-security-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 18px;
+}
+
+.order-security-card > i {
+    color: #16a34a;
+    font-size: 19px;
+}
+
+.order-security-card strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 850;
+}
+
+.order-security-card p {
+    margin: 0;
+    color: var(--od-muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+/* Loading and error states */
+
+.order-loading {
+    padding: 70px 20px;
+    text-align: center;
+}
+
+.loading-spinner {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 20px;
+    place-items: center;
+    color: var(--od-primary);
+    border: 1px solid #e0e7ff;
+    border-radius: 18px;
+    background: #eef2ff;
+    font-size: 23px;
+}
+
+.order-loading h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 850;
+}
+
+.order-loading p {
+    margin: 0;
+    color: var(--od-muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.order-error-card {
+    max-width: 570px;
+    margin: 20px auto;
+    padding: 45px 28px;
+    border: 1px solid var(--od-border);
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 8px 30px rgba(16,24,40,.04);
+    text-align: center;
+}
+
+.error-icon {
+    display: grid;
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 22px;
+    place-items: center;
+    color: #b42318;
+    border-radius: 20px;
+    background: #fff1f0;
+    font-size: 25px;
+}
+
+.order-error-card .order-eyebrow {
+    justify-content: center;
+}
+
+.order-error-card h2 {
+    margin: 0 0 12px;
+    font-size: 23px;
+    font-weight: 850;
+}
+
+.order-error-card p {
+    margin: 0 auto 24px;
+    max-width: 400px;
+    color: var(--od-muted);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+    .order-detail-layout {
+        grid-template-columns: minmax(0, 1fr) 265px;
+        gap: 17px;
+    }
+
+    .order-card,
+    .order-summary-card,
+    .order-help-card {
+        padding: 20px;
+    }
+
+    .order-security-card {
+        padding: 16px;
+    }
+
+    .order-meta {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 720px) {
+    .order-detail-page .container {
+        width: min(100% - 26px, 560px);
+    }
+
+    .order-detail-hero {
+        padding: 25px 0;
+    }
+
+    .order-breadcrumb {
+        margin-bottom: 23px;
+    }
+
+    .order-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .order-detail-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .order-detail-sidebar {
+        grid-row: auto;
+    }
+
+    .order-summary-card {
+        position: static;
+    }
+
+    .order-detail-section {
+        padding-top: 18px;
+    }
+
+    .order-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .order-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 430px) {
+    .order-detail-page .container {
+        width: calc(100% - 22px);
+    }
+
+    .order-card,
+    .order-summary-card,
+    .order-help-card {
+        padding: 17px;
+        border-radius: 15px;
+    }
+
+    .order-card-header,
+    .order-card-title {
+        align-items: flex-start;
+    }
+
+    .order-card-header h2,
+    .order-card-title h2 {
+        font-size: 16px;
+    }
+
+    .order-meta {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .order-meta > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .order-meta span {
+        margin: 0;
+    }
+
+    .order-meta strong {
+        text-align: right;
+    }
+
+    .order-item {
+        flex-wrap: wrap;
+        gap: 11px;
+    }
+
+    .order-item-image {
+        width: 62px;
+        height: 62px;
+        flex-basis: 62px;
+    }
+
+    .order-item-info {
+        flex-basis: calc(100% - 80px);
+    }
+
+    .order-item-price {
+        margin-left: 73px;
+        text-align: left;
+    }
+
+    .text-link {
+        font-size: 11px;
+    }
+
+    .summary-total strong {
+        font-size: 18px;
+    }
+}
+
+/* Print only the useful order information */
+@media print {
+    body {
+        background: #fff !important;
+    }
+
+    .order-detail-page {
+        padding: 0;
+        background: #fff !important;
+    }
+
+    .order-detail-hero {
+        padding: 10px 0;
+        background: #fff !important;
+    }
+
+    .order-breadcrumb,
+    .order-heading > a,
+    .order-detail-sidebar,
+    .order-actions,
+    .text-link {
+        display: none !important;
+    }
+
+    .order-detail-page .container {
+        width: 100%;
+        max-width: none;
+    }
+
+    .order-detail-layout {
+        display: block !important;
+    }
+
+    .order-card {
+        margin-bottom: 12px;
+        box-shadow: none;
+        break-inside: avoid;
+    }
+
+    #pageContent,
+    #orderErrorState {
+        display: none !important;
+    }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-
 <section class="order-detail-page">
 
-    <!-- Header -->
-    <section class="order-detail-hero">
+    <header class="order-detail-hero">
         <div class="container">
 
-            <div class="order-breadcrumb">
-
+            <nav class="order-breadcrumb" aria-label="Breadcrumb">
                 <a href="{% url 'storefront:home' %}">
-                    <i class="fa-solid fa-house"></i>
-                    Home
+                    <i class="fa-solid fa-house"></i> Home
                 </a>
-
-                <i class="fa-solid fa-chevron-right"></i>
-
-                <a href="{% url 'storefront:orders' %}">
-                    Orders
-                </a>
-
-                <i class="fa-solid fa-chevron-right"></i>
-
-                <span>Order Details</span>
-
-            </div>
-
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                <a href="{% url 'storefront:orders' %}">Orders</a>
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                <span>Order details</span>
+            </nav>
 
             <div class="order-heading">
-
                 <div>
-
-                    <span class="eyebrow">
-                        ENOCK SHOPPING CENTER
-                    </span>
-
-                    <h1>
-                        Order Details
-                    </h1>
-
-                    <p>
-                        Review your order, payment and delivery information.
-                    </p>
-
+                    <div class="order-eyebrow">ENOCK SHOPPING CENTER</div>
+                    <h1>Order details</h1>
+                    <p>Review your items, payment and delivery information.</p>
                 </div>
 
-
-                <a
-                    href="{% url 'storefront:orders' %}"
-                    class="btn btn-outline"
-                >
+                <a href="{% url 'storefront:orders' %}" class="btn btn-outline">
                     <i class="fa-solid fa-arrow-left"></i>
-                    Back to Orders
+                    Back to orders
                 </a>
-
             </div>
 
         </div>
-    </section>
+    </header>
 
-
-    <!-- Order Loading / Dynamic Content -->
     <section class="order-detail-section">
-
         <div class="container">
 
+            <!-- Loading state -->
             <div id="pageContent">
-
-                <!--
-                    The order information will be populated by
-                    the storefront JavaScript / Orders API.
-                -->
-
                 <div class="order-loading">
-
                     <div class="loading-spinner">
                         <i class="fa-solid fa-spinner fa-spin"></i>
                     </div>
-
-                    <h3>
-                        Loading order details...
-                    </h3>
-
-                    <p>
-                        Please wait while we retrieve your order.
-                    </p>
-
+                    <h3>Loading your order</h3>
+                    <p>Please wait while we retrieve your order information.</p>
                 </div>
-
             </div>
 
+            <!-- Main order layout: revealed when order data is loaded -->
+            <div id="orderDetailLayout"
+                 class="order-detail-layout"
+                 style="display:none;">
 
-            <!-- Default Order Layout -->
+                <main class="order-detail-main">
 
-            <div
-                id="orderDetailLayout"
-                class="order-detail-layout"
-                style="display:none;"
-            >
-
-                <!-- Main Column -->
-                <div class="order-detail-main">
-
-
-                    <!-- Order Summary -->
-                    <div class="order-card">
-
+                    <!-- Order summary -->
+                    <article class="order-card">
                         <div class="order-card-header">
-
                             <div>
-
-                                <span class="eyebrow">
-                                    ORDER
-                                </span>
-
-                                <h2 id="orderNumber">
-                                    Order #—
-                                </h2>
-
+                                <div class="order-eyebrow">ORDER REFERENCE</div>
+                                <h2 id="orderNumber">Order #—</h2>
                             </div>
-
-
-                            <span
-                                id="orderStatus"
-                                class="order-status"
-                            >
-                                Processing
-                            </span>
-
+                            <span id="orderStatus" class="order-status">Processing</span>
                         </div>
-
 
                         <div class="order-meta">
-
                             <div>
-
-                                <span>
-                                    <i class="fa-regular fa-calendar"></i>
-                                    Order date
-                                </span>
-
-                                <strong id="orderDate">
-                                    —
-                                </strong>
-
+                                <span><i class="fa-regular fa-calendar"></i> Order date</span>
+                                <strong id="orderDate">—</strong>
                             </div>
-
-
                             <div>
-
-                                <span>
-                                    <i class="fa-solid fa-box"></i>
-                                    Items
-                                </span>
-
-                                <strong id="orderItemsCount">
-                                    —
-                                </strong>
-
+                                <span><i class="fa-solid fa-box"></i> Items</span>
+                                <strong id="orderItemsCount">—</strong>
                             </div>
-
-
                             <div>
-
-                                <span>
-                                    <i class="fa-solid fa-money-bill"></i>
-                                    Total
-                                </span>
-
-                                <strong id="orderTotal">
-                                    UGX 0
-                                </strong>
-
+                                <span><i class="fa-solid fa-money-bill-wave"></i> Total</span>
+                                <strong id="orderTotal">UGX 0</strong>
                             </div>
-
                         </div>
+                    </article>
 
-                    </div>
-
-
-                    <!-- Delivery Progress -->
-                    <div class="order-card">
-
+                    <!-- Delivery progress -->
+                    <article class="order-card">
                         <div class="order-card-title">
-
                             <div>
-
-                                <span class="eyebrow">
-                                    DELIVERY
-                                </span>
-
-                                <h2>
-                                    Order progress
-                                </h2>
-
+                                <div class="order-eyebrow">DELIVERY</div>
+                                <h2>Order progress</h2>
                             </div>
-
-                            <a
-                                href="{% url 'storefront:tracking' %}"
-                                class="text-link"
-                            >
-                                Track order
-                                <i class="fa-solid fa-arrow-right"></i>
+                            <a href="{% url 'storefront:tracking' %}" class="text-link">
+                                Track order <i class="fa-solid fa-arrow-right"></i>
                             </a>
-
                         </div>
 
-
-                        <div class="order-timeline">
-
-                            <div class="timeline-step completed">
-
-                                <div class="timeline-icon">
-                                    <i class="fa-solid fa-check"></i>
-                                </div>
-
+                        <div id="orderTimeline" class="order-timeline">
+                            <div class="timeline-step completed" data-stage="placed">
+                                <div class="timeline-icon"><i class="fa-solid fa-check"></i></div>
                                 <div>
-                                    <strong>
-                                        Order placed
-                                    </strong>
-
-                                    <span id="placedDate">
-                                        Your order has been received.
-                                    </span>
+                                    <strong>Order placed</strong>
+                                    <span id="placedDate">Your order has been received.</span>
                                 </div>
-
                             </div>
-
 
                             <div class="timeline-line"></div>
 
-
-                            <div class="timeline-step active">
-
-                                <div class="timeline-icon">
-                                    <i class="fa-solid fa-box"></i>
-                                </div>
-
+                            <div class="timeline-step" data-stage="processing">
+                                <div class="timeline-icon"><i class="fa-solid fa-box"></i></div>
                                 <div>
-                                    <strong>
-                                        Processing
-                                    </strong>
-
-                                    <span>
-                                        The seller is preparing your order.
-                                    </span>
+                                    <strong>Processing</strong>
+                                    <span>The seller is preparing your order.</span>
                                 </div>
-
                             </div>
-
 
                             <div class="timeline-line"></div>
 
-
-                            <div class="timeline-step">
-
-                                <div class="timeline-icon">
-                                    <i class="fa-solid fa-truck"></i>
-                                </div>
-
+                            <div class="timeline-step" data-stage="shipped">
+                                <div class="timeline-icon"><i class="fa-solid fa-truck"></i></div>
                                 <div>
-                                    <strong>
-                                        Out for delivery
-                                    </strong>
-
-                                    <span>
-                                        Your order will be delivered to you.
-                                    </span>
+                                    <strong>Out for delivery</strong>
+                                    <span>Your order is on its way to you.</span>
                                 </div>
-
                             </div>
-
 
                             <div class="timeline-line"></div>
 
-
-                            <div class="timeline-step">
-
-                                <div class="timeline-icon">
-                                    <i class="fa-solid fa-house"></i>
-                                </div>
-
+                            <div class="timeline-step" data-stage="delivered">
+                                <div class="timeline-icon"><i class="fa-solid fa-house"></i></div>
                                 <div>
-                                    <strong>
-                                        Delivered
-                                    </strong>
-
-                                    <span>
-                                        Order delivered successfully.
-                                    </span>
+                                    <strong>Delivered</strong>
+                                    <span>Your order has been delivered.</span>
                                 </div>
-
                             </div>
-
                         </div>
+                    </article>
 
-                    </div>
-
-
-                    <!-- Products -->
-                    <div class="order-card">
-
+                    <!-- Order items -->
+                    <article class="order-card">
                         <div class="order-card-title">
-
                             <div>
-
-                                <span class="eyebrow">
-                                    PRODUCTS
-                                </span>
-
-                                <h2>
-                                    Items in this order
-                                </h2>
-
+                                <div class="order-eyebrow">YOUR PURCHASE</div>
+                                <h2>Items in this order</h2>
                             </div>
-
                         </div>
-
 
                         <div id="orderItems" class="order-items">
-
                             <div class="order-item-placeholder">
-
                                 <i class="fa-solid fa-box-open"></i>
-
-                                <span>
-                                    Loading order items...
-                                </span>
-
+                                <span>Loading order items...</span>
                             </div>
-
                         </div>
+                    </article>
 
-                    </div>
-
-
-                    <!-- Delivery Address -->
-                    <div class="order-card">
-
+                    <!-- Delivery information -->
+                    <article class="order-card">
                         <div class="order-card-title">
-
                             <div>
-
-                                <span class="eyebrow">
-                                    DELIVERY
-                                </span>
-
-                                <h2>
-                                    Delivery information
-                                </h2>
-
+                                <div class="order-eyebrow">DESTINATION</div>
+                                <h2>Delivery information</h2>
                             </div>
-
                         </div>
-
 
                         <div class="delivery-information">
-
                             <div class="delivery-icon">
                                 <i class="fa-solid fa-location-dot"></i>
                             </div>
-
-
                             <div>
-
-                                <strong id="deliveryName">
-                                    Customer
-                                </strong>
-
-                                <p id="deliveryAddress">
-                                    Delivery address will appear here.
-                                </p>
-
-                                <p id="deliveryPhone">
-                                    —
-                                </p>
-
+                                <strong id="deliveryName">Customer</strong>
+                                <p id="deliveryAddress">Delivery address not available.</p>
+                                <p id="deliveryPhone">Phone number not available.</p>
                             </div>
-
                         </div>
+                    </article>
 
-                    </div>
-
-
-                    <!-- Payment -->
-                    <div class="order-card">
-
+                    <!-- Payment information -->
+                    <article class="order-card">
                         <div class="order-card-title">
-
                             <div>
-
-                                <span class="eyebrow">
-                                    PAYMENT
-                                </span>
-
-                                <h2>
-                                    Payment information
-                                </h2>
-
+                                <div class="order-eyebrow">TRANSACTION</div>
+                                <h2>Payment information</h2>
                             </div>
-
                         </div>
-
 
                         <div class="payment-information">
-
                             <div class="payment-method-icon">
                                 <i class="fa-solid fa-credit-card"></i>
                             </div>
-
-
                             <div>
-
-                                <strong id="paymentMethod">
-                                    Payment method
-                                </strong>
-
+                                <strong id="paymentMethod">Payment method</strong>
                                 <p>
                                     Payment status:
-                                    <span
-                                        id="paymentStatus"
-                                        class="payment-status"
-                                    >
-                                        Pending
-                                    </span>
+                                    <span id="paymentStatus" class="payment-status">Pending</span>
                                 </p>
-
                             </div>
-
                         </div>
-
-                    </div>
-
+                    </article>
 
                     <!-- Actions -->
                     <div class="order-actions">
-
-                        <a
-                            href="{% url 'storefront:tracking' %}"
-                            class="btn btn-primary"
-                        >
-                            <i class="fa-solid fa-location-dot"></i>
-                            Track Order
+                        <a href="{% url 'storefront:tracking' %}" class="btn btn-primary">
+                            <i class="fa-solid fa-location-dot"></i> Track order
                         </a>
 
-
-                        <a
-                            href="{% url 'storefront:marketplace' %}"
-                            class="btn btn-outline"
-                        >
-                            <i class="fa-solid fa-bag-shopping"></i>
-                            Continue Shopping
+                        <a href="{% url 'storefront:marketplace' %}" class="btn btn-outline">
+                            <i class="fa-solid fa-bag-shopping"></i> Continue shopping
                         </a>
 
-
-                        <button
-                            type="button"
-                            id="printOrderButton"
-                            class="btn btn-outline"
-                        >
-                            <i class="fa-solid fa-print"></i>
-                            Print Order
+                        <button type="button" id="printOrderButton" class="btn btn-outline">
+                            <i class="fa-solid fa-print"></i> Print order
                         </button>
-
                     </div>
 
-                </div>
-
+                </main>
 
                 <!-- Sidebar -->
                 <aside class="order-detail-sidebar">
 
-
-                    <!-- Price Summary -->
-                    <div class="order-summary-card">
-
-                        <span class="eyebrow">
-                            ORDER SUMMARY
-                        </span>
-
-                        <h2>
-                            Payment summary
-                        </h2>
-
+                    <section class="order-summary-card">
+                        <div class="order-eyebrow">ORDER SUMMARY</div>
+                        <h2>Payment summary</h2>
 
                         <div class="summary-row">
-
-                            <span>
-                                Subtotal
-                            </span>
-
-                            <strong id="summarySubtotal">
-                                UGX 0
-                            </strong>
-
+                            <span>Subtotal</span>
+                            <strong id="summarySubtotal">UGX 0</strong>
                         </div>
-
 
                         <div class="summary-row">
-
-                            <span>
-                                Delivery
-                            </span>
-
-                            <strong id="summaryDelivery">
-                                UGX 0
-                            </strong>
-
+                            <span>Delivery</span>
+                            <strong id="summaryDelivery">UGX 0</strong>
                         </div>
-
 
                         <div class="summary-row">
-
-                            <span>
-                                Discount
-                            </span>
-
-                            <strong id="summaryDiscount">
-                                UGX 0
-                            </strong>
-
+                            <span>Discount</span>
+                            <strong id="summaryDiscount">UGX 0</strong>
                         </div>
-
 
                         <div class="summary-divider"></div>
 
-
                         <div class="summary-total">
-
-                            <span>
-                                Total
-                            </span>
-
-                            <strong id="summaryTotal">
-                                UGX 0
-                            </strong>
-
+                            <span>Total</span>
+                            <strong id="summaryTotal">UGX 0</strong>
                         </div>
+                    </section>
 
-                    </div>
-
-
-                    <!-- Help -->
-                    <div class="order-help-card">
-
+                    <section class="order-help-card">
                         <div class="help-icon">
                             <i class="fa-solid fa-headset"></i>
                         </div>
-
-                        <h3>
-                            Need help?
-                        </h3>
-
-                        <p>
-                            If you have a problem with your order,
-                            contact Enock Shopping Center support.
-                        </p>
-
+                        <h3>Need help?</h3>
+                        <p>Need assistance with your order? Visit the marketplace or contact your configured support channel.</p>
                         <a href="{% url 'storefront:home' %}">
-                            Get Help
-                            <i class="fa-solid fa-arrow-right"></i>
+                            Visit home <i class="fa-solid fa-arrow-right"></i>
                         </a>
+                    </section>
 
-                    </div>
-
-
-                    <!-- Security -->
-                    <div class="order-security-card">
-
+                    <section class="order-security-card">
                         <i class="fa-solid fa-shield-halved"></i>
-
                         <div>
-
-                            <strong>
-                                Secure order
-                            </strong>
-
-                            <p>
-                                Your order information is protected.
-                            </p>
-
+                            <strong>Account privacy</strong>
+                            <p>Only display order details to the customer who is authorised to view this order.</p>
                         </div>
-
-                    </div>
+                    </section>
 
                 </aside>
-
             </div>
 
-
-            <!-- Error State -->
-            <div
-                id="orderErrorState"
-                class="order-error-card"
-                style="display:none;"
-            >
+            <!-- Error state -->
+            <section id="orderErrorState"
+                     class="order-error-card"
+                     style="display:none;"
+                     role="alert">
 
                 <div class="error-icon">
                     <i class="fa-solid fa-circle-exclamation"></i>
                 </div>
 
-                <span class="eyebrow">
-                    ORDER NOT FOUND
-                </span>
-
-                <h2>
-                    We couldn't load this order
-                </h2>
-
+                <div class="order-eyebrow">ORDER UNAVAILABLE</div>
+                <h2>We couldn't load this order</h2>
                 <p id="orderErrorMessage">
-                    The order may no longer exist or you may not
-                    have permission to view it.
+                    The order may not exist, or you may not have permission to view it.
                 </p>
 
-                <a
-                    href="{% url 'storefront:orders' %}"
-                    class="btn btn-primary"
-                >
-                    <i class="fa-solid fa-arrow-left"></i>
-                    Back to Orders
+                <a href="{% url 'storefront:orders' %}" class="btn btn-primary">
+                    <i class="fa-solid fa-arrow-left"></i> Back to orders
                 </a>
-
-            </div>
+            </section>
 
         </div>
-
     </section>
-
 </section>
-
 {% endblock %}
 
-
 {% block scripts %}
-
 <script src="{% static 'storefront/js/app.js' %}"></script>
 
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
+    "use strict";
 
-    /*
-     * Initialise the existing storefront application.
-     */
+    const loadingElement = document.getElementById("pageContent");
+    const layoutElement = document.getElementById("orderDetailLayout");
+    const errorElement = document.getElementById("orderErrorState");
+    const errorMessageElement = document.getElementById("orderErrorMessage");
+
     if (typeof window.initPage === "function") {
         window.initPage("order_detail");
     }
 
-
-    /*
-     * Get the order ID from the current URL.
-     *
-     * Example:
-     * /orders/25/
-     */
     function getOrderId() {
+        const parts = window.location.pathname.split("/").filter(Boolean);
+        const ordersIndex = parts.indexOf("orders");
 
-        const parts =
-            window.location.pathname
-                .split("/")
-                .filter(Boolean);
-
-        const ordersIndex =
-            parts.indexOf("orders");
-
-
-        if (
-            ordersIndex !== -1 &&
-            parts[ordersIndex + 1]
-        ) {
+        if (ordersIndex !== -1 && parts[ordersIndex + 1]) {
             return parts[ordersIndex + 1];
         }
 
         return null;
-
     }
-
 
     const orderId = getOrderId();
 
-
-    /*
-     * Print order.
-     */
-    const printButton =
-        document.getElementById("printOrderButton");
-
-
-    if (printButton) {
-
-        printButton.addEventListener("click", function () {
-            window.print();
-        });
-
-    }
-
-
-    /*
-     * Allow the main application JavaScript to load
-     * the actual order data.
-     *
-     * If app.js exposes loadOrderDetail(), use it.
-     */
-    if (
-        orderId &&
-        typeof window.loadOrderDetail === "function"
-    ) {
-
-        window.loadOrderDetail(orderId);
-
-    }
-
-
-    /*
-     * If app.js does not yet expose an order-detail
-     * function, keep the page ready for the Orders API.
-     */
-    if (!orderId) {
-
-        showOrderError(
-            "No order number was provided."
-        );
-
-    }
-
-
     function showOrderError(message) {
+        if (loadingElement) loadingElement.style.display = "none";
+        if (layoutElement) layoutElement.style.display = "none";
 
-        const loading =
-            document.querySelector(".order-loading");
-
-        const layout =
-            document.getElementById("orderDetailLayout");
-
-        const error =
-            document.getElementById("orderErrorState");
-
-        const errorMessage =
-            document.getElementById("orderErrorMessage");
-
-
-        if (loading) {
-            loading.style.display = "none";
+        if (errorMessageElement) {
+            errorMessageElement.textContent =
+                message || "Unable to load this order.";
         }
 
-        if (layout) {
-            layout.style.display = "none";
-        }
-
-        if (errorMessage) {
-            errorMessage.textContent =
-                message ||
-                "Unable to load this order.";
-        }
-
-        if (error) {
-            error.style.display = "block";
-        }
-
+        if (errorElement) errorElement.style.display = "block";
     }
-
-
-    /*
-     * Global helper for app.js.
-     *
-     * This lets the API integration populate the page
-     * without having to replace the entire template.
-     */
-    window.renderOrderDetail = function (order) {
-
-        if (!order) {
-            showOrderError("Order information was not found.");
-            return;
-        }
-
-
-        const loading =
-            document.querySelector(".order-loading");
-
-        const layout =
-            document.getElementById("orderDetailLayout");
-
-
-        if (loading) {
-            loading.style.display = "none";
-        }
-
-        if (layout) {
-            layout.style.display = "grid";
-        }
-
-
-        /*
-         * Basic order information.
-         */
-        setText(
-            "orderNumber",
-            "Order #" + (
-                order.order_number ||
-                order.id ||
-                "—"
-            )
-        );
-
-
-        setText(
-            "orderStatus",
-            order.status || "Processing"
-        );
-
-
-        setText(
-            "orderDate",
-            formatDate(order.created_at || order.created)
-        );
-
-
-        setText(
-            "orderItemsCount",
-            order.item_count ||
-            (order.items ? order.items.length : 0)
-        );
-
-
-        setMoney(
-            "orderTotal",
-            order.total
-        );
-
-
-        /*
-         * Summary.
-         */
-        setMoney(
-            "summarySubtotal",
-            order.subtotal
-        );
-
-
-        setMoney(
-            "summaryDelivery",
-            order.delivery_fee
-        );
-
-
-        setMoney(
-            "summaryDiscount",
-            order.discount
-        );
-
-
-        setMoney(
-            "summaryTotal",
-            order.total
-        );
-
-
-        /*
-         * Delivery.
-         */
-        setText(
-            "deliveryName",
-            order.delivery_name ||
-            order.customer_name ||
-            "Customer"
-        );
-
-
-        setText(
-            "deliveryAddress",
-            order.delivery_address ||
-            "Delivery address not provided."
-        );
-
-
-        setText(
-            "deliveryPhone",
-            order.delivery_phone ||
-            "Phone number not provided."
-        );
-
-
-        /*
-         * Payment.
-         */
-        setText(
-            "paymentMethod",
-            order.payment_method ||
-            "Payment method"
-        );
-
-
-        setText(
-            "paymentStatus",
-            order.payment_status ||
-            "Pending"
-        );
-
-
-        /*
-         * Order items.
-         */
-        renderItems(
-            order.items || []
-        );
-
-    };
-
-
-    function renderItems(items) {
-
-        const container =
-            document.getElementById("orderItems");
-
-
-        if (!container) {
-            return;
-        }
-
-
-        if (!items.length) {
-
-            container.innerHTML = `
-                <div class="order-item-placeholder">
-                    <i class="fa-solid fa-box-open"></i>
-                    <span>No products found for this order.</span>
-                </div>
-            `;
-
-            return;
-        }
-
-
-        container.innerHTML =
-            items.map(function (item) {
-
-                const name =
-                    escapeHtml(
-                        item.product_name ||
-                        item.name ||
-                        "Product"
-                    );
-
-
-                const quantity =
-                    item.quantity || 1;
-
-
-                const price =
-                    formatMoney(
-                        item.price || 0
-                    );
-
-
-                const image =
-                    item.image ||
-                    "{% static 'storefront/images/product-placeholder.png' %}";
-
-
-                return `
-                    <div class="order-item">
-
-                        <div class="order-item-image">
-
-                            <img
-                                src="${image}"
-                                alt="${name}"
-                                loading="lazy"
-                                onerror="this.style.display='none'"
-                            >
-
-                        </div>
-
-                        <div class="order-item-info">
-
-                            <h3>${name}</h3>
-
-                            <span>
-                                Quantity: ${quantity}
-                            </span>
-
-                        </div>
-
-                        <strong class="order-item-price">
-                            ${price}
-                        </strong>
-
-                    </div>
-                `;
-
-            }).join("");
-
-    }
-
 
     function setText(id, value) {
-
-        const element =
-            document.getElementById(id);
-
-        if (element) {
-            element.textContent =
-                value ?? "—";
-        }
-
+        const element = document.getElementById(id);
+        if (element) element.textContent = value ?? "—";
     }
-
-
-    function setMoney(id, value) {
-
-        const element =
-            document.getElementById(id);
-
-        if (!element) {
-            return;
-        }
-
-        element.textContent =
-            formatMoney(value || 0);
-
-    }
-
 
     function formatMoney(value) {
+        const amount = Number(value);
+        const safeAmount = Number.isFinite(amount) ? amount : 0;
 
-        const number =
-            Number(value) || 0;
-
-        return "UGX " +
-            number.toLocaleString(
-                "en-UG",
-                {
-                    maximumFractionDigits: 0
-                }
-            );
-
+        return "UGX " + safeAmount.toLocaleString("en-UG", {
+            maximumFractionDigits: 0
+        });
     }
 
+    function setMoney(id, value) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = formatMoney(value);
+    }
 
     function formatDate(value) {
+        if (!value) return "—";
 
-        if (!value) {
-            return "—";
-        }
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value);
 
-
-        const date =
-            new Date(value);
-
-
-        if (Number.isNaN(date.getTime())) {
-            return value;
-        }
-
-
-        return date.toLocaleDateString(
-            "en-UG",
-            {
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            }
-        );
-
+        return date.toLocaleString("en-UG", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
     }
 
-
     function escapeHtml(value) {
-
-        return String(value)
+        return String(value ?? "")
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-
     }
 
+    /*
+     * Accept only local image paths or HTTPS image URLs.
+     * The backend should still validate uploaded image URLs.
+     */
+    function safeImageUrl(value) {
+        if (!value) return "";
+
+        try {
+            const parsed = new URL(String(value), window.location.origin);
+
+            if (
+                parsed.origin === window.location.origin &&
+                parsed.pathname.startsWith("/")
+            ) {
+                return parsed.href;
+            }
+
+            if (parsed.protocol === "https:") {
+                return parsed.href;
+            }
+        } catch (error) {
+            return "";
+        }
+
+        return "";
+    }
+
+    function renderItems(items) {
+        const container = document.getElementById("orderItems");
+        if (!container) return;
+
+        if (!Array.isArray(items) || items.length === 0) {
+            container.innerHTML = `
+                <div class="order-item-placeholder">
+                    <i class="fa-solid fa-box-open"></i>
+                    <span>No items are available for this order.</span>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = items.map(function (item) {
+            const name = escapeHtml(
+                item.product_name || item.name || "Product"
+            );
+
+            const quantityValue = Number(item.quantity);
+            const quantity = Number.isFinite(quantityValue) && quantityValue > 0
+                ? quantityValue
+                : 1;
+
+            const price = formatMoney(item.price ?? 0);
+            const imageUrl = safeImageUrl(item.image);
+
+            const imageMarkup = imageUrl
+                ? `<img src="${escapeHtml(imageUrl)}" alt="${name}" loading="lazy">`
+                : `<i class="fa-solid fa-box-open" aria-hidden="true"></i>`;
+
+            return `
+                <div class="order-item">
+                    <div class="order-item-image">
+                        ${imageMarkup}
+                    </div>
+                    <div class="order-item-info">
+                        <h3>${name}</h3>
+                        <span>Quantity: ${quantity}</span>
+                    </div>
+                    <strong class="order-item-price">${price}</strong>
+                </div>`;
+        }).join("");
+
+        container.querySelectorAll("img").forEach(function (img) {
+            img.addEventListener("error", function () {
+                const holder = img.parentElement;
+                if (holder) {
+                    holder.innerHTML =
+                        '<i class="fa-solid fa-box-open" aria-hidden="true"></i>';
+                }
+            }, { once: true });
+        });
+    }
+
+    function updateTimeline(status) {
+        const normalized = String(status || "processing")
+            .toLowerCase()
+            .replace(/[\s-]+/g, "_");
+
+        const stages = ["placed", "processing", "shipped", "delivered"];
+
+        let currentStage = 1;
+
+        if (["pending", "placed", "confirmed", "order_placed"].includes(normalized)) {
+            currentStage = 0;
+        } else if (
+            ["shipped", "out_for_delivery", "dispatched", "in_transit"].includes(normalized)
+        ) {
+            currentStage = 2;
+        } else if (["delivered", "completed"].includes(normalized)) {
+            currentStage = 3;
+        } else if (["cancelled", "canceled", "refunded"].includes(normalized)) {
+            currentStage = -1;
+        }
+
+        const timeline = document.getElementById("orderTimeline");
+        if (!timeline) return;
+
+        timeline.querySelectorAll(".timeline-step").forEach(function (step) {
+            const index = stages.indexOf(step.dataset.stage);
+            step.classList.remove("completed", "active");
+
+            if (currentStage >= 0 && index < currentStage) {
+                step.classList.add("completed");
+                const icon = step.querySelector(".timeline-icon");
+                if (icon) icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+            } else if (currentStage >= 0 && index === currentStage) {
+                step.classList.add("active");
+            }
+        });
+
+        timeline.querySelectorAll(".timeline-line").forEach(function (line, index) {
+            line.classList.toggle(
+                "completed",
+                currentStage >= 0 && index < currentStage
+            );
+        });
+
+        if (currentStage === -1) {
+            setText("orderStatus", normalized.replace(/_/g, " "));
+        }
+    }
+
+    /*
+     * Called by your API integration after the backend
+     * returns the authenticated customer's order data.
+     */
+    window.renderOrderDetail = function (order) {
+        if (!order || typeof order !== "object") {
+            showOrderError("Order information was not found.");
+            return;
+        }
+
+        if (loadingElement) loadingElement.style.display = "none";
+        if (errorElement) errorElement.style.display = "none";
+        if (layoutElement) layoutElement.style.display = "grid";
+
+        const orderNumber = order.order_number ?? order.id ?? "—";
+        const status = order.status ?? "Processing";
+        const items = Array.isArray(order.items) ? order.items : [];
+
+        setText("orderNumber", "Order #" + orderNumber);
+        setText("orderStatus", String(status).replace(/_/g, " "));
+        setText("orderDate", formatDate(order.created_at || order.created));
+        setText(
+            "orderItemsCount",
+            order.item_count ?? items.reduce(function (sum, item) {
+                const qty = Number(item.quantity);
+                return sum + (Number.isFinite(qty) && qty > 0 ? qty : 1);
+            }, 0)
+        );
+
+        setMoney("orderTotal", order.total);
+        setMoney("summarySubtotal", order.subtotal);
+        setMoney("summaryDelivery", order.delivery_fee);
+        setMoney("summaryDiscount", order.discount);
+        setMoney("summaryTotal", order.total);
+
+        setText("placedDate", order.created_at
+            ? "Received " + formatDate(order.created_at)
+            : "Your order has been received.");
+
+        setText(
+            "deliveryName",
+            order.delivery_name || order.customer_name || "Customer"
+        );
+        setText(
+            "deliveryAddress",
+            order.delivery_address || "Delivery address not provided."
+        );
+        setText(
+            "deliveryPhone",
+            order.delivery_phone || "Phone number not provided."
+        );
+
+        setText("paymentMethod", order.payment_method || "Not specified");
+        setText("paymentStatus", order.payment_status || "Pending");
+
+        renderItems(items);
+        updateTimeline(status);
+    };
+
+    const printButton = document.getElementById("printOrderButton");
+    if (printButton) {
+        printButton.addEventListener("click", function () {
+            window.print();
+        });
+    }
+
+    if (!orderId) {
+        showOrderError("No order number was provided in the page address.");
+        return;
+    }
+
+    /*
+     * If app.js implements loadOrderDetail(orderId),
+     * let it load the real order. Otherwise show an honest
+     * error rather than leaving the loading spinner forever.
+     */
+    if (typeof window.loadOrderDetail === "function") {
+        Promise.resolve(window.loadOrderDetail(orderId))
+            .then(function (order) {
+                /*
+                 * Support either:
+                 * 1. A returned order object, or
+                 * 2. A loader that calls renderOrderDetail itself.
+                 */
+                if (order && typeof order === "object") {
+                    window.renderOrderDetail(order);
+                }
+            })
+            .catch(function () {
+                showOrderError(
+                    "We couldn't retrieve this order. Please try again or return to your orders."
+                );
+            });
+    } else {
+        showOrderError(
+            "Order details are not connected to the backend yet. Connect your Django order view or API to display your real order information."
+        );
+    }
 });
-
 </script>
-
 {% endblock %}
+
