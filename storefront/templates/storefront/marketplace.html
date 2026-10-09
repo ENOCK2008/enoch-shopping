@@ -2,545 +2,1527 @@
 {% extends "storefront/base.html" %}
 {% load static %}
 
-{% block title %}Marketplace — Enock Shopping Center{% endblock %}
+{% block title %}Marketplace | Enock Shopping Center{% endblock %}
 
 {% block content %}
 
-<section class="marketplace-page">
+<style>
+/* ==================================================
+   ENOCK SHOPPING CENTER — MARKETPLACE
+================================================== */
 
-    <!-- Marketplace Hero -->
+.marketplace-page {
+    --mk-primary: #2563eb;
+    --mk-secondary: #7c3aed;
+    --mk-ink: #172033;
+    --mk-muted: #667085;
+    --mk-border: #e7eaf0;
+    --mk-surface: #ffffff;
+    --mk-bg: #f7f8fc;
+    color: var(--mk-ink);
+    background: var(--mk-bg);
+    overflow: hidden;
+}
+
+.marketplace-page *,
+.marketplace-page *::before,
+.marketplace-page *::after {
+    box-sizing: border-box;
+}
+
+.marketplace-page .container {
+    width: min(1200px, calc(100% - 36px));
+    margin-inline: auto;
+}
+
+.marketplace-page a {
+    text-decoration: none;
+}
+
+.marketplace-page button,
+.marketplace-page input,
+.marketplace-page select {
+    font: inherit;
+}
+
+.marketplace-page button,
+.marketplace-page a,
+.marketplace-page select {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.marketplace-page .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--mk-primary);
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+}
+
+.marketplace-page .eyebrow::before {
+    width: 22px;
+    height: 3px;
+    border-radius: 10px;
+    background: currentColor;
+    content: "";
+}
+
+.marketplace-page h1,
+.marketplace-page h2,
+.marketplace-page h3,
+.marketplace-page p {
+    margin-top: 0;
+}
+
+.marketplace-page .btn {
+    display: inline-flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 12px 19px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-weight: 750;
+    transition: transform .2s, box-shadow .2s, background .2s;
+    cursor: pointer;
+}
+
+.marketplace-page .btn:hover {
+    transform: translateY(-2px);
+}
+
+.marketplace-page .btn-primary {
+    color: #fff;
+    background: linear-gradient(
+        135deg,
+        var(--mk-primary),
+        var(--mk-secondary)
+    );
+    box-shadow: 0 8px 20px #5145cd25;
+}
+
+.marketplace-page .btn-outline {
+    color: var(--mk-ink);
+    background: #fff;
+    border-color: var(--mk-border);
+}
+
+.marketplace-page .btn-light {
+    color: var(--mk-primary);
+    background: #fff;
+}
+
+.marketplace-page .btn-outline-light {
+    color: #fff;
+    border-color: #ffffff70;
+    background: #ffffff12;
+}
+
+.marketplace-page .text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--mk-primary);
+    font-weight: 750;
+}
+
+.marketplace-page .mk-card {
+    border: 1px solid var(--mk-border);
+    border-radius: 20px;
+    background: var(--mk-surface);
+    box-shadow: 0 5px 22px #17203306;
+    transition: transform .22s, box-shadow .22s;
+}
+
+.marketplace-page .mk-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 34px #17203310;
+}
+
+/* Hero */
+
+.marketplace-page .marketplace-hero {
+    position: relative;
+    padding: 74px 0 82px;
+    color: #fff;
+    background:
+        radial-gradient(
+            circle at 88% 15%,
+            #a78bfa65,
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 10% 100%,
+            #2563eb70,
+            transparent 35%
+        ),
+        linear-gradient(125deg, #111b38, #243d83 60%, #5639a9);
+}
+
+.marketplace-page .marketplace-hero::after {
+    position: absolute;
+    right: -90px;
+    bottom: -160px;
+    width: 390px;
+    height: 390px;
+    border: 1px solid #ffffff1c;
+    border-radius: 50%;
+    content: "";
+    pointer-events: none;
+}
+
+.marketplace-page .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.35fr .75fr;
+    align-items: center;
+    gap: 55px;
+}
+
+.marketplace-page .hero-copy .eyebrow {
+    color: #c7d2fe;
+}
+
+.marketplace-page .hero-copy h1 {
+    max-width: 720px;
+    margin: 22px 0;
+    font-size: clamp(2.5rem, 5.5vw, 4.7rem);
+    font-weight: 850;
+    letter-spacing: -.055em;
+    line-height: 1.06;
+}
+
+.marketplace-page .hero-copy h1 span {
+    display: block;
+    color: #c4b5fd;
+}
+
+.marketplace-page .hero-copy > p {
+    max-width: 590px;
+    margin-bottom: 28px;
+    color: #e0e7ff;
+    font-size: 1.06rem;
+    line-height: 1.8;
+}
+
+.marketplace-page .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.marketplace-page .hero-panel {
+    padding: 27px;
+    border: 1px solid #ffffff35;
+    border-radius: 25px;
+    background: #ffffff12;
+    box-shadow: 0 24px 70px #090f2c25;
+    backdrop-filter: blur(14px);
+}
+
+.marketplace-page .hero-panel-icon {
+    display: grid;
+    width: 65px;
+    height: 65px;
+    margin-bottom: 23px;
+    place-items: center;
+    border-radius: 20px;
+    color: #fff;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    font-size: 1.8rem;
+}
+
+.marketplace-page .hero-panel h2 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.marketplace-page .hero-panel > p {
+    color: #e0e7ff;
+    line-height: 1.7;
+}
+
+.marketplace-page .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid #ffffff2b;
+}
+
+.marketplace-page .hero-stat strong {
+    display: block;
+    font-size: 1.1rem;
+}
+
+.marketplace-page .hero-stat small {
+    color: #dbeafe;
+    font-size: .72rem;
+}
+
+/* Search */
+
+.marketplace-page .search-wrap {
+    position: relative;
+    z-index: 2;
+    margin-top: -30px;
+}
+
+.marketplace-page .search-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px;
+    border: 1px solid var(--mk-border);
+    border-radius: 19px;
+    background: #fff;
+    box-shadow: 0 14px 42px #17203312;
+}
+
+.marketplace-page .search-box > i {
+    padding-left: 12px;
+    color: var(--mk-primary);
+    font-size: 1.2rem;
+}
+
+.marketplace-page .search-box input {
+    width: 100%;
+    min-width: 0;
+    min-height: 45px;
+    border: 0;
+    outline: 0;
+    color: var(--mk-ink);
+    background: transparent;
+}
+
+.marketplace-page .search-box input::placeholder {
+    color: #98a2b3;
+}
+
+.marketplace-page .search-box input:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+.marketplace-page .popular-searches {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    padding: 17px 4px 0;
+}
+
+.marketplace-page .popular-searches > span {
+    color: var(--mk-muted);
+    font-size: .85rem;
+    font-weight: 700;
+}
+
+.marketplace-page .search-tag {
+    padding: 7px 12px;
+    border: 1px solid var(--mk-border);
+    border-radius: 30px;
+    color: #475467;
+    background: #fff;
+    font-size: .8rem;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.marketplace-page .search-tag:hover,
+.marketplace-page .search-tag:focus-visible {
+    border-color: var(--mk-primary);
+    color: var(--mk-primary);
+    background: #eff6ff;
+}
+
+/* Sections */
+
+.marketplace-page .marketplace-section {
+    padding: 66px 0;
+}
+
+.marketplace-page .section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.marketplace-page .section-heading h2 {
+    margin: 12px 0 8px;
+    font-size: clamp(1.65rem, 3vw, 2.35rem);
+    font-weight: 850;
+    letter-spacing: -.035em;
+}
+
+.marketplace-page .section-heading p {
+    margin-bottom: 0;
+    color: var(--mk-muted);
+    line-height: 1.65;
+}
+
+.marketplace-page .section-heading.centered {
+    display: block;
+    max-width: 650px;
+    margin: 0 auto 35px;
+    text-align: center;
+}
+
+.marketplace-page .section-heading.centered .eyebrow::before {
+    display: none;
+}
+
+/* Categories */
+
+.marketplace-page .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.marketplace-page .category-card {
+    display: flex;
+    min-height: 180px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 23px;
+    border: 1px solid var(--mk-border);
+    border-radius: 19px;
+    color: var(--mk-ink);
+    background: #fff;
+    transition: transform .22s, border-color .22s, box-shadow .22s;
+}
+
+.marketplace-page .category-card:hover,
+.marketplace-page .category-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: #b9c8ff;
+    box-shadow: 0 14px 35px #1720330d;
+}
+
+.marketplace-page .category-icon {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 17px;
+    place-items: center;
+    border-radius: 16px;
+    color: var(--mk-primary);
+    background: #eff6ff;
+    font-size: 1.35rem;
+}
+
+.marketplace-page .category-card:nth-child(3n + 2) .category-icon {
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+.marketplace-page .category-card:nth-child(3n) .category-icon {
+    color: #047857;
+    background: #ecfdf5;
+}
+
+.marketplace-page .category-card h3 {
+    margin-bottom: 7px;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.marketplace-page .category-card p {
+    margin-bottom: 0;
+    color: var(--mk-muted);
+    font-size: .87rem;
+    line-height: 1.6;
+}
+
+/* Product controls */
+
+.marketplace-page .product-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.marketplace-page .filter-select {
+    min-height: 43px;
+    padding: 9px 32px 9px 12px;
+    border: 1px solid var(--mk-border);
+    border-radius: 11px;
+    color: var(--mk-ink);
+    background: #fff;
+    cursor: pointer;
+}
+
+.marketplace-page .products-section {
+    background: #fff;
+}
+
+.marketplace-page .products-section .section-heading {
+    align-items: center;
+}
+
+.marketplace-page .marketplace-loading,
+.marketplace-page .empty-products {
+    padding: 48px 22px;
+    border: 1px dashed #d7ddea;
+    border-radius: 20px;
+    background: #fafbff;
+    text-align: center;
+}
+
+.marketplace-page .loading-spinner,
+.marketplace-page .empty-products-icon {
+    display: grid;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 17px;
+    place-items: center;
+    border-radius: 20px;
+    color: var(--mk-primary);
+    background: #eaf1ff;
+    font-size: 1.6rem;
+}
+
+.marketplace-page .marketplace-loading h3,
+.marketplace-page .empty-products h3 {
+    margin-bottom: 8px;
+    font-size: 1.15rem;
+}
+
+.marketplace-page .marketplace-loading p,
+.marketplace-page .empty-products p {
+    max-width: 520px;
+    margin: 0 auto;
+    color: var(--mk-muted);
+    line-height: 1.7;
+}
+
+/* Product cards rendered by Django */
+
+.marketplace-page .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.marketplace-page .product-card {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--mk-border);
+    border-radius: 17px;
+    background: #fff;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.marketplace-page .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px #17203310;
+}
+
+.marketplace-page .product-image {
+    display: grid;
+    aspect-ratio: 1 / .82;
+    overflow: hidden;
+    place-items: center;
+    background: #f2f4f8;
+}
+
+.marketplace-page .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.marketplace-page .product-image-placeholder {
+    color: #98a2b3;
+    font-size: 2rem;
+}
+
+.marketplace-page .product-info {
+    padding: 16px;
+}
+
+.marketplace-page .product-category {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--mk-primary);
+    font-size: .72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.marketplace-page .product-name {
+    margin-bottom: 10px;
+    font-size: .98rem;
+    font-weight: 800;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.marketplace-page .product-price {
+    margin-bottom: 14px;
+    color: var(--mk-primary);
+    font-size: 1.1rem;
+    font-weight: 850;
+}
+
+/* Seller CTA */
+
+.marketplace-page .seller-marketplace-section {
+    padding: 15px 0 65px;
+}
+
+.marketplace-page .seller-marketplace-card {
+    display: grid;
+    grid-template-columns: 1.3fr .7fr;
+    align-items: center;
+    gap: 35px;
+    padding: clamp(26px, 5vw, 55px);
+    overflow: hidden;
+    border-radius: 26px;
+    color: #fff;
+    background:
+        radial-gradient(circle at 90% 20%, #8b5cf655, transparent 28%),
+        linear-gradient(125deg, #172554, #312e81);
+}
+
+.marketplace-page .seller-marketplace-card .eyebrow {
+    color: #c4b5fd;
+}
+
+.marketplace-page .seller-marketplace-card h2 {
+    margin: 17px 0;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 850;
+    letter-spacing: -.04em;
+    line-height: 1.15;
+}
+
+.marketplace-page .seller-marketplace-card h2 span {
+    color: #c4b5fd;
+}
+
+.marketplace-page .seller-content > p {
+    max-width: 560px;
+    color: #e0e7ff;
+    line-height: 1.8;
+}
+
+.marketplace-page .seller-benefits {
+    display: grid;
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.marketplace-page .seller-benefits div {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: #eef2ff;
+}
+
+.marketplace-page .seller-benefits i {
+    color: #c4b5fd;
+}
+
+.marketplace-page .seller-visual {
+    display: grid;
+    min-height: 220px;
+    place-items: center;
+}
+
+.marketplace-page .seller-circle {
+    display: grid;
+    width: min(210px, 100%);
+    aspect-ratio: 1;
+    place-items: center;
+    border: 1px solid #ffffff45;
+    border-radius: 45px;
+    color: #fff;
+    background: #ffffff13;
+    box-shadow: 0 20px 70px #0f172a30;
+    font-size: clamp(4rem, 8vw, 6rem);
+    transform: rotate(-7deg);
+}
+
+/* Benefits */
+
+.marketplace-page .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.marketplace-page .benefit-card {
+    padding: 23px;
+    border: 1px solid var(--mk-border);
+    border-radius: 18px;
+    background: #fff;
+}
+
+.marketplace-page .benefit-icon {
+    display: grid;
+    width: 49px;
+    height: 49px;
+    margin-bottom: 18px;
+    place-items: center;
+    border-radius: 15px;
+    color: var(--mk-primary);
+    background: #eff6ff;
+    font-size: 1.25rem;
+}
+
+.marketplace-page .benefit-card h3 {
+    margin-bottom: 9px;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.marketplace-page .benefit-card p {
+    margin-bottom: 0;
+    color: var(--mk-muted);
+    font-size: .88rem;
+    line-height: 1.75;
+}
+
+/* Final CTA */
+
+.marketplace-page .marketplace-final-cta {
+    padding: 62px 0;
+    color: #fff;
+    background: linear-gradient(120deg, #2563eb, #6d28d9);
+}
+
+.marketplace-page .final-cta-content {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.marketplace-page .final-cta-content .eyebrow {
+    color: #ddd6fe;
+}
+
+.marketplace-page .final-cta-content .eyebrow::before {
+    display: none;
+}
+
+.marketplace-page .final-cta-content h2 {
+    margin: 15px 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 850;
+    letter-spacing: -.04em;
+}
+
+.marketplace-page .final-cta-content p {
+    margin-bottom: 24px;
+    color: #e0e7ff;
+    line-height: 1.8;
+}
+
+.marketplace-page .cta-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* Accessibility */
+
+.marketplace-page a:focus-visible,
+.marketplace-page button:focus-visible,
+.marketplace-page select:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 3px;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+    .marketplace-page .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .marketplace-page .hero-panel {
+        max-width: 560px;
+    }
+
+    .marketplace-page .category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .marketplace-page .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .marketplace-page .benefits-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .marketplace-page .seller-marketplace-card {
+        grid-template-columns: 1fr;
+    }
+
+    .marketplace-page .seller-visual {
+        display: none;
+    }
+}
+
+@media (max-width: 560px) {
+    .marketplace-page .container {
+        width: min(100% - 26px, 1200px);
+    }
+
+    .marketplace-page .marketplace-hero {
+        padding: 49px 0 61px;
+    }
+
+    .marketplace-page .hero-copy h1 {
+        font-size: clamp(2.35rem, 10vw, 3.2rem);
+    }
+
+    .marketplace-page .hero-copy > p {
+        font-size: .96rem;
+    }
+
+    .marketplace-page .hero-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .marketplace-page .hero-actions .btn {
+        width: 100%;
+    }
+
+    .marketplace-page .hero-panel {
+        padding: 21px;
+    }
+
+    .marketplace-page .search-box {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .marketplace-page .search-box input {
+        flex: 1;
+    }
+
+    .marketplace-page .search-box .btn {
+        width: 100%;
+    }
+
+    .marketplace-page .marketplace-section {
+        padding: 47px 0;
+    }
+
+    .marketplace-page .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .marketplace-page .category-grid {
+        gap: 11px;
+    }
+
+    .marketplace-page .category-card {
+        min-height: 170px;
+        padding: 16px;
+    }
+
+    .marketplace-page .category-card h3 {
+        font-size: .91rem;
+    }
+
+    .marketplace-page .category-card p {
+        font-size: .8rem;
+    }
+
+    .marketplace-page .product-controls {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .marketplace-page .filter-select {
+        width: 100%;
+    }
+
+    .marketplace-page .product-grid {
+        gap: 11px;
+    }
+
+    .marketplace-page .product-info {
+        padding: 12px;
+    }
+
+    .marketplace-page .benefits-grid {
+        gap: 11px;
+    }
+
+    .marketplace-page .benefit-card {
+        padding: 16px;
+    }
+
+    .marketplace-page .seller-marketplace-section {
+        padding-bottom: 45px;
+    }
+
+    .marketplace-page .seller-marketplace-card {
+        padding: 26px 21px;
+    }
+
+    .marketplace-page .cta-buttons {
+        flex-direction: column;
+    }
+
+    .marketplace-page .cta-buttons .btn {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marketplace-page *,
+    .marketplace-page *::before,
+    .marketplace-page *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+</style>
+
+
+<div class="marketplace-page">
+
+    <!-- HERO -->
     <section class="marketplace-hero">
         <div class="container">
-            <div class="marketplace-hero-content">
-                <div>
-                    <span class="eyebrow">ENOCK SHOPPING CENTER</span>
+            <div class="hero-grid">
+
+                <div class="hero-copy">
+                    <span class="eyebrow">Enock Shopping Center</span>
 
                     <h1>
-                        Shop everything you need,
-                        <span>all in one place.</span>
+                        Discover more.
+                        <span>Shop smarter.</span>
                     </h1>
 
                     <p>
-                        Discover products from trusted sellers, compare prices,
-                        add to your cart and order for delivery.
+                        Explore phones, solar products, fashion, vehicles,
+                        home essentials and local products from one marketplace
+                        designed for Uganda and beyond.
                     </p>
 
-                    <div class="marketplace-actions">
-                        <a href="{% url 'storefront:cart' %}" class="btn btn-primary">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            View Cart
+                    <div class="hero-actions">
+                        <a href="#products" class="btn btn-primary">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            Explore Products
                         </a>
 
-                        <a href="{% url 'storefront:sellers' %}" class="btn btn-outline">
+                        <a href="{% url 'storefront:sellers' %}"
+                           class="btn btn-outline">
                             <i class="fa-solid fa-store"></i>
-                            Explore Sellers
+                            Discover Sellers
                         </a>
                     </div>
                 </div>
 
-                <div class="marketplace-hero-card">
-                    <div class="hero-icon">
-                        <i class="fa-solid fa-bag-shopping"></i>
+                <aside class="hero-panel">
+                    <div class="hero-panel-icon">
+                        <i class="fa-solid fa-cart-shopping"></i>
                     </div>
 
-                    <h3>Smart Shopping</h3>
+                    <h2>Your marketplace, all in one place</h2>
 
                     <p>
-                        Find products faster with search, categories,
-                        filters and recommendations.
+                        Browse categories, discover available products
+                        and find options that fit your needs.
                     </p>
 
                     <div class="hero-stats">
-                        <div>
-                            <strong>24/7</strong>
+                        <div class="hero-stat">
+                            <strong>Everyday</strong>
                             <small>Shopping</small>
                         </div>
 
-                        <div>
+                        <div class="hero-stat">
                             <strong>UGX</strong>
-                            <small>Local pricing</small>
+                            <small>Price display</small>
                         </div>
 
-                        <div>
-                            <strong>Fast</strong>
-                            <small>Delivery</small>
+                        <div class="hero-stat">
+                            <strong>Local</strong>
+                            <small>Products</small>
                         </div>
                     </div>
-                </div>
+                </aside>
+
             </div>
         </div>
     </section>
 
 
-    <!-- Search -->
-    <section class="marketplace-search-section">
+    <!-- SEARCH -->
+    <section class="search-wrap" aria-label="Find products">
         <div class="container">
 
-            <div class="marketplace-search">
-                <i class="fa-solid fa-magnifying-glass"></i>
+            <form class="search-box" id="marketplaceSearchForm" role="search">
+                <i class="fa-solid fa-magnifying-glass"
+                   aria-hidden="true"></i>
 
                 <input
                     type="search"
                     id="marketplaceSearch"
-                    placeholder="Search phones, solar products, clothes, bikes, animals..."
+                    name="q"
+                    placeholder="What are you looking for today?"
+                    aria-label="Search marketplace products"
                     autocomplete="off"
-                />
+                >
 
-                <button type="button" id="searchButton" class="btn btn-primary">
-                    Search
+                <button type="submit" class="btn btn-primary">
+                    Search products
                 </button>
-            </div>
+            </form>
 
             <div class="popular-searches">
-                <span>Popular:</span>
+                <span>Popular searches:</span>
 
-                <button type="button" class="search-tag" data-search="phones">
-                    Phones
-                </button>
+                <button type="button" class="search-tag"
+                        data-search="phones">Phones</button>
 
-                <button type="button" class="search-tag" data-search="solar">
-                    Solar
-                </button>
+                <button type="button" class="search-tag"
+                        data-search="solar">Solar</button>
 
-                <button type="button" class="search-tag" data-search="motorcycles">
-                    Motorcycles
-                </button>
+                <button type="button" class="search-tag"
+                        data-search="motorcycles">Motorcycles</button>
 
-                <button type="button" class="search-tag" data-search="fashion">
-                    Fashion
-                </button>
+                <button type="button" class="search-tag"
+                        data-search="fashion">Fashion</button>
 
-                <button type="button" class="search-tag" data-search="livestock">
-                    Livestock
-                </button>
+                <button type="button" class="search-tag"
+                        data-search="livestock">Livestock</button>
             </div>
 
         </div>
     </section>
 
 
-    <!-- Categories -->
+    <!-- CATEGORIES -->
     <section class="marketplace-section">
         <div class="container">
 
             <div class="section-heading">
                 <div>
-                    <span class="eyebrow">EXPLORE</span>
+                    <span class="eyebrow">Explore the marketplace</span>
                     <h2>Shop by category</h2>
-                    <p>Find what you need quickly.</p>
+                    <p>Start with a category and discover what is available.</p>
                 </div>
 
                 <a href="#products" class="text-link">
-                    View products
+                    Browse products
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
 
-
             <div class="category-grid">
 
-                <a href="#products" class="category-card">
+                <a href="#products"
+                   class="category-card"
+                   data-category-link="electronics">
                     <div class="category-icon">
                         <i class="fa-solid fa-mobile-screen-button"></i>
                     </div>
                     <h3>Phones & Electronics</h3>
-                    <p>Smartphones, accessories and electronics</p>
+                    <p>Smartphones, accessories and electronics.</p>
                 </a>
 
-
-                <a href="#products" class="category-card">
+                <a href="#products"
+                   class="category-card"
+                   data-category-link="solar">
                     <div class="category-icon">
                         <i class="fa-solid fa-solar-panel"></i>
                     </div>
                     <h3>Solar Products</h3>
-                    <p>Solar systems, panels and accessories</p>
+                    <p>Solar panels, lighting and power systems.</p>
                 </a>
 
-
-                <a href="#products" class="category-card">
+                <a href="#products"
+                   class="category-card"
+                   data-category-link="vehicles">
                     <div class="category-icon">
                         <i class="fa-solid fa-motorcycle"></i>
                     </div>
                     <h3>Bikes & Vehicles</h3>
-                    <p>Motorcycles, bicycles and vehicles</p>
+                    <p>Motorcycles, bicycles and vehicles.</p>
                 </a>
 
-
-                <a href="#products" class="category-card">
+                <a href="#products"
+                   class="category-card"
+                   data-category-link="fashion">
                     <div class="category-icon">
                         <i class="fa-solid fa-shirt"></i>
                     </div>
                     <h3>Fashion</h3>
-                    <p>Clothes, shoes and accessories</p>
+                    <p>Clothing, shoes and accessories.</p>
                 </a>
 
-
-                <a href="#products" class="category-card">
+                <a href="#products"
+                   class="category-card"
+                   data-category-link="home">
                     <div class="category-icon">
                         <i class="fa-solid fa-house"></i>
                     </div>
                     <h3>Home & Living</h3>
-                    <p>Furniture, appliances and home goods</p>
+                    <p>Furniture, appliances and household goods.</p>
                 </a>
 
-
-                <a href="#products" class="category-card">
+                <a href="#products"
+                   class="category-card"
+                   data-category-link="animals">
                     <div class="category-icon">
                         <i class="fa-solid fa-egg"></i>
                     </div>
-                    <h3>Animals & Birds</h3>
-                    <p>Hens, ducks, livestock and birds</p>
+                    <h3>Animals & Agriculture</h3>
+                    <p>Birds, livestock and agricultural products.</p>
                 </a>
 
             </div>
-
         </div>
     </section>
 
 
-    <!-- Products -->
+    <!-- PRODUCTS -->
     <section class="marketplace-section products-section" id="products">
         <div class="container">
 
             <div class="section-heading">
                 <div>
-                    <span class="eyebrow">MARKETPLACE</span>
-                    <h2>Featured products</h2>
-                    <p>Discover products available from our marketplace.</p>
+                    <span class="eyebrow">Find your next purchase</span>
+                    <h2>Explore products</h2>
+                    <p>Browse the products currently available in the marketplace.</p>
                 </div>
 
                 <div class="product-controls">
+                    <label>
+                        <span class="visually-hidden">Filter by category</span>
+                        <select id="categoryFilter"
+                                class="filter-select"
+                                aria-label="Filter by category">
+                            <option value="">All categories</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="solar">Solar</option>
+                            <option value="vehicles">Vehicles</option>
+                            <option value="fashion">Fashion</option>
+                            <option value="home">Home & Living</option>
+                            <option value="animals">Animals</option>
+                        </select>
+                    </label>
 
-                    <select id="categoryFilter" class="filter-select">
-                        <option value="">All categories</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="solar">Solar</option>
-                        <option value="vehicles">Vehicles</option>
-                        <option value="fashion">Fashion</option>
-                        <option value="home">Home</option>
-                        <option value="animals">Animals</option>
-                    </select>
-
-                    <select id="sortProducts" class="filter-select">
-                        <option value="">Sort by</option>
-                        <option value="price_low">Price: Low to High</option>
-                        <option value="price_high">Price: High to Low</option>
-                        <option value="newest">Newest</option>
-                    </select>
-
+                    <label>
+                        <span class="visually-hidden">Sort products</span>
+                        <select id="sortProducts"
+                                class="filter-select"
+                                aria-label="Sort products">
+                            <option value="">Sort products</option>
+                            <option value="price_low">Price: Low to High</option>
+                            <option value="price_high">Price: High to Low</option>
+                            <option value="newest">Newest</option>
+                        </select>
+                    </label>
                 </div>
             </div>
 
+            <div id="pageContent" aria-live="polite">
 
-            <!-- Product API loading area -->
-            <div id="pageContent">
+                {% if featured_products %}
+                    <div class="product-grid" id="serverProductGrid">
 
-                <div class="marketplace-loading">
+                        {% for product in featured_products %}
+                            <article
+                                class="product-card"
+                                data-product-name="{{ product.name|default:product.title|default:''|lower }}"
+                                data-category="{{ product.category.slug|default:product.category.name|default:''|lower }}"
+                                data-price="{{ product.price|default:0 }}"
+                            >
+                                <div class="product-image">
+                                    {% if product.image %}
+                                        <img
+                                            src="{{ product.image.url }}"
+                                            alt="{{ product.name|default:product.title|default:'Marketplace product' }}"
+                                            loading="lazy"
+                                        >
+                                    {% else %}
+                                        <div class="product-image-placeholder">
+                                            <i class="fa-solid fa-image"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
 
-                    <div class="loading-spinner">
-                        <i class="fa-solid fa-spinner fa-spin"></i>
+                                <div class="product-info">
+                                    <span class="product-category">
+                                        {{ product.category.name|default:product.category|default:"Marketplace" }}
+                                    </span>
+
+                                    <h3 class="product-name">
+                                        {{ product.name|default:product.title|default:"Product" }}
+                                    </h3>
+
+                                    <div class="product-price">
+                                        UGX {{ product.price|default:"Price on request" }}
+                                    </div>
+
+                                    <a href="#products"
+                                       class="btn btn-primary product-details-link">
+                                        View product
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </article>
+                        {% endfor %}
+
                     </div>
 
-                    <h3>Loading products...</h3>
+                {% else %}
+                    <div class="marketplace-loading" id="productLoading">
+                        <div class="loading-spinner">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
 
-                    <p>
-                        Please wait while we load products from the marketplace.
-                    </p>
+                        <h3>Discover marketplace products</h3>
 
-                </div>
+                        <p>
+                            Products will appear here when they are supplied
+                            by the catalog API or passed to this page by Django.
+                        </p>
+                    </div>
+                {% endif %}
 
             </div>
-
         </div>
     </section>
 
 
-    <!-- Seller CTA -->
+    <!-- SELLER PROMOTION -->
     <section class="seller-marketplace-section">
         <div class="container">
 
             <div class="seller-marketplace-card">
-
                 <div class="seller-content">
 
-                    <span class="eyebrow">SELL ON ENOCK</span>
+                    <span class="eyebrow">For businesses and entrepreneurs</span>
 
                     <h2>
-                        Turn your products into
-                        <span>new opportunities.</span>
+                        Bring your business
+                        <span>to more customers.</span>
                     </h2>
 
                     <p>
-                        Join Enock Shopping Center and reach customers
-                        across Uganda and beyond.
+                        Introduce your products to shoppers through
+                        Enock Shopping Center and build your online presence.
                     </p>
 
                     <div class="seller-benefits">
-
                         <div>
                             <i class="fa-solid fa-users"></i>
-                            <span>Reach more customers</span>
+                            <span>Showcase your products</span>
                         </div>
 
                         <div>
                             <i class="fa-solid fa-chart-line"></i>
-                            <span>Grow your sales</span>
+                            <span>Grow your customer reach</span>
                         </div>
 
                         <div>
                             <i class="fa-solid fa-mobile-screen"></i>
-                            <span>Manage your store online</span>
+                            <span>Build your online store</span>
                         </div>
-
                     </div>
 
-                    <a href="{% url 'storefront:sellers' %}" class="btn btn-primary">
+                    <a href="{% url 'storefront:sellers' %}"
+                       class="btn btn-primary">
                         <i class="fa-solid fa-store"></i>
-                        Become a Seller
+                        Explore seller options
                     </a>
 
                 </div>
 
-                <div class="seller-visual">
+                <div class="seller-visual" aria-hidden="true">
                     <div class="seller-circle">
                         <i class="fa-solid fa-store"></i>
                     </div>
                 </div>
-
             </div>
 
         </div>
     </section>
 
 
-    <!-- Shopping Benefits -->
+    <!-- BENEFITS -->
     <section class="marketplace-section">
         <div class="container">
 
             <div class="section-heading centered">
-                <span class="eyebrow">WHY ENOCK</span>
-                <h2>Shopping made easier</h2>
+                <span class="eyebrow">The Enock experience</span>
+                <h2>A simpler way to discover products</h2>
                 <p>
-                    Everything you need for a simple and convenient
-                    online shopping experience.
+                    A marketplace designed to bring products,
+                    sellers and shoppers together.
                 </p>
             </div>
-
 
             <div class="benefits-grid">
 
-                <div class="benefit-card">
+                <article class="benefit-card">
                     <div class="benefit-icon">
-                        <i class="fa-solid fa-shield-halved"></i>
+                        <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
+                    <h3>Easy discovery</h3>
+                    <p>Explore product categories and find items that match your needs.</p>
+                </article>
 
-                    <h3>Secure Shopping</h3>
-
-                    <p>
-                        Shop with confidence using secure accounts
-                        and protected checkout.
-                    </p>
-                </div>
-
-
-                <div class="benefit-card">
+                <article class="benefit-card">
                     <div class="benefit-icon">
-                        <i class="fa-solid fa-money-bill-transfer"></i>
+                        <i class="fa-solid fa-store"></i>
                     </div>
+                    <h3>Seller discovery</h3>
+                    <p>Explore sellers and the products they make available.</p>
+                </article>
 
-                    <h3>Flexible Payments</h3>
-
-                    <p>
-                        Designed for convenient mobile money and
-                        online payment experiences.
-                    </p>
-                </div>
-
-
-                <div class="benefit-card">
+                <article class="benefit-card">
                     <div class="benefit-icon">
-                        <i class="fa-solid fa-truck-fast"></i>
+                        <i class="fa-solid fa-basket-shopping"></i>
                     </div>
+                    <h3>Shopping tools</h3>
+                    <p>Use the marketplace and cart features available on the platform.</p>
+                </article>
 
-                    <h3>Delivery</h3>
-
-                    <p>
-                        Order your products and keep track of your
-                        delivery journey.
-                    </p>
-                </div>
-
-
-                <div class="benefit-card">
+                <article class="benefit-card">
                     <div class="benefit-icon">
                         <i class="fa-solid fa-headset"></i>
                     </div>
-
-                    <h3>Customer Support</h3>
-
-                    <p>
-                        Get help when you need it throughout your
-                        shopping experience.
-                    </p>
-                </div>
+                    <h3>Help and support</h3>
+                    <p>Find assistance through the support options provided by the platform.</p>
+                </article>
 
             </div>
-
         </div>
     </section>
 
 
-    <!-- Final CTA -->
+    <!-- FINAL CTA -->
     <section class="marketplace-final-cta">
         <div class="container">
-
             <div class="final-cta-content">
 
-                <span class="eyebrow">ENOCK SHOPPING CENTER</span>
+                <span class="eyebrow">Enock Shopping Center</span>
 
-                <h2>Ready to start shopping?</h2>
+                <h2>Your next discovery starts here.</h2>
 
                 <p>
-                    Explore products, discover great sellers and
-                    build your cart today.
+                    Explore the marketplace, browse categories
+                    and discover products for everyday life.
                 </p>
 
                 <div class="cta-buttons">
-
                     <a href="#products" class="btn btn-light">
                         <i class="fa-solid fa-bag-shopping"></i>
-                        Browse Products
+                        Browse products
                     </a>
 
-                    <a href="{% url 'storefront:cart' %}" class="btn btn-outline-light">
+                    <a href="{% url 'storefront:cart' %}"
+                       class="btn btn-outline-light">
                         <i class="fa-solid fa-cart-shopping"></i>
-                        My Cart
+                        Open my cart
                     </a>
-
                 </div>
 
             </div>
-
         </div>
     </section>
 
-</section>
+</div>
 
 {% endblock %}
 
 
 {% block scripts %}
-
-<script src="{% static 'storefront/js/app.js' %}"></script>
+<script src="{% static 'storefront/js/app.js' %}" defer></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-
+    const form = document.getElementById("marketplaceSearchForm");
     const searchInput = document.getElementById("marketplaceSearch");
-    const searchButton = document.getElementById("searchButton");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const sortSelect = document.getElementById("sortProducts");
 
-    function performSearch() {
-        const value = searchInput ? searchInput.value.trim() : "";
+    function scrollToProducts() {
+        document.getElementById("products")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 
-        if (!value) {
-            document.getElementById("products")?.scrollIntoView({
-                behavior: "smooth"
-            });
+    function performSearch(value) {
+        const query = (value || "").trim();
+
+        scrollToProducts();
+
+        if (!query) {
             return;
         }
 
-        /*
-         * The current storefront does not yet have a dedicated
-         * search URL. For now, save the search term so app.js/API
-         * integration can use it.
-         */
-        sessionStorage.setItem("marketplace_search", value);
-
-        document.getElementById("products")?.scrollIntoView({
-            behavior: "smooth"
-        });
-
+        // Use the existing catalog/search integration when available.
         if (typeof window.searchProducts === "function") {
-            window.searchProducts(value);
+            window.searchProducts(query);
+            return;
         }
-    }
 
+        // Local filtering for products already rendered in the page.
+        const cards = document.querySelectorAll(
+            "#serverProductGrid .product-card"
+        );
 
-    if (searchButton) {
-        searchButton.addEventListener("click", performSearch);
-    }
+        if (!cards.length) {
+            return;
+        }
 
+        let visibleCount = 0;
 
-    if (searchInput) {
-        searchInput.addEventListener("keydown", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                performSearch();
+        cards.forEach(function (card) {
+            const name = card.dataset.productName || "";
+            const category = card.dataset.category || "";
+            const matches =
+                name.includes(query.toLowerCase()) ||
+                category.includes(query.toLowerCase());
+
+            card.hidden = !matches;
+
+            if (matches) {
+                visibleCount++;
             }
         });
+
+        announceSearchResult(visibleCount);
     }
 
+    function announceSearchResult(count) {
+        const grid = document.getElementById("serverProductGrid");
+
+        if (!grid) return;
+
+        let message = document.getElementById("searchResultMessage");
+
+        if (!message) {
+            message = document.createElement("p");
+            message.id = "searchResultMessage";
+            message.setAttribute("role", "status");
+            message.style.marginBottom = "18px";
+            grid.parentNode.insertBefore(message, grid);
+        }
+
+        message.textContent = count === 0
+            ? "No matching products were found in the currently displayed products."
+            : count + " matching product(s) found.";
+    }
+
+    if (form) {
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            performSearch(searchInput ? searchInput.value : "");
+        });
+    }
 
     document.querySelectorAll(".search-tag").forEach(function (tag) {
-
         tag.addEventListener("click", function () {
-
-            const value = this.dataset.search || "";
+            const query = this.dataset.search || "";
 
             if (searchInput) {
-                searchInput.value = value;
+                searchInput.value = query;
             }
 
-            performSearch();
-
+            performSearch(query);
         });
-
     });
 
+    document.querySelectorAll("[data-category-link]").forEach(function (link) {
+        link.addEventListener("click", function () {
+            const category = this.dataset.categoryLink || "";
 
-    const categoryFilter = document.getElementById("categoryFilter");
+            if (categoryFilter) {
+                categoryFilter.value = category;
+                categoryFilter.dispatchEvent(new Event("change"));
+            }
+        });
+    });
 
     if (categoryFilter) {
-
         categoryFilter.addEventListener("change", function () {
-
             const category = this.value;
 
             if (typeof window.filterProducts === "function") {
                 window.filterProducts(category);
+                return;
             }
 
-        });
+            const cards = document.querySelectorAll(
+                "#serverProductGrid .product-card"
+            );
 
+            cards.forEach(function (card) {
+                const productCategory = (card.dataset.category || "")
+                    .toLowerCase();
+
+                card.hidden = Boolean(
+                    category && !productCategory.includes(category)
+                );
+            });
+        });
     }
 
-
-    const sortProducts = document.getElementById("sortProducts");
-
-    if (sortProducts) {
-
-        sortProducts.addEventListener("change", function () {
-
+    if (sortSelect) {
+        sortSelect.addEventListener("change", function () {
             const sort = this.value;
 
             if (typeof window.sortProducts === "function") {
                 window.sortProducts(sort);
+                return;
             }
 
-        });
+            const grid = document.getElementById("serverProductGrid");
 
+            if (!grid) return;
+
+            const cards = Array.from(
+                grid.querySelectorAll(".product-card")
+            );
+
+            cards.sort(function (a, b) {
+                const priceA = Number(a.dataset.price || 0);
+                const priceB = Number(b.dataset.price || 0);
+
+                if (sort === "price_low") return priceA - priceB;
+                if (sort === "price_high") return priceB - priceA;
+
+                return 0;
+            });
+
+            cards.forEach(function (card) {
+                grid.appendChild(card);
+            });
+        });
     }
 
-
-    /*
-     * Use the existing page initializer when available.
-     * It can later connect directly to the Catalog API.
-     */
+    // Preserve compatibility with the existing storefront application.
     if (typeof window.initPage === "function") {
         window.initPage("marketplace");
     }
-
 });
 </script>
-
 {% endblock %}
