@@ -1,640 +1,1005 @@
-
+```django
 {% extends "storefront/base.html" %}
 {% load static %}
 
-{% block title %}Sign In — Enock Shopping Center{% endblock %}
+{% block title %}Sign In | Enock Shopping Center{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =========================================================
+   ENOCK SHOPPING CENTER — MODERN AUTHENTICATION
+   ========================================================= */
+
+.auth-page {
+    --auth-primary: #4f46e5;
+    --auth-secondary: #7c3aed;
+    --auth-text: #172033;
+    --auth-muted: #687386;
+    --auth-border: #e5e9f2;
+    --auth-surface: #ffffff;
+
+    min-height: calc(100vh - 80px);
+    padding: 42px 18px;
+    background:
+        radial-gradient(circle at 5% 10%, rgba(99,102,241,.09), transparent 28%),
+        radial-gradient(circle at 95% 90%, rgba(124,58,237,.08), transparent 28%),
+        #f7f8fc;
+    color: var(--auth-text);
+}
+
+.auth-page *,
+.auth-page *::before,
+.auth-page *::after {
+    box-sizing: border-box;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+.auth-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(380px, .95fr);
+    align-items: stretch;
+    overflow: hidden;
+    background: var(--auth-surface);
+    border: 1px solid rgba(226,232,240,.9);
+    border-radius: 28px;
+    box-shadow: 0 25px 80px rgba(31,41,55,.09);
+}
+
+/* Promotional panel */
+
+.auth-promo {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    padding: 48px;
+    overflow: hidden;
+    color: #fff;
+    background: linear-gradient(145deg, #312e81 0%, #4f46e5 48%, #7c3aed 100%);
+}
+
+.auth-promo::before,
+.auth-promo::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.auth-promo::before {
+    width: 380px;
+    height: 380px;
+    top: -130px;
+    right: -160px;
+}
+
+.auth-promo::after {
+    width: 310px;
+    height: 310px;
+    bottom: -150px;
+    left: -110px;
+}
+
+.auth-promo-content {
+    width: 100%;
+    max-width: 450px;
+    margin: auto;
+}
+
+.auth-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 70px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.auth-brand:hover {
+    color: #fff;
+    opacity: .95;
+}
+
+.auth-brand-icon {
+    display: grid;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    color: var(--auth-primary);
+    background: #fff;
+    border-radius: 15px;
+    font-size: 21px;
+    box-shadow: 0 8px 24px rgba(15,23,42,.14);
+}
+
+.auth-brand-name {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.auth-brand-name strong {
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.auth-brand-name span {
+    color: rgba(255,255,255,.76);
+    font-size: 12px;
+}
+
+.auth-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    color: #c7d2fe;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.auth-eyebrow::before {
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    content: "";
+}
+
+.auth-promo h1 {
+    margin: 0 0 20px;
+    color: #fff;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 850;
+    line-height: 1.12;
+    letter-spacing: -1.8px;
+}
+
+.auth-promo h1 span {
+    display: block;
+    color: #c4b5fd;
+}
+
+.auth-promo-description {
+    max-width: 390px;
+    margin-bottom: 35px;
+    color: rgba(255,255,255,.8);
+    font-size: 15px;
+    line-height: 1.85;
+}
+
+.auth-benefits {
+    display: grid;
+    gap: 14px;
+}
+
+.auth-benefit {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 16px;
+    background: rgba(255,255,255,.075);
+    backdrop-filter: blur(8px);
+}
+
+.auth-benefit-icon {
+    display: grid;
+    flex-shrink: 0;
+    width: 43px;
+    height: 43px;
+    place-items: center;
+    color: #fff;
+    border-radius: 13px;
+    background: rgba(255,255,255,.14);
+    font-size: 17px;
+}
+
+.auth-benefit strong,
+.auth-benefit span {
+    display: block;
+}
+
+.auth-benefit strong {
+    margin-bottom: 4px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.auth-benefit span {
+    color: rgba(255,255,255,.72);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.auth-promo-footer {
+    margin-top: 35px;
+    color: rgba(255,255,255,.68);
+    font-size: 11px;
+}
+
+/* Login panel */
+
+.auth-form-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 52px clamp(28px, 5vw, 64px);
+}
+
+.auth-mobile-brand {
+    display: none;
+}
+
+.auth-card-header {
+    margin-bottom: 30px;
+}
+
+.auth-card-header .auth-eyebrow {
+    margin-bottom: 12px;
+    color: var(--auth-primary);
+    font-size: 10px;
+}
+
+.auth-card-header h2 {
+    margin: 0 0 10px;
+    color: var(--auth-text);
+    font-size: 32px;
+    font-weight: 850;
+    letter-spacing: -1.1px;
+}
+
+.auth-card-header p {
+    margin: 0;
+    color: var(--auth-muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.auth-message {
+    display: none;
+    margin-bottom: 20px;
+    padding: 13px 15px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.auth-message.error {
+    display: block;
+    color: #b42318;
+    background: #fff1f0;
+    border-color: #ffd5d2;
+}
+
+.auth-message.success {
+    display: block;
+    color: #067647;
+    background: #ecfdf3;
+    border-color: #abefc6;
+}
+
+.auth-message.info {
+    display: block;
+    color: #1d4ed8;
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.auth-form {
+    display: grid;
+    gap: 21px;
+}
+
+.auth-form-group {
+    min-width: 0;
+}
+
+.auth-form-group label,
+.auth-password-label-row label {
+    display: block;
+    margin-bottom: 9px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.auth-password-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.auth-password-label-row label {
+    margin-bottom: 9px;
+}
+
+.auth-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.auth-input-icon {
+    position: absolute;
+    left: 16px;
+    color: #98a2b3;
+    font-size: 15px;
+    pointer-events: none;
+}
+
+.auth-input-wrapper input {
+    width: 100%;
+    min-width: 0;
+    height: 52px;
+    padding: 0 47px;
+    color: var(--auth-text);
+    border: 1px solid var(--auth-border);
+    border-radius: 13px;
+    outline: none;
+    background: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+.auth-input-wrapper input::placeholder {
+    color: #a0a8b7;
+}
+
+.auth-input-wrapper input:focus {
+    border-color: var(--auth-primary);
+    box-shadow: 0 0 0 4px rgba(79,70,229,.10);
+}
+
+.auth-input-wrapper input:focus + .auth-password-toggle {
+    color: var(--auth-primary);
+}
+
+.auth-password-toggle {
+    position: absolute;
+    right: 8px;
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    color: #667085;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    cursor: pointer;
+}
+
+.auth-password-toggle:hover {
+    color: var(--auth-primary);
+    background: #f4f4ff;
+}
+
+.auth-forgot-link {
+    margin-bottom: 9px;
+    color: var(--auth-primary);
+    font-size: 12px;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.auth-forgot-link:hover {
+    color: var(--auth-secondary);
+    text-decoration: underline;
+}
+
+.auth-remember-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: -4px;
+}
+
+.auth-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #667085;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.auth-checkbox-label input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--auth-primary);
+    cursor: pointer;
+}
+
+.auth-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 53px;
+    margin-top: 3px;
+    padding: 13px 18px;
+    color: #fff;
+    border: 0;
+    border-radius: 13px;
+    background: linear-gradient(100deg, var(--auth-primary), var(--auth-secondary));
+    box-shadow: 0 9px 22px rgba(79,70,229,.23);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s, opacity .2s;
+}
+
+.auth-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 13px 27px rgba(79,70,229,.30);
+}
+
+.auth-submit:disabled {
+    opacity: .7;
+    cursor: wait;
+}
+
+.auth-submit .auth-submit-arrow {
+    margin-left: auto;
+}
+
+.auth-submit-loading {
+    display: none;
+    align-items: center;
+    gap: 8px;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 26px 0;
+    color: #98a2b3;
+    font-size: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    flex: 1;
+    height: 1px;
+    background: var(--auth-border);
+    content: "";
+}
+
+.auth-register-prompt {
+    color: var(--auth-muted);
+    font-size: 13px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+.auth-register-prompt a {
+    margin-left: 4px;
+    color: var(--auth-primary);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.auth-register-prompt a:hover {
+    text-decoration: underline;
+}
+
+.auth-security {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 28px;
+    color: #7b8494;
+    font-size: 11px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.auth-security i {
+    color: #16a34a;
+    font-size: 14px;
+}
+
+.auth-back-shopping {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    align-self: center;
+    margin-top: 25px;
+    color: #667085;
+    font-size: 13px;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.auth-back-shopping:hover {
+    color: var(--auth-primary);
+}
+
+.auth-back-shopping i {
+    transition: transform .2s;
+}
+
+.auth-back-shopping:hover i {
+    transform: translateX(-3px);
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+    .auth-page {
+        padding: 28px 16px;
+    }
+
+    .auth-layout {
+        grid-template-columns: minmax(0, .9fr) minmax(350px, 1.1fr);
+    }
+
+    .auth-promo {
+        padding: 35px 28px;
+    }
+
+    .auth-brand {
+        margin-bottom: 48px;
+    }
+
+    .auth-promo h1 {
+        font-size: 35px;
+    }
+
+    .auth-form-panel {
+        padding: 42px 30px;
+    }
+}
+
+@media (max-width: 680px) {
+    .auth-page {
+        min-height: auto;
+        padding: 18px 12px 30px;
+        background: #f7f8fc;
+    }
+
+    .auth-layout {
+        display: block;
+        max-width: 480px;
+        margin: 0 auto;
+        overflow: visible;
+        border-radius: 22px;
+        box-shadow: 0 15px 45px rgba(31,41,55,.07);
+    }
+
+    .auth-promo {
+        display: none;
+    }
+
+    .auth-form-panel {
+        padding: 30px 23px 27px;
+    }
+
+    .auth-mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 32px;
+    }
+
+    .auth-mobile-brand .auth-brand-icon {
+        width: 43px;
+        height: 43px;
+        color: #fff;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+
+    .auth-mobile-brand strong {
+        display: block;
+        color: var(--auth-text);
+        font-size: 16px;
+        font-weight: 850;
+    }
+
+    .auth-mobile-brand span {
+        display: block;
+        margin-top: 3px;
+        color: var(--auth-muted);
+        font-size: 11px;
+    }
+
+    .auth-card-header {
+        margin-bottom: 25px;
+    }
+
+    .auth-card-header h2 {
+        font-size: 29px;
+    }
+
+    .auth-back-shopping {
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 360px) {
+    .auth-form-panel {
+        padding: 25px 17px;
+    }
+
+    .auth-password-label-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .auth-password-label-row label,
+    .auth-forgot-link {
+        margin-bottom: 9px;
+    }
+
+    .auth-remember-row {
+        align-items: flex-start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .auth-page *,
+    .auth-page *::before,
+    .auth-page *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+    }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-
 <section class="auth-page">
-
-    <div class="container">
-
+    <div class="auth-container">
         <div class="auth-layout">
 
-            <!-- Left promotional section -->
-            <div class="auth-promo">
-
+            <!-- Marketplace introduction -->
+            <aside class="auth-promo">
                 <div class="auth-promo-content">
 
                     <a href="{% url 'storefront:home' %}" class="auth-brand">
                         <div class="auth-brand-icon">
                             <i class="fa-solid fa-bag-shopping"></i>
                         </div>
-
-                        <div>
+                        <div class="auth-brand-name">
                             <strong>Enock</strong>
                             <span>Shopping Center</span>
                         </div>
                     </a>
 
-
-                    <span class="eyebrow">
-                        WELCOME BACK
-                    </span>
-
+                    <div class="auth-eyebrow">WELCOME BACK</div>
 
                     <h1>
                         Your marketplace
                         <span>is waiting for you.</span>
                     </h1>
 
-
-                    <p>
-                        Sign in to manage your orders, wishlist, cart,
-                        seller account and shopping preferences.
+                    <p class="auth-promo-description">
+                        Discover products, manage your orders and keep
+                        everything you love in one convenient place.
                     </p>
 
-
                     <div class="auth-benefits">
-
                         <div class="auth-benefit">
-
                             <div class="auth-benefit-icon">
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </div>
-
                             <div>
-                                <strong>Your Cart</strong>
-                                <span>Continue where you left off.</span>
+                                <strong>Shopping made simple</strong>
+                                <span>Return to your cart and saved products.</span>
                             </div>
-
                         </div>
-
 
                         <div class="auth-benefit">
-
                             <div class="auth-benefit-icon">
-                                <i class="fa-solid fa-box"></i>
+                                <i class="fa-solid fa-box-open"></i>
                             </div>
-
                             <div>
-                                <strong>Track Orders</strong>
-                                <span>Keep up with your deliveries.</span>
+                                <strong>Stay updated</strong>
+                                <span>Access your orders and delivery details.</span>
                             </div>
-
                         </div>
-
 
                         <div class="auth-benefit">
-
                             <div class="auth-benefit-icon">
-                                <i class="fa-solid fa-heart"></i>
+                                <i class="fa-solid fa-store"></i>
                             </div>
-
                             <div>
-                                <strong>Your Wishlist</strong>
-                                <span>Save products you love.</span>
+                                <strong>One marketplace, more possibilities</strong>
+                                <span>Shop products and access seller features where available.</span>
                             </div>
-
                         </div>
-
                     </div>
 
+                    <div class="auth-promo-footer">
+                        Your marketplace. Your choices. Your shopping experience.
+                    </div>
                 </div>
+            </aside>
 
-            </div>
+            <!-- Sign-in form -->
+            <main class="auth-form-panel">
 
-
-            <!-- Login form -->
-            <div class="auth-card-wrapper">
-
-                <div class="auth-card">
-
-                    <div class="auth-card-header">
-
-                        <div class="mobile-auth-logo">
-                            <div class="auth-brand-icon">
-                                <i class="fa-solid fa-bag-shopping"></i>
-                            </div>
-                        </div>
-
-                        <span class="eyebrow">
-                            ENOCK SHOPPING CENTER
-                        </span>
-
-                        <h2>
-                            Welcome back
-                        </h2>
-
-                        <p>
-                            Sign in to continue shopping.
-                        </p>
-
+                <a href="{% url 'storefront:home' %}"
+                   class="auth-mobile-brand">
+                    <div class="auth-brand-icon">
+                        <i class="fa-solid fa-bag-shopping"></i>
                     </div>
-
-
-                    <!-- Error / success message -->
-                    <div
-                        id="loginMessage"
-                        class="auth-message"
-                        role="alert"
-                        style="display:none;"
-                    ></div>
-
-
-                    <form
-                        id="loginForm"
-                        class="auth-form"
-                        method="post"
-                        novalidate
-                    >
-
-                        {% csrf_token %}
-
-
-                        <!-- Email -->
-                        <div class="form-group">
-
-                            <label for="loginEmail">
-                                Email address
-                            </label>
-
-                            <div class="input-wrapper">
-
-                                <i class="fa-solid fa-envelope"></i>
-
-                                <input
-                                    id="loginEmail"
-                                    name="email"
-                                    type="email"
-                                    placeholder="you@example.com"
-                                    autocomplete="email"
-                                    required
-                                />
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- Password -->
-                        <div class="form-group">
-
-                            <div class="password-label-row">
-
-                                <label for="loginPassword">
-                                    Password
-                                </label>
-
-                                <a
-                                    href="#"
-                                    id="forgotPasswordLink"
-                                    class="forgot-password"
-                                >
-                                    Forgot password?
-                                </a>
-
-                            </div>
-
-
-                            <div class="input-wrapper">
-
-                                <i class="fa-solid fa-lock"></i>
-
-                                <input
-                                    id="loginPassword"
-                                    name="password"
-                                    type="password"
-                                    placeholder="Enter your password"
-                                    autocomplete="current-password"
-                                    required
-                                />
-
-                                <button
-                                    type="button"
-                                    id="togglePassword"
-                                    class="password-toggle"
-                                    aria-label="Show password"
-                                >
-                                    <i class="fa-solid fa-eye"></i>
-                                </button>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- Remember me -->
-                        <div class="remember-row">
-
-                            <label class="checkbox-label">
-
-                                <input
-                                    type="checkbox"
-                                    name="remember"
-                                    id="rememberMe"
-                                />
-
-                                <span>
-                                    Remember me
-                                </span>
-
-                            </label>
-
-                        </div>
-
-
-                        <!-- Submit -->
-                        <button
-                            type="submit"
-                            class="auth-submit"
-                            id="loginButton"
-                        >
-
-                            <span class="login-button-text">
-                                Sign In
-                            </span>
-
-                            <span
-                                class="login-button-loading"
-                                style="display:none;"
-                            >
-                                <i class="fa-solid fa-spinner fa-spin"></i>
-                                Signing in...
-                            </span>
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-                    </form>
-
-
-                    <!-- Divider -->
-                    <div class="auth-divider">
-                        <span>or</span>
+                    <div>
+                        <strong>Enock Shopping Center</strong>
+                        <span>Your marketplace starts here</span>
                     </div>
-
-
-                    <!-- Register -->
-                    <div class="register-prompt">
-
-                        <span>
-                            Don't have an account?
-                        </span>
-
-                        <a href="{% url 'storefront:register' %}">
-                            Create an account
-                        </a>
-
-                    </div>
-
-
-                    <!-- Security -->
-                    <div class="auth-security">
-
-                        <i class="fa-solid fa-shield-halved"></i>
-
-                        <span>
-                            Your account information is protected.
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Back to shopping -->
-                <a
-                    href="{% url 'storefront:marketplace' %}"
-                    class="back-shopping"
-                >
-                    <i class="fa-solid fa-arrow-left"></i>
-                    Continue shopping
                 </a>
 
-            </div>
+                <header class="auth-card-header">
+                    <div class="auth-eyebrow">YOUR ACCOUNT</div>
+                    <h2>Welcome back</h2>
+                    <p>Sign in to continue shopping and manage your account.</p>
+                </header>
 
+                <!-- Django messages -->
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="auth-message {% if msg.tags == 'error' %}error{% elif msg.tags == 'success' %}success{% else %}info{% endif %}"
+                             role="status">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div id="loginMessage"
+                     class="auth-message"
+                     role="alert"
+                     aria-live="polite"></div>
+
+                <form id="loginForm"
+                      class="auth-form"
+                      method="post"
+                      action=""
+                      autocomplete="on">
+
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="auth-message error" role="alert">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="auth-form-group">
+                        <label for="loginEmail">Email address</label>
+                        <div class="auth-input-wrapper">
+                            <i class="fa-regular fa-envelope auth-input-icon"></i>
+                            <input
+                                id="loginEmail"
+                                name="email"
+                                type="email"
+                                placeholder="you@example.com"
+                                autocomplete="username"
+                                autocapitalize="none"
+                                spellcheck="false"
+                                required
+                                value="{{ request.POST.email|default:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="auth-form-group">
+                        <div class="auth-password-label-row">
+                            <label for="loginPassword">Password</label>
+                            <a href="{% url 'storefront:password_reset' %}"
+                               class="auth-forgot-link">
+                                Forgot password?
+                            </a>
+                        </div>
+
+                        <div class="auth-input-wrapper">
+                            <i class="fa-solid fa-lock auth-input-icon"></i>
+                            <input
+                                id="loginPassword"
+                                name="password"
+                                type="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required>
+
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="auth-password-toggle"
+                                aria-label="Show password"
+                                aria-pressed="false">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="auth-remember-row">
+                        <label class="auth-checkbox-label" for="rememberMe">
+                            <input
+                                type="checkbox"
+                                name="remember"
+                                id="rememberMe"
+                                value="1"
+                                {% if request.POST.remember %}checked{% endif %}>
+                            <span>Remember me</span>
+                        </label>
+                    </div>
+
+                    <button type="submit"
+                            class="auth-submit"
+                            id="loginButton">
+                        <span class="login-button-text">Sign in securely</span>
+
+                        <span class="auth-submit-loading"
+                              id="loginButtonLoading">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                            Signing in...
+                        </span>
+
+                        <i class="fa-solid fa-arrow-right auth-submit-arrow"
+                           id="loginButtonArrow"></i>
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>NEW TO ENOCK?</span>
+                </div>
+
+                <div class="auth-register-prompt">
+                    Don't have an account?
+                    <a href="{% url 'storefront:register' %}">
+                        Create an account
+                    </a>
+                </div>
+
+                <div class="auth-security">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Your password is submitted securely over HTTPS when HTTPS is configured.</span>
+                </div>
+
+                <a href="{% url 'storefront:marketplace' %}"
+                   class="auth-back-shopping">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Continue browsing the marketplace
+                </a>
+
+            </main>
         </div>
-
     </div>
-
 </section>
-
 {% endblock %}
 
-
 {% block scripts %}
-
-<script src="{% static 'storefront/js/app.js' %}"></script>
-
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
+    "use strict";
 
     const form = document.getElementById("loginForm");
     const email = document.getElementById("loginEmail");
     const password = document.getElementById("loginPassword");
-
     const message = document.getElementById("loginMessage");
+    const togglePassword = document.getElementById("togglePassword");
     const button = document.getElementById("loginButton");
+    const buttonText = document.querySelector(".login-button-text");
+    const buttonLoading = document.getElementById("loginButtonLoading");
+    const buttonArrow = document.getElementById("loginButtonArrow");
 
-    const buttonText =
-        document.querySelector(".login-button-text");
-
-    const buttonLoading =
-        document.querySelector(".login-button-loading");
-
-
-    /*
-     * Password visibility
-     */
-    const togglePassword =
-        document.getElementById("togglePassword");
-
-
-    if (togglePassword && password) {
-
-        togglePassword.addEventListener("click", function () {
-
-            const isPassword =
-                password.type === "password";
-
-            password.type =
-                isPassword ? "text" : "password";
-
-            this.innerHTML = isPassword
-                ? '<i class="fa-solid fa-eye-slash"></i>'
-                : '<i class="fa-solid fa-eye"></i>';
-
-            this.setAttribute(
-                "aria-label",
-                isPassword
-                    ? "Hide password"
-                    : "Show password"
-            );
-
-        });
-
-    }
-
-
-    /*
-     * Display login messages
-     */
     function showMessage(text, type) {
-
-        if (!message) {
-            return;
-        }
+        if (!message) return;
 
         message.textContent = text;
-
-        message.className =
-            "auth-message " + (type || "error");
-
+        message.className = "auth-message " + (type || "info");
         message.style.display = "block";
-
     }
 
+    function hideMessage() {
+        if (!message) return;
 
-    /*
-     * Loading state
-     */
+        message.textContent = "";
+        message.className = "auth-message";
+        message.style.display = "none";
+    }
+
     function setLoading(loading) {
-
-        if (!button) {
-            return;
-        }
+        if (!button) return;
 
         button.disabled = loading;
+        button.setAttribute("aria-busy", String(loading));
 
         if (buttonText) {
-            buttonText.style.display =
-                loading ? "none" : "inline";
+            buttonText.style.display = loading ? "none" : "inline";
         }
 
         if (buttonLoading) {
-            buttonLoading.style.display =
-                loading ? "inline-flex" : "none";
+            buttonLoading.style.display = loading ? "inline-flex" : "none";
         }
 
+        if (buttonArrow) {
+            buttonArrow.style.display = loading ? "none" : "inline-block";
+        }
     }
 
+    // Password visibility
+    if (togglePassword && password) {
+        togglePassword.addEventListener("click", function () {
+            const show = password.type === "password";
+
+            password.type = show ? "text" : "password";
+            togglePassword.setAttribute("aria-label", show ? "Hide password" : "Show password");
+            togglePassword.setAttribute("aria-pressed", String(show));
+
+            togglePassword.innerHTML = show
+                ? '<i class="fa-regular fa-eye-slash"></i>'
+                : '<i class="fa-regular fa-eye"></i>';
+        });
+    }
 
     /*
-     * Login form
-     *
-     * If app.js already provides the authentication
-     * implementation, use it.
+     * Important:
+     * This template uses ordinary Django POST by default.
+     * Do not prevent submission unless you have confirmed
+     * that your authentication API is implemented.
      */
     if (form) {
-
-        form.addEventListener("submit", async function (event) {
-
-            event.preventDefault();
-
+        form.addEventListener("submit", function (event) {
+            hideMessage();
 
             if (!email.value.trim()) {
-
-                showMessage(
-                    "Please enter your email address.",
-                    "error"
-                );
-
+                event.preventDefault();
+                showMessage("Please enter your email address.", "error");
                 email.focus();
-
                 return;
             }
-
 
             if (!password.value) {
-
-                showMessage(
-                    "Please enter your password.",
-                    "error"
-                );
-
+                event.preventDefault();
+                showMessage("Please enter your password.", "error");
                 password.focus();
-
                 return;
             }
 
-
-            showMessage("", "");
-
-            if (message) {
-                message.style.display = "none";
-            }
-
+            /*
+             * Allow the browser to submit the form to Django.
+             * The loading indicator is visual feedback only.
+             */
             setLoading(true);
-
-
-            /*
-             * Let the main storefront application handle
-             * authentication when available.
-             */
-            if (typeof window.loginUser === "function") {
-
-                try {
-
-                    await window.loginUser(
-                        email.value.trim(),
-                        password.value
-                    );
-
-                } catch (error) {
-
-                    showMessage(
-                        error.message ||
-                        "Unable to sign in. Please check your details.",
-                        "error"
-                    );
-
-                    setLoading(false);
-
-                }
-
-                return;
-            }
-
-
-            /*
-             * Fallback API request.
-             *
-             * This matches the project's API structure and
-             * can be adjusted to the exact users API endpoint
-             * if the backend uses another authentication route.
-             */
-            try {
-
-                const response = await fetch(
-                    "/api/users/login/",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRFToken": getCSRFToken()
-                        },
-
-                        credentials: "same-origin",
-
-                        body: JSON.stringify({
-                            email: email.value.trim(),
-                            password: password.value
-                        })
-                    }
-                );
-
-
-                let data = {};
-
-                try {
-                    data = await response.json();
-                } catch (jsonError) {
-                    data = {};
-                }
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.detail ||
-                        data.message ||
-                        "Invalid email or password."
-                    );
-
-                }
-
-
-                showMessage(
-                    "Signed in successfully. Redirecting...",
-                    "success"
-                );
-
-
-                /*
-                 * Send the customer back to the account page.
-                 */
-                window.location.href =
-                    "{% url 'storefront:account' %}";
-
-
-            } catch (error) {
-
-                showMessage(
-                    error.message ||
-                    "Unable to sign in. Please try again.",
-                    "error"
-                );
-
-                setLoading(false);
-
-            }
-
         });
-
     }
 
+    // Clear loading state if the browser restores this page from cache.
+    window.addEventListener("pageshow", function () {
+        setLoading(false);
+    });
 
-    /*
-     * CSRF helper
-     */
-    function getCSRFToken() {
-
-        const name = "csrftoken=";
-
-        const cookies =
-            document.cookie.split(";");
-
-        for (let cookie of cookies) {
-
-            cookie = cookie.trim();
-
-            if (cookie.indexOf(name) === 0) {
-
-                return decodeURIComponent(
-                    cookie.substring(name.length)
-                );
-
-            }
-
-        }
-
-        return "";
-
-    }
-
-
-    /*
-     * Forgot password
-     *
-     * The current storefront routes do not yet expose a
-     * dedicated password-reset page, so do not create a
-     * broken Django URL here.
-     */
-    const forgotPasswordLink =
-        document.getElementById("forgotPasswordLink");
-
-
-    if (forgotPasswordLink) {
-
-        forgotPasswordLink.addEventListener("click", function (event) {
-
-            event.preventDefault();
-
-            showMessage(
-                "Password recovery will be connected to the users authentication system.",
-                "info"
-            );
-
-        });
-
-    }
-
-
-    /*
-     * Keep compatibility with the existing application
-     * initializer.
-     */
     if (typeof window.initPage === "function") {
         window.initPage("login");
     }
-
 });
-
 </script>
-
 {% endblock %}
+```
