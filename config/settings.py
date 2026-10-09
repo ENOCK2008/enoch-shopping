@@ -1,6 +1,7 @@
 
 from pathlib import Path
 import os
+import logging
 
 import dj_database_url
 
@@ -71,7 +72,6 @@ if render_host:
 # ============================================================
 
 INSTALLED_APPS = [
-    # Django
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -79,11 +79,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # Third-party
     "corsheaders",
     "rest_framework",
 
-    # Enock Shopping Center
     "users",
     "sellers",
     "catalog",
@@ -121,7 +119,6 @@ MIDDLEWARE = [
 # ============================================================
 
 ROOT_URLCONF = "config.urls"
-
 WSGI_APPLICATION = "config.wsgi.application"
 
 
@@ -227,7 +224,6 @@ CORS_ALLOW_CREDENTIALS = True
 # ============================================================
 
 LANGUAGE_CODE = os.getenv("LANGUAGE_CODE", "en")
-
 TIME_ZONE = os.getenv("TIME_ZONE", "Africa/Kampala")
 
 USE_I18N = True
@@ -239,7 +235,6 @@ USE_TZ = True
 # ============================================================
 
 STATIC_URL = "/static/"
-
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
@@ -260,7 +255,6 @@ STORAGES = {
 # ============================================================
 
 MEDIA_URL = "/media/"
-
 MEDIA_ROOT = BASE_DIR / "media"
 
 
@@ -312,7 +306,36 @@ if not DEBUG:
 # ============================================================
 
 LOGIN_URL = "/login/"
-
 LOGIN_REDIRECT_URL = "/"
-
 LOGOUT_REDIRECT_URL = "/"
+
+
+# ============================================================
+# TEMPORARY DIAGNOSTIC LOGGING
+# ============================================================
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
