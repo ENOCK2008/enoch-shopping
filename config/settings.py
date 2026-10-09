@@ -14,15 +14,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # ============================================================
-# SECURITY
+# ENVIRONMENT / SECURITY
 # ============================================================
 
-SECRET_KEY = os.getenv(
-    "SECRET_KEY",
-    "django-insecure-development-key-change-this-on-render",
-)
+DEBUG = os.getenv("DEBUG", "False").strip().lower() in {
+    "true", "1", "yes"
+}
 
-DEBUG = os.getenv("DEBUG", "False").strip().lower() == "true"
+SECRET_KEY = os.getenv("SECRET_KEY", "")
+
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = "django-insecure-local-development-only-key"
+    else:
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured(
+            "Set the SECRET_KEY environment variable before deployment."
+        )
 
 
 # ============================================================
@@ -33,26 +41,36 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
         "ALLOWED_HOSTS",
-        "127.0.0.1,localhost",
+        "localhost,127.0.0.1",
     ).split(",")
     if host.strip()
 ]
 
+# Render
 render_host = os.getenv("RENDER_EXTERNAL_HOSTNAME")
-
-if render_host and render_host not in ALLOWED_HOSTS:
+if render_host:
     ALLOWED_HOSTS.append(render_host)
 
-if ".onrender.com" not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(".onrender.com")
+# Vercel
+vercel_url = os.getenv("VERCEL_URL")
+if vercel_url:
+    ALLOWED_HOSTS.append(vercel_url)
+
+# Optional comma-separated extra hosts
+for host in [
+    ".onrender.com",
+    ".vercel.app",
+]:
+    if host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(host)
 
 
 # ============================================================
-# CSRF
+# CSRF TRUSTED ORIGINS
 # ============================================================
 
 CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
+    origin.strip().rstrip("/")
     for origin in os.getenv(
         "CSRF_TRUSTED_ORIGINS",
         "",
@@ -61,10 +79,19 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 if render_host:
-    render_origin = f"https://{render_host}"
+    CSRF_TRUSTED_ORIGINS.append(
+        f"https://{render_host}"
+    )
 
-    if render_origin not in CSRF_TRUSTED_ORIGINS:
-        CSRF_TRUSTED_ORIGINS.append(render_origin)
+if vercel_url:
+    CSRF_TRUSTED_ORIGINS.append(
+        f"https://{vercel_url}"
+    )
+
+# Remove duplicate origins
+CSRF_TRUSTED_ORIGINS = list(
+    dict.fromkeys(CSRF_TRUSTED_ORIGINS)
+)
 
 
 # ============================================================
@@ -157,25 +184,29 @@ if DATABASE_URL:
     DATABASES = {
         "default": dj_database_url.parse(
             DATABASE_URL,
-            conn_max_age=600,
+            conn_max_age=0,
             ssl_require=not DEBUG,
         )
     }
 else:
+    # Local development fallback only.
+    # Configure PostgreSQL through DATABASE_URL in production.
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("POSTGRES_DB", "enock"),
-            "USER": os.getenv("POSTGRES_USER", "enock"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "enock"),
-            "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-            "PORT": os.getenv("POSTGRES_PORT", "5432"),
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 
+    if not DEBUG:
+        logging.getLogger(__name__).warning(
+            "DATABASE_URL is missing. SQLite is not suitable "
+            "for persistent production hosting on Vercel."
+        )
+
 
 # ============================================================
-# CUSTOM USER
+# CUSTOM USER MODEL
 # ============================================================
 
 AUTH_USER_MODEL = "users.User"
@@ -208,7 +239,7 @@ REST_FRAMEWORK = {
 # ============================================================
 
 CORS_ALLOWED_ORIGINS = [
-    origin.strip()
+    origin.strip().rstrip("/")
     for origin in os.getenv(
         "CORS_ALLOWED_ORIGINS",
         "",
@@ -243,8 +274,7 @@ STORAGES = {
     },
     "staticfiles": {
         "BACKEND": (
-            "whitenoise.storage."
-            "CompressedManifestStaticFilesStorage"
+            "whitenoise.storage.CompressedStaticFilesStorage"
         ),
     },
 }
@@ -257,6 +287,9 @@ STORAGES = {
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Vercel's application filesystem is not persistent storage.
+# Configure external object storage for product/ad uploads.
+
 
 # ============================================================
 # DEFAULT PRIMARY KEY
@@ -266,7 +299,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # ============================================================
-# SESSION / CSRF
+# SESSION / CSRF COOKIES
 # ============================================================
 
 SESSION_COOKIE_SECURE = not DEBUG
@@ -275,9 +308,12 @@ CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False
 
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+
 
 # ============================================================
-# HTTPS / RENDER
+# HTTPS / REVERSE PROXY
 # ============================================================
 
 SECURE_PROXY_SSL_HEADER = (
@@ -294,8 +330,8 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
 
     SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
 
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
@@ -311,7 +347,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 
 # ============================================================
-# TEMPORARY DIAGNOSTIC LOGGING
+# LOGGING
 # ============================================================
 
 LOGGING = {
