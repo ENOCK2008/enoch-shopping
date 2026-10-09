@@ -1,1 +1,57 @@
+{% extends "storefront/base.html" %}
+{% load humanize %}
 
+{% block title %}My Commissions | Enock Shopping Center{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="mb-4">
+    <h1 class="h3 mb-1">My seller earnings</h1>
+    <p class="text-muted mb-0">Review your order values, platform commissions, and earnings.</p>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="card h-100 shadow-sm"><div class="card-body">
+      <div class="text-muted small">Order total</div>
+      <div class="fs-4 fw-bold">UGX {{ order_total|floatformat:0|intcomma }}</div>
+    </div></div></div>
+    <div class="col-md-4"><div class="card h-100 shadow-sm"><div class="card-body">
+      <div class="text-muted small">Platform commission</div>
+      <div class="fs-4 fw-bold">UGX {{ commission_total|floatformat:0|intcomma }}</div>
+    </div></div></div>
+    <div class="col-md-4"><div class="card h-100 shadow-sm"><div class="card-body">
+      <div class="text-muted small">Your earnings</div>
+      <div class="fs-4 fw-bold text-success">UGX {{ earnings_total|floatformat:0|intcomma }}</div>
+    </div></div></div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light"><tr>
+          <th>Order reference</th><th>Date</th><th>Order amount</th><th>Rate</th>
+          <th>Commission</th><th>Your earnings</th><th>Status</th>
+        </tr></thead>
+        <tbody>
+          {% for item in commissions %}
+          <tr>
+            <td>{{ item.order_reference }}</td>
+            <td>{{ item.created_at|date:"d M Y" }}</td>
+            <td>{{ item.currency }} {{ item.order_amount|floatformat:0|intcomma }}</td>
+            <td>{{ item.commission_rate }}%</td>
+            <td>{{ item.currency }} {{ item.commission_amount|floatformat:0|intcomma }}</td>
+            <td class="fw-semibold">{{ item.currency }} {{ item.seller_earnings|floatformat:0|intcomma }}</td>
+            <td><span class="badge text-bg-secondary">{{ item.get_status_display }}</span></td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="text-center py-5">
+            <h2 class="h5">No commission records yet</h2>
+            <p class="text-muted mb-0">Eligible order commissions will appear here.</p>
+          </td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
